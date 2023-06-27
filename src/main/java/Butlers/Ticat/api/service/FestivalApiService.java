@@ -86,6 +86,67 @@ public class FestivalApiService {
         }
     }
 
+    public void getFestivalDetail() throws IOException {
 
+        List<Festival> festivalList = festivalRepository.findAll();
+
+
+        for(Festival festival : festivalList){
+
+            StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B551011/KorService1/detailIntro1");
+            urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + serviceKey);
+            urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("MobileOS", "UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("MobileApp", "UTF-8") + "=" + URLEncoder.encode("AppTest", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("_type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("contentId", "UTF-8") + "=" + URLEncoder.encode(festival.getContentId(), "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("contentTypeId", "UTF-8") + "=" + URLEncoder.encode("15", "UTF-8"));
+
+            URL url = new URL(urlBuilder.toString());
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-type", "application/json");
+
+            System.out.println("Response code: " + conn.getResponseCode());
+            BufferedReader rd;
+            if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+                rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            } else {
+                rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            }
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                sb.append(line);
+            }
+            rd.close();
+            conn.disconnect();
+            String data = sb.toString();
+
+            JSONObject jObject = new JSONObject(data);
+            JSONObject response = jObject.getJSONObject("response");
+            JSONObject body = response.getJSONObject("body");
+            JSONObject items = body.getJSONObject("items");
+            JSONArray jArray = items.getJSONArray("item");
+
+
+            JSONObject obj = jArray.getJSONObject(0);
+
+            String sponsor1 = obj.get("sponsor1").toString();
+            String sponsor1tel = obj.get("sponsor1tel").toString();
+            String sponsor2 = obj.get("sponsor2").toString();
+            String eventstartdate = obj.get("eventstartdate").toString();
+            String eventenddate = obj.get("eventenddate").toString();
+            String playtime = obj.get("playtime").toString();
+            String eventplace = obj.get("eventplace").toString();
+            String usetimefestival = obj.get("usetimefestival").toString();
+
+            festival.updateDetailFestival(new DetailFestival(sponsor1,sponsor1tel,sponsor2,eventstartdate,eventenddate,playtime,eventplace,usetimefestival));
+
+            festivalRepository.save(festival);
+
+        }
+    }
 
 }
