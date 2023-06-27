@@ -1,13 +1,11 @@
 package Butlers.Ticat.api.entity;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Embeddable
 @Getter
 public class DetailFestival {
@@ -27,4 +25,22 @@ public class DetailFestival {
     private String eventplace; // 행사장소
 
     private String usetimefestival; // 이용요금
+
+    @Column(length = 2000)
+    private String overview; // 상세 정보
+
+    public DetailFestival(String sponsor1, String sponsor1tel, String sponsor2, String eventstartdate, String eventenddate, String playtime, String eventplace, String usetimefestival) {
+        this.sponsor1 = sponsor1;
+        this.sponsor1tel = sponsor1tel;
+        this.sponsor2 = sponsor2;
+        this.eventstartdate = eventstartdate;
+        this.eventenddate = eventenddate;
+        this.playtime = playtime;
+        this.eventplace = eventplace;
+        this.usetimefestival = usetimefestival;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
 }
