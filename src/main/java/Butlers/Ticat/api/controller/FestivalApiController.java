@@ -23,4 +23,10 @@ public class FestivalApiController {
         return ResponseEntity.ok("행사리스트 불러오기");
     }
 
+    @PostMapping("/detail")
+    public ResponseEntity<String> detailTourList() throws IOException {
+        festivalApiService.getFestivalDetail();
+
+        return ResponseEntity.ok("행사상세 불러오기");
+    }
 }
