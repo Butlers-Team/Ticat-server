@@ -1,4 +1,4 @@
-package Butlers.Ticat.api.entity;
+package Butlers.Ticat.festival.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,9 +16,10 @@ public class DetailFestival {
 
     private String sponsor2; // 주관사 정보
 
-    private String eventstartdate; // 행사시작일
-
-    private String eventenddate; // 행사 종료일
+    private String eventDate;
+//    private String eventstartdate; // 행사시작일
+//
+//    private String eventenddate; // 행사 종료일
 
     private String playtime; //공연시간
 
@@ -29,12 +30,11 @@ public class DetailFestival {
     @Column(length = 2000)
     private String overview; // 상세 정보
 
-    public DetailFestival(String sponsor1, String sponsor1tel, String sponsor2, String eventstartdate, String eventenddate, String playtime, String eventplace, String usetimefestival) {
+    public DetailFestival(String sponsor1, String sponsor1tel, String sponsor2, String eventDate, String playtime, String eventplace, String usetimefestival) {
         this.sponsor1 = sponsor1;
         this.sponsor1tel = sponsor1tel;
         this.sponsor2 = sponsor2;
-        this.eventstartdate = eventstartdate;
-        this.eventenddate = eventenddate;
+        this.eventDate = eventDate;
         this.playtime = playtime;
         this.eventplace = eventplace;
         this.usetimefestival = usetimefestival;
