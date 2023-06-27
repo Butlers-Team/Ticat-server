@@ -1,6 +1,6 @@
-package Butlers.Ticat.api.repository;
+package Butlers.Ticat.festival.repository;
 
-import Butlers.Ticat.api.entity.Festival;
+import Butlers.Ticat.festival.entity.Festival;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

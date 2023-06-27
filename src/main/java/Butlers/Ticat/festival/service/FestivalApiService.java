@@ -1,10 +1,9 @@
-package Butlers.Ticat.api.service;
+package Butlers.Ticat.festival.service;
 
-import Butlers.Ticat.api.entity.DetailFestival;
-import Butlers.Ticat.api.entity.Festival;
-import Butlers.Ticat.api.repository.FestivalRepository;
+import Butlers.Ticat.festival.entity.DetailFestival;
+import Butlers.Ticat.festival.entity.Festival;
+import Butlers.Ticat.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -142,7 +141,7 @@ public class FestivalApiService {
             String eventplace = obj.get("eventplace").toString();
             String usetimefestival = obj.get("usetimefestival").toString();
 
-            festival.updateDetailFestival(new DetailFestival(sponsor1,sponsor1tel,sponsor2,eventstartdate,eventenddate,playtime,eventplace,usetimefestival));
+            festival.updateDetailFestival(new DetailFestival(sponsor1,sponsor1tel,sponsor2,eventstartdate+ " ~ " +eventenddate,playtime,eventplace,usetimefestival));
 
             festivalRepository.save(festival);
 

@@ -1,6 +1,6 @@
-package Butlers.Ticat.api.controller;
+package Butlers.Ticat.festival.controller;
 
-import Butlers.Ticat.api.service.FestivalApiService;
+import Butlers.Ticat.festival.service.FestivalApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
