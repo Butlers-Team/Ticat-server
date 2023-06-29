@@ -1,5 +1,6 @@
 package Butlers.Ticat.member.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,15 @@ public class MemberDto {
         private Long memberId;
         private String displayName;
         private String password;
+
+    }
+
+    @Getter
+    @Builder
+    public static class Response {
+
+        private Long memberId;
+        private String displayName;
 
     }
 }
