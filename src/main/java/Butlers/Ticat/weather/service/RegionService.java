@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 @Transactional
@@ -42,5 +43,56 @@ public class RegionService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Long getRegionId(int currentLatitude,int currentLongitude){
+        List<Region> allRegions = regionRepository.findAll();
+
+        // 가장 가까운 지역을 저장할 변수와 초기 거리를 설정
+        Region closestRegion = null;
+        int minDistance = Integer.MAX_VALUE;
+
+        // 모든 지역을 순회하면서 가장 가까운 지역을 찾음
+        for (Region region : allRegions) {
+            int regionLatitude = region.getNx();
+            int regionLongitude = region.getNy();
+
+            // 두 지점 간의 거리 계산
+            double distance = calculateDistance(currentLatitude, currentLongitude, regionLatitude, regionLongitude);
+
+            // 현재까지의 최소 거리보다 작은 거리가 나타나면 가장 가까운 지역을 업데이트
+            if (distance < minDistance) {
+                minDistance = (int) distance;
+                closestRegion = region;
+            }
+        }
+
+        if (closestRegion != null) {
+            return closestRegion.getId();
+        } else {
+            return null;
+        }
+
+    }
+
+    public double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double earthRadius = 6371.0; // 지구 반지름 (단위: km)
+
+        // 위도 및 경도를 라디안 단위로 변환
+        double lat1Rad = Math.toRadians(lat1);
+        double lon1Rad = Math.toRadians(lon1);
+        double lat2Rad = Math.toRadians(lat2);
+        double lon2Rad = Math.toRadians(lon2);
+
+        // 위도 차이와 경도 차이 계산
+        double deltaLat = lat2Rad - lat1Rad;
+        double deltaLon = lon2Rad - lon1Rad;
+
+        // Haversine 공식을 사용하여 거리 계산
+        double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.pow(Math.sin(deltaLon / 2), 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = earthRadius * c;
+
+        return distance;
     }
 }
