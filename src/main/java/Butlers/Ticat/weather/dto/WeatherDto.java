@@ -14,7 +14,6 @@ public class WeatherDto {
 
         private String region;
         private Weather weather;
-
         private String message;
     }
 }

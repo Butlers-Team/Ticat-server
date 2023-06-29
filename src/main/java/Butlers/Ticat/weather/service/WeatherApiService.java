@@ -58,6 +58,7 @@ public class WeatherApiService {
             if(prevWeather.getLastUpdateTime().equals(currentChangeTime)) {
                 log.info("기존 자료를 재사용합니다");
                 return WeatherDto.Response.builder()
+                        .region(region.getParentRegion() +" "+ region.getChildRegion())
                         .weather(prevWeather)
                         .message("날씨를 불러 왔습니다.").build();
             }
