@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -25,6 +26,9 @@ public class Region {
 
     private int ny;
 
+    @Embedded
+    private Weather weather;
+
     public Region(Long id, String parentRegion, String childRegion, int nx, int ny) {
         this.id = id;
         this.parentRegion = parentRegion;
@@ -32,4 +36,9 @@ public class Region {
         this.nx = nx;
         this.ny = ny;
     }
+
+    public void updateRegionWeather(Weather weather){
+        this.weather = weather;
+    }
+
 }
