@@ -3,6 +3,8 @@ package Butlers.Ticat.weather.service;
 import Butlers.Ticat.weather.dto.WeatherDto;
 import Butlers.Ticat.weather.entity.Region;
 import Butlers.Ticat.weather.entity.Weather;
+import Butlers.Ticat.weather.helper.LatXLngY;
+import Butlers.Ticat.weather.helper.ConvertGPS;
 import Butlers.Ticat.weather.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import static Butlers.Ticat.weather.helper.ConvertGPS.TO_GPS;
+import static Butlers.Ticat.weather.helper.ConvertGPS.TO_GRID;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -31,6 +36,8 @@ public class WeatherApiService {
     @Value("${weatherApi.serviceKey}")
     private String serviceKey;
     private final RegionRepository regionRepository;
+
+    private final ConvertGPS convertGPS;
 
     public WeatherDto.Response getRegionWeather(Long regionId){
         // 1. 날씨 정보를 요청한 지역 조회
@@ -47,9 +54,11 @@ public class WeatherApiService {
         if(min <= 30) { // 해당 시각 발표 전에는 자료가 없음 - 이전시각을 기준으로 해야함
             hour -= 1;
         }
+        LatXLngY tmp = convertGPS.convertGRID_GPS(TO_GPS, region.getNx(), region.getNy());
+
         String hourStr = hour + "00"; // 정시 기준
-        String nx = Integer.toString(region.getNx());
-        String ny = Integer.toString(region.getNy());
+        String nx = String.valueOf((int)tmp.x);
+        String ny = String.valueOf((int)tmp.y);
         String currentChangeTime = now.format(DateTimeFormatter.ofPattern("yy.MM.dd ")) + hour;
 
         // 기준 시각 조회 자료가 이미 존재하고 있다면 API 요청 없이 기존 자료 그대로 넘김

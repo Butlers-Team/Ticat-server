@@ -38,31 +38,31 @@ public class RegionService {
             while ((line = br.readLine()) != null) {
                 String[] splits = line.split(",");
                 regionRepository.save(new Region(Long.parseLong(splits[0]), splits[1], splits[2],
-                        Integer.parseInt(splits[3]), Integer.parseInt(splits[4])));
+                        Double.parseDouble(splits[3]), Double.parseDouble(splits[4])));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Long getRegionId(int currentLatitude,int currentLongitude){
+    public Long getRegionId(double currentLatitude,double currentLongitude){
         List<Region> allRegions = regionRepository.findAll();
 
         // 가장 가까운 지역을 저장할 변수와 초기 거리를 설정
         Region closestRegion = null;
-        int minDistance = Integer.MAX_VALUE;
+        double minDistance = Double.MAX_VALUE;
 
         // 모든 지역을 순회하면서 가장 가까운 지역을 찾음
         for (Region region : allRegions) {
-            int regionLatitude = region.getNx();
-            int regionLongitude = region.getNy();
+            double regionLatitude = region.getNy();
+            double regionLongitude = region.getNx();
 
             // 두 지점 간의 거리 계산
             double distance = calculateDistance(currentLatitude, currentLongitude, regionLatitude, regionLongitude);
 
             // 현재까지의 최소 거리보다 작은 거리가 나타나면 가장 가까운 지역을 업데이트
             if (distance < minDistance) {
-                minDistance = (int) distance;
+                minDistance = distance;
                 closestRegion = region;
             }
         }

@@ -25,8 +25,8 @@ public class WeatherApiController {
 
     @GetMapping
     @Transactional
-    public ResponseEntity getRegionWeather(@RequestParam(defaultValue = "60") int currentLatitude,
-                                           @RequestParam(defaultValue = "127") int currentLongitude) {
+    public ResponseEntity getRegionWeather(@RequestParam(defaultValue = "126.9816417") double currentLongitude,
+                                           @RequestParam(defaultValue = "37.57037778") double currentLatitude) {
         Long regionId = regionService.getRegionId(currentLatitude, currentLongitude);
 
         WeatherDto.Response regionWeather = weatherApiService.getRegionWeather(regionId);
