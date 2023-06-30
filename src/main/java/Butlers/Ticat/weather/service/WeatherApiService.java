@@ -23,10 +23,6 @@ import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-
-import static Butlers.Ticat.weather.helper.ConvertGPS.TO_GPS;
-import static Butlers.Ticat.weather.helper.ConvertGPS.TO_GRID;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -54,7 +50,7 @@ public class WeatherApiService {
         if(min <= 30) { // 해당 시각 발표 전에는 자료가 없음 - 이전시각을 기준으로 해야함
             hour -= 1;
         }
-        LatXLngY tmp = convertGPS.convertGRID_GPS(TO_GPS, region.getNx(), region.getNy());
+        LatXLngY tmp = convertGPS.convertGRID_GPS(0, region.getNy(), region.getNx());
 
         String hourStr = hour + "00"; // 정시 기준
         String nx = String.valueOf((int)tmp.x);

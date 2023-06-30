@@ -4,9 +4,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ConvertGPS {
-    public static int TO_GRID = 0;
-    public static int TO_GPS = 1;
-
     public LatXLngY convertGRID_GPS(int mode, double lat_X, double lng_Y) {
         double RE = 6371.00877; // 지구 반경(km)
         double GRID = 5.0; // 격자 간격(km)
@@ -36,7 +33,7 @@ public class ConvertGPS {
         ro = re * sf / Math.pow(ro, sn);
         LatXLngY rs = new LatXLngY();
 
-        if (mode == TO_GRID) {
+        if (mode == 0) {
             rs.lat = lat_X;
             rs.lng = lng_Y;
             double ra = Math.tan(Math.PI * 0.25 + (lat_X) * DEGRAD * 0.5);
@@ -60,6 +57,7 @@ public class ConvertGPS {
             }
             double alat = Math.pow((re * sf / ra), (1.0 / sn));
             alat = 2.0 * Math.atan(alat) - Math.PI * 0.5;
+
             double theta = 0.0;
             if (Math.abs(xn) <= 0.0) {
                 theta = 0.0;
