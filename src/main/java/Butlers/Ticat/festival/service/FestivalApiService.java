@@ -1,5 +1,6 @@
 package Butlers.Ticat.festival.service;
 
+import Butlers.Ticat.festival.dto.FestivalDto;
 import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.repository.FestivalRepository;
@@ -32,12 +33,12 @@ public class FestivalApiService {
     public void getFestivalList() throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B551011/KorService1/areaBasedList1");
         urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + serviceKey);
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("100", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileOS", "UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileApp", "UTF-8") + "=" + URLEncoder.encode("AppTest", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("_type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("arrange", "UTF-8") + "=" + URLEncoder.encode("R", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("arrange", "UTF-8") + "=" + URLEncoder.encode("D", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("contentTypeId", "UTF-8") + "=" + URLEncoder.encode("15", "UTF-8"));
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -74,8 +75,8 @@ public class FestivalApiService {
             String contentId = obj.get("contentid").toString();
             String areacode = obj.get("areacode").toString();
             String image = obj.get("firstimage").toString();
-            String mapx = obj.get("mapx").toString();
-            String mapy = obj.get("mapy").toString();
+            double mapx = Double.parseDouble(obj.get("mapx").toString());
+            double mapy = Double.parseDouble(obj.get("mapy").toString());
             String tel = obj.get("tel").toString();
 
             Optional<Festival> optionalFestival = festivalRepository.findByContentId(contentId);
@@ -94,7 +95,7 @@ public class FestivalApiService {
 
             StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B551011/KorService1/detailIntro1");
             urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + serviceKey);
-            urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("100", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("MobileOS", "UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("MobileApp", "UTF-8") + "=" + URLEncoder.encode("AppTest", "UTF-8"));
@@ -202,4 +203,5 @@ public class FestivalApiService {
 
         }
     }
+
 }
