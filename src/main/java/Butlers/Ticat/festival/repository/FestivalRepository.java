@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface FestivalRepository extends JpaRepository<Festival,Long> {
 
-    Optional<Festival> findByContentId(String contentId);
+    Optional<Festival> findByContentId(Long contentId);
 
     // 두 지점 사이의 거리를 구하는 데 사용하는 함수 ST_DISTANCE_SPHERE
     @Query("SELECT f FROM Festival f WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance")
