@@ -17,7 +17,7 @@ public class Festival {
     @Column(name = "festival_id")
     private Long id;
 
-    private String contentId; // 콘텐츠 아이디 ( 식별자 )
+    private Long contentId; // 콘텐츠 아이디 ( 식별자 )
     private String title; // 축제 제목
 
     private String address; // 축제 주소
@@ -35,7 +35,7 @@ public class Festival {
     @Embedded
     private DetailFestival detailFestival;
 
-    public Festival(String contentId, String title, String address, String areacode, String image, double mapx, double mapy, String tel) {
+    public Festival(Long contentId, String title, String address, String areacode, String image, double mapx, double mapy, String tel) {
         this.contentId = contentId;
         this.title = title;
         this.address = address;
