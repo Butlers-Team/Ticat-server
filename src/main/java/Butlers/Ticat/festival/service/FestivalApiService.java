@@ -141,8 +141,9 @@ public class FestivalApiService {
             String playtime = obj.get("playtime").toString();
             String eventplace = obj.get("eventplace").toString();
             String usetimefestival = obj.get("usetimefestival").toString();
-
-            festival.updateDetailFestival(new DetailFestival(sponsor1,sponsor1tel,sponsor2,eventstartdate+ " ~ " +eventenddate,playtime,eventplace,usetimefestival));
+            String eventhomepage = obj.get("eventhomepage").toString();
+            
+            festival.updateDetailFestival(new DetailFestival(sponsor1,sponsor1tel,sponsor2,eventstartdate+ " ~ " +eventenddate,eventhomepage,playtime,eventplace,usetimefestival));
 
             festivalRepository.save(festival);
 
