@@ -26,16 +26,16 @@ public class Festival {
 
     private String image; // 축제 사진
 
-    private String mapx; // 축제 x좌표
+    private double mapx; // 축제 x좌표
 
-    private String mapy; // 축제 y좌표
+    private double mapy; // 축제 y좌표
 
     private String tel; // 축제 전화번호
 
     @Embedded
     private DetailFestival detailFestival;
 
-    public Festival(String contentId, String title, String address, String areacode, String image, String mapx, String mapy, String tel) {
+    public Festival(String contentId, String title, String address, String areacode, String image, double mapx, double mapy, String tel) {
         this.contentId = contentId;
         this.title = title;
         this.address = address;
