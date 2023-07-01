@@ -1,8 +1,11 @@
 package Butlers.Ticat.festival.controller;
 
 import Butlers.Ticat.dto.MultiResponseDto;
+import Butlers.Ticat.dto.SingleResponseDto;
+import Butlers.Ticat.festival.dto.FestivalDto;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.mapper.FestivalMapper;
+import Butlers.Ticat.festival.service.FestivalApiService;
 import Butlers.Ticat.festival.service.FestivalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,7 +26,6 @@ import java.util.List;
 public class FestivalController {
 
     private final FestivalService festivalService;
-
     private final FestivalMapper mapper;
 
     @GetMapping
@@ -32,5 +35,13 @@ public class FestivalController {
         List<Festival> festivals = pageFestivals.getContent();
 
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+    }
+
+    @GetMapping("/distance")
+    public ResponseEntity getFestivalsWithinDistance(@Positive @RequestParam double mapX,
+                                               @Positive @RequestParam double mapY,
+                                               @Positive @RequestParam double distance){
+        List<Festival> festivals = festivalService.findFestivalsWithinDistance(mapX,mapY,distance);
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
     }
 }
