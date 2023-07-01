@@ -1,5 +1,6 @@
 package Butlers.Ticat.festival.service;
 
+import Butlers.Ticat.festival.dto.FestivalDto;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -21,4 +24,9 @@ public class FestivalService {
         return festivalRepository.findAll(PageRequest.of(page-1,size));
     }
 
+    public List<Festival> findFestivalsWithinDistance(double latitude, double longitude, double distance) {
+        return festivalRepository.findFestivalsWithinDistance(longitude,latitude, distance);
+    }
+
+    
 }
