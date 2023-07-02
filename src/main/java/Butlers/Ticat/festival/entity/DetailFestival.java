@@ -10,6 +10,7 @@ import javax.persistence.Embeddable;
 @Getter
 public class DetailFestival {
 
+    private String category;
     private String sponsor1; // 주최자 정보
 
     private String sponsor1tel; // 주최자 연락처
@@ -44,7 +45,9 @@ public class DetailFestival {
         this.usetimefestival = usetimefestival;
     }
 
-    public void setOverview(String overview) {
+    public void updateCategoryAndOverView(String category,String overview) {
+        this.category = category;
         this.overview = overview;
     }
+
 }
