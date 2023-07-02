@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -32,8 +33,17 @@ public class Festival {
 
     private String tel; // 축제 전화번호
 
+    private Integer likeCount = 0;
+
+    private double reviewRating = 0;
+
+    private Integer reviewCount = 0;
+
     @Embedded
     private DetailFestival detailFestival;
+
+//    @OneToMany(mappedBy = "festival")
+//    private List<Favorite> favorites;
 
     public Festival(Long contentId, String title, String address, String areacode, String image, double mapx, double mapy, String tel) {
         this.contentId = contentId;
