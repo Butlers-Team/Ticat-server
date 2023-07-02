@@ -11,6 +11,7 @@ public class FestivalDto {
         private Long contentId;
         private String title;
         private String image;
+        private String category;
         private String eventDate;
         private Double rating;
         private Integer like;
