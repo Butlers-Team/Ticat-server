@@ -20,6 +20,7 @@ public interface FestivalMapper {
     FestivalDto.Response festivalToResponse(Festival festival);
 
     @Mapping(source = "detailFestival.eventDate", target = "eventDate")
+    @Mapping(source = "detailFestival.category", target = "category")
     FestivalDto.ListResponse festivalToListResponse(Festival festival);
     List<FestivalDto.ListResponse> festivalsToFestivalListResponses(List<Festival> festivals);
 }
