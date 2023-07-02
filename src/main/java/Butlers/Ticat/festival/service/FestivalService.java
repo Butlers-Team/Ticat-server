@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,5 +29,10 @@ public class FestivalService {
         return festivalRepository.findFestivalsWithinDistance(longitude,latitude, distance);
     }
 
-    
+    public Festival findFestival(long contentId) {
+        Optional<Festival> optionalFestival = festivalRepository.findByContentId(contentId);
+        Festival festival = optionalFestival.orElseThrow();
+        return festival;
+    }
+
 }

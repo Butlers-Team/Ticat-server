@@ -21,6 +21,9 @@ public class DetailFestival {
 //
 //    private String eventenddate; // 행사 종료일
 
+    @Column(length = 1000)
+    private String eventhomepage; // 홈페이지
+
     private String playtime; //공연시간
 
     private String eventplace; // 행사장소
@@ -30,11 +33,12 @@ public class DetailFestival {
     @Column(length = 2000)
     private String overview; // 상세 정보
 
-    public DetailFestival(String sponsor1, String sponsor1tel, String sponsor2, String eventDate, String playtime, String eventplace, String usetimefestival) {
+    public DetailFestival(String sponsor1, String sponsor1tel, String sponsor2, String eventDate, String eventhomepage, String playtime, String eventplace, String usetimefestival) {
         this.sponsor1 = sponsor1;
         this.sponsor1tel = sponsor1tel;
         this.sponsor2 = sponsor2;
         this.eventDate = eventDate;
+        this.eventhomepage = eventhomepage;
         this.playtime = playtime;
         this.eventplace = eventplace;
         this.usetimefestival = usetimefestival;

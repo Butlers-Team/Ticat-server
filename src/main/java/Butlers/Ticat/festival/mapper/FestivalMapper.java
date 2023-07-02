@@ -12,6 +12,14 @@ import java.util.List;
 public interface FestivalMapper {
 
     @Mapping(source = "detailFestival.eventDate", target = "eventDate")
+    @Mapping(source = "detailFestival.overview", target = "overview")
+    @Mapping(source = "detailFestival.eventhomepage", target = "eventhomepage")
+    @Mapping(source = "detailFestival.eventplace", target = "eventplace")
+    @Mapping(source = "detailFestival.usetimefestival", target = "usetimefestival")
+    @Mapping(source = "detailFestival.playtime", target = "playtime")
+    FestivalDto.Response festivalToResponse(Festival festival);
+
+    @Mapping(source = "detailFestival.eventDate", target = "eventDate")
     FestivalDto.ListResponse festivalToListResponse(Festival festival);
     List<FestivalDto.ListResponse> festivalsToFestivalListResponses(List<Festival> festivals);
 }
