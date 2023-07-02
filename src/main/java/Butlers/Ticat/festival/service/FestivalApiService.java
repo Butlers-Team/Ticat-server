@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,6 +20,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Optional;
+
+import static Butlers.Ticat.festival.helper.KeywordCategoryMapping.determineCategory;
+import static Butlers.Ticat.festival.helper.KeywordCategoryMapping.keywordCategoryMap;
 
 @Service
 @Transactional
@@ -79,6 +83,8 @@ public class FestivalApiService {
             double mapy = Double.parseDouble(obj.get("mapy").toString());
             String tel = obj.get("tel").toString();
             Optional<Festival> optionalFestival = festivalRepository.findByContentId(Long.parseLong(contentId));
+
+
             if (optionalFestival.isEmpty()) { // contentId가 중복되지 않은 경우에만 저장 진행
                 festivalRepository.save(new Festival(Long.parseLong(contentId),title,address,areacode,image,mapx,mapy,tel));
             }
@@ -194,10 +200,10 @@ public class FestivalApiService {
 
 
             JSONObject obj = jArray.getJSONObject(0);
-
             String overview = obj.get("overview").toString();
+            String category = determineCategory(overview, keywordCategoryMap);
 
-            festival.getDetailFestival().setOverview(overview);
+            festival.getDetailFestival().updateCategoryAndOverView(category,overview);
 
             festivalRepository.save(festival);
 
