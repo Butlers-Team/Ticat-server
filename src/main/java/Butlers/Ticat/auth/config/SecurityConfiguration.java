@@ -2,16 +2,14 @@ package Butlers.Ticat.auth.config;
 
 import Butlers.Ticat.auth.filter.JwtAuthenticationFilter;
 import Butlers.Ticat.auth.filter.JwtVerificationFilter;
-import Butlers.Ticat.auth.handler.MemberAccessDeniedHandler;
-import Butlers.Ticat.auth.handler.MemberAuthenticationEntryPoint;
-import Butlers.Ticat.auth.handler.MemberAuthenticationFailureHandler;
-import Butlers.Ticat.auth.handler.MemberAuthenticationSuccessHandler;
+import Butlers.Ticat.auth.handler.*;
 import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.auth.jwt.JwtTokenizer;
 import Butlers.Ticat.auth.utils.JwtUtils;
-import lombok.RequiredArgsConstructor;
+import Butlers.Ticat.member.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,8 +29,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.Arrays;
 @Configuration
 @EnableWebSecurity(debug = true)
-@RequiredArgsConstructor
 public class SecurityConfiguration implements WebMvcConfigurer {
+
+    private final MemberService memberService;
+
+    public SecurityConfiguration(@Lazy MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -67,7 +70,9 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().permitAll()
-                );
+                )
+                .oauth2Login()
+                .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer(), memberService));
         return http.build();
     }
 

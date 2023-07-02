@@ -1,10 +1,15 @@
 package Butlers.Ticat.auth.handler;
 
 import Butlers.Ticat.auth.jwt.JwtTokenizer;
+import Butlers.Ticat.auth.userinfo.GoogleUserInfo;
+import Butlers.Ticat.auth.userinfo.KakaoUserInfo;
+import Butlers.Ticat.auth.userinfo.OAuth2UserInfo;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,16 +25,33 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         var oAuth2User = (OAuth2User)authentication.getPrincipal();
-        String email = String.valueOf(oAuth2User.getAttributes().get("email"));
+        OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
+
+        OAuth2UserInfo oAuth2UserInfo = null;
+
+        String provider = oauth2Token.getAuthorizedClientRegistrationId();
+        if(provider.equals("google")) {
+            log.info("구글 로그인 요청");
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        } else if(provider.equals("kakao")) {
+            log.info("카카오 로그인 요청");
+            oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
+        }
+
+        String providerId = oAuth2UserInfo.getProviderId();
+        String email = provider + "_" + providerId;
         Member member;
+
         try {
             member = saveMember(email);
             redirect(request, response, member);
@@ -51,7 +73,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         response.setHeader("Authorization", addedAccessToken);
         response.setHeader("Refresh", refreshToken);
 
-        String uri = createUri(addedAccessToken, member.getMemberId()).toString();
+        String uri = createUri(addedAccessToken, refreshToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
     private String delegateAccessToken(Member member) {
@@ -76,17 +98,17 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return refreshToken;
     }
 
-    private URI createUri(String accessToken, long memberId) {
+    private URI createUri(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("Authorization", accessToken);
+        queryParams.add("Refresh", refreshToken);
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-                .port(3000)
+                .scheme("http:/localhost")
+                .port(8080)
                 .queryParams(queryParams)
                 .build()
                 .toUri();
 
     }
-
 }
