@@ -14,5 +14,7 @@ public class FestivalDto {
         private String eventDate;
         private Double rating;
         private Integer like;
+        private double mapx;
+        private double mapy;
     }
 }
