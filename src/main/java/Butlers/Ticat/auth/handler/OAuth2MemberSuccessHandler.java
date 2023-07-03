@@ -3,6 +3,7 @@ package Butlers.Ticat.auth.handler;
 import Butlers.Ticat.auth.jwt.JwtTokenizer;
 import Butlers.Ticat.auth.userinfo.GoogleUserInfo;
 import Butlers.Ticat.auth.userinfo.KakaoUserInfo;
+import Butlers.Ticat.auth.userinfo.NaverUserInfo;
 import Butlers.Ticat.auth.userinfo.OAuth2UserInfo;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.service.MemberService;
@@ -46,6 +47,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         } else if(provider.equals("kakao")) {
             log.info("카카오 로그인 요청");
             oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
+        } else if(provider.equals("naver")) {
+            log.info("네이버 로그인 요청");
+            oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
         }
 
         String providerId = oAuth2UserInfo.getProviderId();
