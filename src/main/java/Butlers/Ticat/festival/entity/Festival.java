@@ -23,7 +23,7 @@ public class Festival {
 
     private String address; // 축제 주소
 
-    private String areacode; // 축제 지역코드
+    private String area; // 축제 위치
 
     private String image; // 축제 사진
 
@@ -45,11 +45,11 @@ public class Festival {
 //    @OneToMany(mappedBy = "festival")
 //    private List<Favorite> favorites;
 
-    public Festival(Long contentId, String title, String address, String areacode, String image, double mapx, double mapy, String tel) {
+    public Festival(Long contentId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
         this.contentId = contentId;
         this.title = title;
         this.address = address;
-        this.areacode = areacode;
+        this.area = area;
         this.image = image;
         this.mapx = mapx;
         this.mapy = mapy;
