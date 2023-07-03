@@ -35,4 +35,9 @@ public class FestivalService {
         return festival;
     }
 
+    public List<Festival> findFestivalByArea(List<String> areas) {
+        return festivalRepository.findByAreaIn(areas);
+    }
+
+
 }

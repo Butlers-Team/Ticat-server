@@ -21,6 +21,8 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Optional;
 
+import static Butlers.Ticat.festival.helper.AreaNameMapping.areaMap;
+import static Butlers.Ticat.festival.helper.AreaNameMapping.determineArea;
 import static Butlers.Ticat.festival.helper.KeywordCategoryMapping.determineCategory;
 import static Butlers.Ticat.festival.helper.KeywordCategoryMapping.keywordCategoryMap;
 
@@ -78,6 +80,10 @@ public class FestivalApiService {
             String address = obj.get("addr1").toString();
             String contentId = obj.get("contentid").toString();
             String areacode = obj.get("areacode").toString();
+            String sigungucode = obj.get("sigungucode").toString();
+
+            String area = determineArea(areacode+sigungucode,areaMap);
+
             String image = obj.get("firstimage").toString();
             double mapx = Double.parseDouble(obj.get("mapx").toString());
             double mapy = Double.parseDouble(obj.get("mapy").toString());
@@ -86,7 +92,7 @@ public class FestivalApiService {
 
 
             if (optionalFestival.isEmpty()) { // contentId가 중복되지 않은 경우에만 저장 진행
-                festivalRepository.save(new Festival(Long.parseLong(contentId),title,address,areacode,image,mapx,mapy,tel));
+                festivalRepository.save(new Festival(Long.parseLong(contentId),title,address,area,image,mapx,mapy,tel));
             }
         }
     }
