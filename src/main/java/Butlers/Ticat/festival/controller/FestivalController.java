@@ -50,4 +50,10 @@ public class FestivalController {
         List<Festival> festivals = festivalService.findFestivalsWithinDistance(mapX,mapY,distance);
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
     }
+
+    @GetMapping("/area")
+    public ResponseEntity getFestivalsByDistricts(@RequestParam List<String> areas) {
+        List<Festival> festivals = festivalService.findFestivalByArea(areas);
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
+    }
 }
