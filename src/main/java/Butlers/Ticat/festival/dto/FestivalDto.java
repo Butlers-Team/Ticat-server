@@ -17,6 +17,7 @@ public class FestivalDto {
         private double reviewRating;
         private Integer reviewCount;
         private Integer likeCount;
+        private String area;
         private double mapx;
         private double mapy;
     }
