@@ -18,6 +18,8 @@ import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.util.List;
 
+import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
+
 @RestController
 @RequestMapping("/festivals")
 @RequiredArgsConstructor
@@ -54,6 +56,12 @@ public class FestivalController {
     @GetMapping("/area")
     public ResponseEntity getFestivalsByDistricts(@RequestParam List<String> areas) {
         List<Festival> festivals = festivalService.findFestivalByArea(areas);
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
+    }
+
+    @GetMapping("/banner")
+    public ResponseEntity getFestivalsByStatus() {
+        List<Festival> festivals = festivalService.findFestivalByStatus(ONGOING);
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
     }
 }
