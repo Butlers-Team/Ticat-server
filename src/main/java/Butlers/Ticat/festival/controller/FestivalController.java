@@ -29,14 +29,14 @@ public class FestivalController {
     private final FestivalService festivalService;
     private final FestivalMapper mapper;
 
-    @GetMapping
-    public ResponseEntity getFestivals(@Positive @RequestParam int page,
-                                       @Positive @RequestParam int size){
-        Page<Festival> pageFestivals = festivalService.findFestivals(page, size);
-        List<Festival> festivals = pageFestivals.getContent();
-
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity getFestivals(@Positive @RequestParam int page,
+//                                       @Positive @RequestParam int size){
+//        Page<Festival> pageFestivals = festivalService.findFestivals(page, size);
+//        List<Festival> festivals = pageFestivals.getContent();
+//
+//        return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+//    }
 
     @GetMapping("/{contentId}")
     public ResponseEntity getFestival(@Positive @PathVariable("contentId") long contentId){
@@ -53,15 +53,45 @@ public class FestivalController {
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
     }
 
-    @GetMapping("/area")
-    public ResponseEntity getFestivalsByDistricts(@RequestParam List<String> areas) {
-        List<Festival> festivals = festivalService.findFestivalByArea(areas);
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
-    }
+//    @GetMapping("/area")
+//    public ResponseEntity getFestivalsByDistricts(@RequestParam List<String> areas) {
+//        List<Festival> festivals = festivalService.findFestivalByArea(areas);
+//        return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
+//    }
 
     @GetMapping("/banner")
     public ResponseEntity getFestivalsByStatus() {
         List<Festival> festivals = festivalService.findFestivalByStatus(ONGOING);
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
+    }
+
+    // 축제 리스트 불러오기
+    @GetMapping("/list")
+    public ResponseEntity getFilteredFestivals(@RequestParam(required = false) String category,
+                                               @RequestParam(required = false) List<String> areas,
+                                               @Positive @RequestParam int page,
+                                               @Positive @RequestParam int size) {
+        if (category == null || category.equalsIgnoreCase("전체")) {
+            if (areas != null && !areas.isEmpty()) {
+                Page<Festival> pageFestivals = festivalService.findFestivalByArea(areas,page,size);
+                List<Festival> festivals = pageFestivals.getContent();
+                return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+            } else {
+                Page<Festival> pageFestivals = festivalService.findFestivals(page, size);
+                List<Festival> festivals = pageFestivals.getContent();
+                return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+            }
+        } else {
+            if (areas != null && !areas.isEmpty()) {
+                Page<Festival> pageFestivals = festivalService.findByCategoryAndArea(category, areas, page, size);
+                List<Festival> festivals = pageFestivals.getContent();
+                return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+            } else {
+
+                Page<Festival> pageFestivals = festivalService.findByCategory(category,page, size);
+                List<Festival> festivals = pageFestivals.getContent();
+                return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+            }
+        }
     }
 }
