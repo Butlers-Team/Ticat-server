@@ -1,5 +1,6 @@
 package Butlers.Ticat.festival.repository;
 
+import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Festival;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,6 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
 
     // In 키워드를 사용하면 단일 값이 아닌 다중 값에 대한 조건을 지정할 수 있다
     List<Festival> findByAreaIn(List<String> areas);
+
+    List<Festival> findByDetailFestivalStatus(DetailFestival.Status status);
 }

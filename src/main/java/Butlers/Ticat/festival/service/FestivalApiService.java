@@ -6,6 +6,7 @@ import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -135,29 +136,33 @@ public class FestivalApiService {
             conn.disconnect();
             String data = sb.toString();
 
-            JSONObject jObject = new JSONObject(data);
-            JSONObject response = jObject.getJSONObject("response");
-            JSONObject body = response.getJSONObject("body");
-            JSONObject items = body.getJSONObject("items");
-            JSONArray jArray = items.getJSONArray("item");
+            try {
+                JSONObject jObject = new JSONObject(data);
+                JSONObject response = jObject.getJSONObject("response");
+                JSONObject body = response.getJSONObject("body");
+                JSONObject items = body.getJSONObject("items");
+                JSONArray jArray = items.getJSONArray("item");
 
 
-            JSONObject obj = jArray.getJSONObject(0);
+                JSONObject obj = jArray.getJSONObject(0);
 
-            String sponsor1 = obj.get("sponsor1").toString();
-            String sponsor1tel = obj.get("sponsor1tel").toString();
-            String sponsor2 = obj.get("sponsor2").toString();
-            String eventstartdate = obj.get("eventstartdate").toString();
-            String eventenddate = obj.get("eventenddate").toString();
-            String playtime = obj.get("playtime").toString();
-            String eventplace = obj.get("eventplace").toString();
-            String usetimefestival = obj.get("usetimefestival").toString();
-            String eventhomepage = obj.get("eventhomepage").toString();
+                String sponsor1 = obj.get("sponsor1").toString();
+                String sponsor1tel = obj.get("sponsor1tel").toString();
+                String sponsor2 = obj.get("sponsor2").toString();
+                String eventstartdate = obj.get("eventstartdate").toString();
+                String eventenddate = obj.get("eventenddate").toString();
+                String playtime = obj.get("playtime").toString();
+                String eventplace = obj.get("eventplace").toString();
+                String usetimefestival = obj.get("usetimefestival").toString();
+                String eventhomepage = obj.get("eventhomepage").toString();
 
-            festival.updateDetailFestival(new DetailFestival(sponsor1,sponsor1tel,sponsor2,eventstartdate+ " ~ " +eventenddate,eventhomepage,playtime,eventplace,usetimefestival));
+                festival.updateDetailFestival(new DetailFestival(sponsor1, sponsor1tel, sponsor2, eventstartdate + " ~ " + eventenddate, eventstartdate, eventenddate, eventhomepage, playtime, eventplace, usetimefestival));
 
-            festivalRepository.save(festival);
-
+                festivalRepository.save(festival);
+            }catch (JSONException e) {
+                System.err.println("Failed to parse JSON data: " + e.getMessage());
+                continue;
+            }
         }
     }
 
@@ -198,21 +203,26 @@ public class FestivalApiService {
             conn.disconnect();
             String data = sb.toString();
 
-            JSONObject jObject = new JSONObject(data);
-            JSONObject response = jObject.getJSONObject("response");
-            JSONObject body = response.getJSONObject("body");
-            JSONObject items = body.getJSONObject("items");
-            JSONArray jArray = items.getJSONArray("item");
+            try {
+                JSONObject jObject = new JSONObject(data);
+                JSONObject response = jObject.getJSONObject("response");
+                JSONObject body = response.getJSONObject("body");
+                JSONObject items = body.getJSONObject("items");
+                JSONArray jArray = items.getJSONArray("item");
 
 
-            JSONObject obj = jArray.getJSONObject(0);
-            String overview = obj.get("overview").toString();
-            String category = determineCategory(overview, keywordCategoryMap);
+                JSONObject obj = jArray.getJSONObject(0);
+                String overview = obj.optString("overview", ""); // null일 경우 ""로 반환됨
+                String category = determineCategory(overview, keywordCategoryMap);
 
-            festival.getDetailFestival().updateCategoryAndOverView(category,overview);
 
-            festivalRepository.save(festival);
+                festival.getDetailFestival().updateCategoryAndOverView(category, overview);
+                festivalRepository.save(festival);
 
+            }catch (JSONException e) {
+                System.err.println("Failed to parse JSON data: " + e.getMessage());
+                continue;
+            }
         }
     }
 
