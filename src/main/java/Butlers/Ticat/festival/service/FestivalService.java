@@ -1,6 +1,7 @@
 package Butlers.Ticat.festival.service;
 
 import Butlers.Ticat.festival.dto.FestivalDto;
+import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +41,16 @@ public class FestivalService {
         return festivalRepository.findByAreaIn(areas);
     }
 
+    public List<Festival> findFestivalByStatus(DetailFestival.Status status) {
+
+        List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(status);
+
+        if (festivals.size() >= 4) {
+            Collections.shuffle(festivals);
+            festivals = festivals.subList(0, 4);
+        }
+
+        return festivals;
+    }
 
 }
