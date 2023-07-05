@@ -1,4 +1,5 @@
 package Butlers.Ticat.festival.dto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,5 +46,19 @@ public class FestivalDto {
         private String playtime;
         private double mapx;
         private double mapy;
+    }
+
+
+    @Getter
+    @Setter
+    @Builder
+    public static class StampResponse{
+
+        private Long contentId;
+        private String status;
+        private String eventStartDate; // 행사시작일
+        private String eventEndDate; // 행사 종료일
+        private String title;
+        private String address;
     }
 }
