@@ -23,11 +23,6 @@ public class StampDto {
     @AllArgsConstructor
     public static class Response {
         private Long memberId;
-
-
         private List<FestivalDto.StampResponse> festivalList;
-//        private String eventStartDate;
-//        private String eventEndDate;
-
     }
 }
