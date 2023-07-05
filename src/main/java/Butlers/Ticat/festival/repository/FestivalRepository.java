@@ -2,6 +2,8 @@ package Butlers.Ticat.festival.repository;
 
 import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Festival;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +20,10 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     List<Festival> findFestivalsWithinDistance(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("distance") double distance);
 
     // In 키워드를 사용하면 단일 값이 아닌 다중 값에 대한 조건을 지정할 수 있다
-    List<Festival> findByAreaIn(List<String> areas);
+    Page<Festival> findByAreaIn(List<String> areas, Pageable pageable);
+
+    Page<Festival> findByDetailFestivalCategory(String category,Pageable pageable);
+    Page<Festival> findByDetailFestivalCategoryAndAreaIn(String category,List<String> areas, Pageable pageable);
 
     List<Festival> findByDetailFestivalStatus(DetailFestival.Status status);
 }
