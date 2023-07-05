@@ -3,7 +3,6 @@ package Butlers.Ticat.stamp.mapper;
 import Butlers.Ticat.festival.dto.FestivalDto;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.stamp.dto.StampDto;
-import Butlers.Ticat.stamp.entity.Location;
 import Butlers.Ticat.stamp.entity.Stamp;
 import org.mapstruct.Mapper;
 
@@ -27,8 +26,8 @@ public interface StampMapper {
                         .contentId(stamp.getFestival().getContentId())
                         .title(stamp.getTitle())
                         .address(stamp.getFestival().getAddress())
-                        .eventStartDate(stamp.)
-                        .eventDate(stamp.getFestival().getDetailFestival().getEventDate())
+                        .eventStartDate(stamp.getFestival().getDetailFestival().getEventstartdate())
+                        .eventEndDate(stamp.getFestival().getDetailFestival().getEventenddate())
                         .build())
                 .collect(Collectors.toList());
     }
