@@ -11,10 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -50,12 +47,20 @@ public class FestivalService {
 
         List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(status);
 
-        if (festivals.size() >= 4) {
-            Collections.shuffle(festivals);
-            festivals = festivals.subList(0, 4);
+        List<Festival> filteredFestivals = new ArrayList<>();
+
+        for (Festival festival : festivals) {
+            if (!festival.getImage().isEmpty()) {
+                filteredFestivals.add(festival);
+            }
         }
 
-        return festivals;
+        if (filteredFestivals.size() >= 4) {
+            Collections.shuffle(filteredFestivals);
+            filteredFestivals = filteredFestivals.subList(0, 4);
+        }
+
+        return filteredFestivals;
     }
 
     // 카테고리와 지역 이용해서 축제 찾기
