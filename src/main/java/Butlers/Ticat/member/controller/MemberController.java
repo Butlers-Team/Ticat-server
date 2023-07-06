@@ -54,6 +54,7 @@ public class MemberController {
                 memberService.findMember(memberId)), HttpStatus.OK);
     }
 
+
     @DeleteMapping("/members/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId) {
         memberService.deleteMember(memberId);
