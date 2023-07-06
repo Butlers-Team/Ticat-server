@@ -3,6 +3,7 @@ package Butlers.Ticat.festival.repository;
 import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Festival;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,6 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     Page<Festival> findByDetailFestivalCategoryAndAreaIn(String category,List<String> areas, Pageable pageable);
 
     List<Festival> findByDetailFestivalStatus(DetailFestival.Status status);
+
+    Page<Festival> findByTitleContainingIgnoreCase(String title, PageRequest of);
 }
