@@ -1,13 +1,22 @@
 package Butlers.Ticat.member.controller;
 
+import Butlers.Ticat.dto.MultiResponseDto;
+import Butlers.Ticat.festival.dto.FestivalDto;
 import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.mapper.MemberMapper;
 import Butlers.Ticat.member.service.MemberService;
+import Butlers.Ticat.stamp.dto.StampDto;
+import Butlers.Ticat.stamp.entity.Stamp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Positive;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -51,4 +60,26 @@ public class MemberController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/members/{member-id}/stamps")
+    public ResponseEntity getMemberStamped(@PathVariable("member-id") @Positive Long memberId,
+                                           @Positive @RequestParam int page,
+                                           @RequestParam int year, @RequestParam int month,
+                                           @RequestParam(required = false) Integer day) {
+        Member member = memberService.findMember(memberId);
+        Page<Stamp> stampPage = memberService.getMemberStamped(member, page, year, month, day);
+        List<Stamp> stamps = stampPage.getContent();
+
+        List<FestivalDto.StampResponse> stampResponses = memberMapper.getResponses(stamps);
+
+        StampDto.Response stampResponse = StampDto.Response.builder()
+                .memberId(member.getMemberId())
+                .festivalList(stampResponses)
+                .build();
+
+        MultiResponseDto<StampDto.Response> multiResponseDto =
+                new MultiResponseDto<>(Collections.singletonList(stampResponse), stampPage);
+        return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
+    }
+
 }
