@@ -103,7 +103,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer());
             jwtAuthenticationFilter.setFilterProcessesUrl("/login");
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer()));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtUtils());
@@ -126,6 +126,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new JwtParseInterceptor(jwtUtils()));
+        registry.addInterceptor(new JwtParseInterceptor(jwtUtils()))
+        .addPathPatterns("/*/interest");
     }
 }

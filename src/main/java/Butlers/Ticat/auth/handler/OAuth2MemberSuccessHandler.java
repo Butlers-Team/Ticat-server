@@ -36,9 +36,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         var oAuth2User = (OAuth2User)authentication.getPrincipal();
-        OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
-
         OAuth2UserInfo oAuth2UserInfo = null;
+        OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
 
         String provider = oauth2Token.getAuthorizedClientRegistrationId();
         if(provider.equals("google")) {
@@ -52,15 +51,15 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
             oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
         }
 
-        String providerId = oAuth2UserInfo.getProviderId();
-        String email = provider + "_" + providerId;
-        Member member;
+        String email = oAuth2UserInfo.getEmail();
+        Member member = null;
 
         try {
             member = saveMember(email);
-            redirect(request, response, member);
         } catch (Exception e) {
-            redirect(request, response, memberService.findMemberByEmail(email));
+            member = memberService.findMemberByEmail(email);
+        } finally {
+            redirect(request, response, member);
         }
     }
 
@@ -77,7 +76,13 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         response.setHeader("Authorization", addedAccessToken);
         response.setHeader("Refresh", refreshToken);
 
-        String uri = createUri(addedAccessToken, refreshToken).toString();
+        String uri;
+
+        if (member.getDisplayName() == null || member.getInterest().getInterests() == null) {
+            uri = createInterestUri(accessToken, refreshToken). toString();
+        } else {
+            uri = createUri(addedAccessToken, refreshToken).toString();
+        }
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
     private String delegateAccessToken(Member member) {
@@ -102,7 +107,23 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return refreshToken;
     }
 
+    // 콜백 Uri
     private URI createUri(String accessToken, String refreshToken) {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("Authorization", accessToken);
+        queryParams.add("Refresh", refreshToken);
+        return UriComponentsBuilder
+                .newInstance()
+                .scheme("http:/localhost")
+                .port(8080)
+                .queryParams(queryParams)
+                .build()
+                .toUri();
+
+    }
+
+    // 콜백 Uri(관심사 등록 필요)
+    private URI createInterestUri(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("Authorization", accessToken);
         queryParams.add("Refresh", refreshToken);

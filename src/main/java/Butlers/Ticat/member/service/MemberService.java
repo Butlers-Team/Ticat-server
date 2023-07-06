@@ -2,6 +2,8 @@ package Butlers.Ticat.member.service;
 
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
+import Butlers.Ticat.interest.entity.Interest;
+import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,17 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
         return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+    }
+
+    // 관심사 등록
+    public void registerInterest(Long memberId, MemberDto.Interest interests) {
+        Member member = findVerifiedMember(memberId);
+        Interest interest = new Interest();
+        interest.setInterests(interests.getInterests());
+
+        member.setInterest(interest);
+        member.setDisplayName(interests.getDisplayName());
+        memberRepository.save(member);
     }
 
     private Member findVerifiedMember (Long memberId) {
