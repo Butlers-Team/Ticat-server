@@ -67,7 +67,7 @@ public class MemberController {
                                            @RequestParam int year, @RequestParam int month,
                                            @RequestParam(required = false) Integer day) {
         Member member = memberService.findMember(memberId);
-        Page<Stamp> stampPage = memberService.getMemberStamped(member, page, year, month, day);
+        Page<Stamp> stampPage = memberService.getMemberStamped(member, page -1, year, month, day);
         List<Stamp> stamps = stampPage.getContent();
 
         List<FestivalDto.StampResponse> stampResponses = memberMapper.getResponses(stamps);
