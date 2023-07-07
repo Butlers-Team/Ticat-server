@@ -89,7 +89,7 @@ public class FestivalApiService {
             double mapx = Double.parseDouble(obj.get("mapx").toString());
             double mapy = Double.parseDouble(obj.get("mapy").toString());
             String tel = obj.get("tel").toString();
-            Optional<Festival> optionalFestival = festivalRepository.findByContentId(Long.parseLong(contentId));
+            Optional<Festival> optionalFestival = festivalRepository.findById(Long.parseLong(contentId));
 
 
             if (optionalFestival.isEmpty()) { // contentId가 중복되지 않은 경우에만 저장 진행
@@ -112,7 +112,7 @@ public class FestivalApiService {
             urlBuilder.append("&" + URLEncoder.encode("MobileOS", "UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("MobileApp", "UTF-8") + "=" + URLEncoder.encode("AppTest", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("_type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("contentId", "UTF-8") + "=" + URLEncoder.encode(festival.getContentId().toString(), "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("contentId", "UTF-8") + "=" + URLEncoder.encode(festival.getFestivalId().toString(), "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("contentTypeId", "UTF-8") + "=" + URLEncoder.encode("15", "UTF-8"));
 
             URL url = new URL(urlBuilder.toString());
@@ -156,7 +156,7 @@ public class FestivalApiService {
                 String usetimefestival = obj.get("usetimefestival").toString();
                 String eventhomepage = obj.get("eventhomepage").toString();
 
-                festival.updateDetailFestival(new DetailFestival(sponsor1, sponsor1tel, sponsor2, eventstartdate + " ~ " + eventenddate, eventstartdate, eventenddate, eventhomepage, playtime, eventplace, usetimefestival));
+                festival.updateDetailFestival(new DetailFestival(sponsor1, sponsor1tel, sponsor2, eventstartdate, eventenddate, eventhomepage, playtime, eventplace, usetimefestival));
 
                 festivalRepository.save(festival);
             }catch (JSONException e) {
@@ -178,7 +178,7 @@ public class FestivalApiService {
             urlBuilder.append("&" + URLEncoder.encode("MobileOS", "UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("MobileApp", "UTF-8") + "=" + URLEncoder.encode("AppTest", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("_type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("contentId", "UTF-8") + "=" + URLEncoder.encode(festival.getContentId().toString(), "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("contentId", "UTF-8") + "=" + URLEncoder.encode(festival.getFestivalId().toString(), "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("contentTypeId", "UTF-8") + "=" + URLEncoder.encode("15", "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("overviewYN", "UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8"));
 
