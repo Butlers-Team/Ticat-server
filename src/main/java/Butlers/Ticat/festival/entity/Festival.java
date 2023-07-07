@@ -5,14 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-public class Festival implements Serializable {
+public class Festival {
 
     @Id
     @Column(name = "festival_id")
