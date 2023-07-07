@@ -40,8 +40,8 @@ public class Festival implements Serializable {
     @Embedded
     private DetailFestival detailFestival;
 
-//    @OneToMany(mappedBy = "festival")
-//    private List<Favorite> favorites;
+    @OneToMany(mappedBy = "festival")
+    private List<Favorite> favorites;
 
     public Festival(Long festivalId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
         this.festivalId = festivalId;
