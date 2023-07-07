@@ -38,9 +38,10 @@ public class FestivalController {
 //        return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
 //    }
 
-    @GetMapping("/{contentId}")
-    public ResponseEntity getFestival(@Positive @PathVariable("contentId") long contentId){
-        Festival festival = festivalService.findFestival(contentId);
+    // 축제 상세 페이지
+    @GetMapping("/{festivalId}")
+    public ResponseEntity getFestival(@Positive @PathVariable("festivalId") long festivalId){
+        Festival festival = festivalService.findFestival(festivalId);
 
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalToResponse(festival)),HttpStatus.OK);
     }
@@ -59,6 +60,7 @@ public class FestivalController {
 //        return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
 //    }
 
+    // 축제 메인페이지 배너
     @GetMapping("/banner")
     public ResponseEntity getFestivalsByStatus() {
         List<Festival> festivals = festivalService.findFestivalByStatus(ONGOING);
@@ -94,4 +96,21 @@ public class FestivalController {
             }
         }
     }
+
+    @PostMapping("/{festival-id}/favorite")
+    public ResponseEntity<String> postFavorite(@PathVariable("festival-id") @Positive long festivalId) {
+        festivalService.createFavorite(festivalId);
+
+        return ResponseEntity.ok("좋아요");
+    }
+
+    @DeleteMapping("/{festival-id}/favorite")
+    public ResponseEntity<String> deleteFavorite(@PathVariable("festival-id") @Positive long festivalId) {
+        festivalService.cancleFavorite(festivalId);
+
+        return ResponseEntity.ok("좋아요 취소");
+    }
+
+
+
 }
