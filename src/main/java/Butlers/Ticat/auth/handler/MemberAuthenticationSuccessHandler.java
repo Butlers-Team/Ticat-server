@@ -34,13 +34,13 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
         if (principal instanceof Member) {
             Member member = (Member) principal;
 
-            if (member.getDisplayName() == null || member.getInterest().getInterests() == null) {
-                log.info("# Need Resist Interest");
-                String accessToken = generateAccessToken(member);
-                String refreshToken = generateRefreshToken(member.getEmail());
-                String uri = createInterestUri(accessToken, refreshToken).toString();
-                response.sendRedirect(uri);
-            }
+//            if (member.getDisplayName() == null || member.getInterest().getInterests() == null) {
+//                log.info("# Need Resist Interest");
+//                String accessToken = generateAccessToken(member);
+//                String refreshToken = generateRefreshToken(member.getEmail());
+//                String uri = createInterestUri(accessToken, refreshToken).toString();
+//                response.sendRedirect(uri);
+//            }
         }
     }
 
