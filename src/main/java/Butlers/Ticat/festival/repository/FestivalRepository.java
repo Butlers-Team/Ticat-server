@@ -5,6 +5,7 @@ import Butlers.Ticat.festival.entity.Festival;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -12,8 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FestivalRepository extends JpaRepository<Festival,Long> {
-
-    Optional<Festival> findByContentId(Long contentId);
 
     // 두 지점 사이의 거리를 구하는 데 사용하는 함수 ST_DISTANCE_SPHERE
     @Query("SELECT f FROM Festival f WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance")
@@ -26,4 +25,16 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     Page<Festival> findByDetailFestivalCategoryAndAreaIn(String category,List<String> areas, Pageable pageable);
 
     List<Festival> findByDetailFestivalStatus(DetailFestival.Status status);
+
+    @Modifying
+    @Query(value = "INSERT INTO favorite (festival_id, member_id, ischecked) " +
+            "SELECT :festivalId, :memberId, true " +
+            "WHERE NOT EXISTS (SELECT festival_id, member_id " +
+            "FROM favorite " +
+            "WHERE festival_id = :festivalId and member_id = :memberId)", nativeQuery = true)
+    int upFavorite(long festivalId, long memberId);
+
+    @Modifying
+    @Query(value = "DELETE FROM favorite WHERE festival_id = :festivalId and member_id = :memberId", nativeQuery = true)
+    int downFavorite(long festivalId, long memberId);
 }
