@@ -1,11 +1,9 @@
 package Butlers.Ticat.member.entity;
 
+import Butlers.Ticat.interest.entity.Interest;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -21,4 +19,23 @@ public class Member {
     private String password;
     private String displayName;
 
+    // 소셜 로그인 여부
+    private boolean isOauthChecked;
+
+    // 관심사 1:1 매핑
+    @OneToOne(mappedBy = "member")
+    private Interest interest;
+
+    // 관심사 설정 메서드
+    public void setInterest(Interest interest) {
+        this.interest = interest;
+        if (interest.getMember() != this) {
+            interest.setMember(this);
+        }
+    }
+
+    // 오어스 회원가입을 위한 생성자
+    public Member(String email) {
+        this.email = email;
+    }
 }
