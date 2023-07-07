@@ -1,9 +1,11 @@
 package Butlers.Ticat.member.entity;
 
+import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.interest.entity.Interest;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +27,9 @@ public class Member {
     // 관심사 1:1 매핑
     @OneToOne(mappedBy = "member")
     private Interest interest;
+
+    @OneToMany(mappedBy = "member")
+    private List<Favorite> favorites;
 
     // 관심사 설정 메서드
     public void setInterest(Interest interest) {
