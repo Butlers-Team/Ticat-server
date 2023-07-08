@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class MemberDto {
@@ -11,9 +13,17 @@ public class MemberDto {
     @Getter
     @Setter
     public static class Post {
-        private String displayName;
-        private String password;
+
+        @Email
+        @NotBlank
         private String email;
+
+        @NotBlank
+        private String password;
+
+        // 비밀번호 확인 (검증 시 필요)
+        @NotBlank
+        private String confirmPassword;
 
     }
 

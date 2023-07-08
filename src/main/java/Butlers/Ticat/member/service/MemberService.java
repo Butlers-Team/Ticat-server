@@ -19,7 +19,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     // 로컬 회원 가입
-    public Member createMember(Member member) {
+    public Member joinInLocal(Member member) {
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 
