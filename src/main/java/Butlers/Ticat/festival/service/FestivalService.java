@@ -127,4 +127,37 @@ public class FestivalService {
     }
 
 
+    //여러개의 카테고리로 축제 찾기 최신순
+    public Page<Festival> findByCategories(List<String> categories ,int page,int size){
+        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page-1,size,Sort.by("festivalId").descending()));
+    }
+
+    //여러개의 카테고리로 축제 찾기 좋아요순
+    public Page<Festival> findByCategoriesAndSortByLikeCount(List<String> categories ,int page,int size){
+        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page-1,size,Sort.by("likeCount").descending()));
+    }
+
+    //여러개의 카테고리로 축제 찾기 평점순
+    public Page<Festival> findByCategoriesAndSortByReviewRating(List<String> categories ,int page,int size){
+        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page-1,size,Sort.by("reviewRating").descending()));
+    }
+
+    //여러개의 카테고리로 축제 찾기 리뷰수순
+    public Page<Festival> findByCategoriesAndSortByReviewCount(List<String> categories ,int page,int size){
+        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page-1,size,Sort.by("reviewCount").descending()));
+    }
+
+    // 좋아요순 전체 리스트
+    public Page<Festival> findFestivalsByLikeCount(int page, int size){
+        return festivalRepository.findAll(PageRequest.of(page-1,size,Sort.by("likeCount").descending()));
+    }
+    // 평점순 전체 리스트
+    public Page<Festival> findFestivalsByReviewRating(int page, int size){
+        return festivalRepository.findAll(PageRequest.of(page-1,size,Sort.by("reviewRating").descending()));
+    }
+    // 리뷰수순 전체 리스트
+    public Page<Festival> findFestivalsByReviewCount(int page, int size){
+        return festivalRepository.findAll(PageRequest.of(page-1,size,Sort.by("reviewCount").descending()));
+    }
+
 }
