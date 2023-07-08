@@ -18,4 +18,15 @@ public interface InterestMapper {
 
         return interest;
     }
+
+    default Interest patchToInterest(Long memberId, InterestDto.Patch requestBody) {
+        Member member = new Member();
+        member.setMemberId(memberId);
+
+        Interest interest = new Interest();
+        interest.setMember(member);
+        interest.setCategories(requestBody.getCategories());
+
+        return interest;
+    }
 }

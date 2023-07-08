@@ -15,4 +15,10 @@ public class InterestDto {
         private String displayName;
         private List<String> categories;
     }
+
+    @Getter
+    public static class Patch {
+
+        private List<String> categories;
+    }
 }
