@@ -3,6 +3,7 @@ package Butlers.Ticat.member.service;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.interest.entity.Interest;
+import Butlers.Ticat.interest.repository.InterestRepository;
 import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.repository.MemberRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final InterestRepository interestRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 로컬 회원 가입
@@ -45,11 +47,11 @@ public class MemberService {
     public void registerInterest(Long memberId, MemberDto.Interest interests) {
         Member member = findVerifiedMember(memberId);
         Interest interest = new Interest();
-        interest.setInterests(interests.getInterests());
+        interest.setCategories(interests.getCategories());
 
         member.setInterest(interest);
         member.setDisplayName(interests.getDisplayName());
-        memberRepository.save(member);
+        interestRepository.save(interest);
     }
 
     private Member findVerifiedMember (Long memberId) {

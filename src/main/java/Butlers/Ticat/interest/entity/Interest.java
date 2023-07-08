@@ -25,5 +25,5 @@ public class Interest {
 
     // 관심사 목록
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> interests = new ArrayList<>();
+    private List<String> categories = new ArrayList<>();
 }
