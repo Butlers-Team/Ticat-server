@@ -5,7 +5,8 @@ import lombok.Getter;
 public enum ExceptionCode {
 
     MEMBER_NOT_FOUND(404, "회원을 찾을 수 없습니다"),
-    MEMBER_EMAIL_EXISTS(409, "이메일이 이미 있습니다" );
+    MEMBER_EMAIL_EXISTS(409, "이메일이 이미 있습니다" ),
+    PASSWORD_DOES_NOT_MATCH(409, "입력하신 비밀번호가 일치하지 않습니다.");
 
     @Getter
     private int status;
