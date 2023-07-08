@@ -78,7 +78,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         String uri;
 
-        if (member.getDisplayName() == null || member.getInterest().getInterests() == null) {
+        if (member.getDisplayName() == null || member.getInterest().getCategories() == null) {
             uri = createInterestUri(accessToken, refreshToken). toString();
         } else {
             uri = createUri(addedAccessToken, refreshToken).toString();
