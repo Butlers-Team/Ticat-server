@@ -89,11 +89,7 @@ public class FestivalService {
         Festival festival = findFestival(festivalId);
 
         //로그인한 멤버 불러오기
-//        Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
-
-        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Optional<Member> findbyEmailMember = memberRepository.findByEmail(principal);
-        Member member = findbyEmailMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
 
         for(Favorite favorite : member.getFavorites()){
             if(favorite.getFestival().getFestivalId() == festival.getFestivalId()){
@@ -111,11 +107,7 @@ public class FestivalService {
         Festival festival = findFestival(festivalId);
 
         //로그인한 멤버 불러오기
-//        Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
-
-        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Optional<Member> findbyEmailMember = memberRepository.findByEmail(principal);
-        Member member = findbyEmailMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
 
         festival.getFavorites().stream()
                 .filter(f -> f.getMember() == member)
