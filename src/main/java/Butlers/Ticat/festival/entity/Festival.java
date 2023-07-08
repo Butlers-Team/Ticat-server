@@ -5,14 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-public class Festival implements Serializable {
+public class Festival {
 
     @Id
     @Column(name = "festival_id")
@@ -40,8 +39,8 @@ public class Festival implements Serializable {
     @Embedded
     private DetailFestival detailFestival;
 
-//    @OneToMany(mappedBy = "festival")
-//    private List<Favorite> favorites;
+    @OneToMany(mappedBy = "festival")
+    private List<Favorite> favorites;
 
     public Festival(Long festivalId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
         this.festivalId = festivalId;
