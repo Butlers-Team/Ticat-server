@@ -21,6 +21,8 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     // In 키워드를 사용하면 단일 값이 아닌 다중 값에 대한 조건을 지정할 수 있다
     Page<Festival> findByAreaIn(List<String> areas, Pageable pageable);
 
+    Page<Festival> findByDetailFestivalCategoryIn(List<String> categories,Pageable pageable);
+
     Page<Festival> findByDetailFestivalCategory(String category,Pageable pageable);
     Page<Festival> findByDetailFestivalCategoryAndAreaIn(String category,List<String> areas, Pageable pageable);
 
