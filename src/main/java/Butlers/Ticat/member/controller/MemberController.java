@@ -1,6 +1,5 @@
 package Butlers.Ticat.member.controller;
 
-import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.mapper.MemberMapper;
@@ -48,15 +47,6 @@ public class MemberController {
     @DeleteMapping("/members/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId) {
         memberService.deleteMember(memberId);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/interest")
-    public ResponseEntity postInterest(@RequestBody MemberDto.Interest interest) {
-        long authenticationMemeberId = JwtParseInterceptor.getAuthenticatedMemberId();
-
-        memberService.registerInterest(authenticationMemeberId, interest);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

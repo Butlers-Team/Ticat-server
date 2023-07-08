@@ -2,9 +2,7 @@ package Butlers.Ticat.member.service;
 
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
-import Butlers.Ticat.interest.entity.Interest;
 import Butlers.Ticat.interest.repository.InterestRepository;
-import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +15,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final InterestRepository interestRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 로컬 회원 가입
-    public Member joinInLocal(Member member) {
+    public void joinInLocal(Member member) {
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 
-        return memberRepository.save(member);
+        memberRepository.save(member);
     }
 
     // 오어스 회원 가입
@@ -43,18 +40,7 @@ public class MemberService {
         return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
-    // 관심사 등록
-    public void registerInterest(Long memberId, MemberDto.Interest interests) {
-        Member member = findVerifiedMember(memberId);
-        Interest interest = new Interest();
-        interest.setCategories(interests.getCategories());
-
-        member.setInterest(interest);
-        member.setDisplayName(interests.getDisplayName());
-        interestRepository.save(interest);
-    }
-
-    private Member findVerifiedMember (Long memberId) {
+    public Member findVerifiedMember (Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findedMember = optionalMember.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
