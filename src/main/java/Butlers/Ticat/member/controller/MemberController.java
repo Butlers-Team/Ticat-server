@@ -1,5 +1,6 @@
 package Butlers.Ticat.member.controller;
 
+import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.dto.MultiResponseDto;
 import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Positive;
 import java.util.Collections;
@@ -60,6 +62,34 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 프로필 이미지 업로드
+    @PostMapping("/profile")
+    public ResponseEntity postProfile(@RequestPart MultipartFile image) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+        memberService.uploadProfileImage(authenticationMemberId, image);
+
+        return new ResponseEntity<>("이미지 등록이 완료되었습니다.", HttpStatus.OK);
+    }
+
+    // 프로필 이미지 수정
+    @PatchMapping("/profile")
+    public ResponseEntity patchProfile(@RequestBody MultipartFile image) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+        memberService.updateProfileImage(authenticationMemberId, image);
+
+        return new ResponseEntity<>("이미지 변경이 완료되었습니다.", HttpStatus.OK);
+    }
+
+    // 프로필 이미지 삭제
+    @DeleteMapping("/profile")
+    public ResponseEntity deleteProfile() {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+        memberService.deleteProfileImage(authenticationMemberId);
+
+        return new ResponseEntity<>("이미지 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
+    }
+  
+  
     @GetMapping("/members/{member-id}/stamps")
     public ResponseEntity getMemberStamped(@PathVariable("member-id") @Positive Long memberId,
                                            @Positive @RequestParam int page,
@@ -80,5 +110,4 @@ public class MemberController {
                 new MultiResponseDto<>(Collections.singletonList(stampResponse), stampPage);
         return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
     }
-
 }

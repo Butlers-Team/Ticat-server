@@ -1,8 +1,8 @@
 package Butlers.Ticat.member.service;
 
+import Butlers.Ticat.aws.service.AwsS3Service;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
-import Butlers.Ticat.interest.repository.InterestRepository;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.repository.MemberRepository;
 import Butlers.Ticat.stamp.entity.Stamp;
@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -21,6 +22,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+
+    private final AwsS3Service awsS3Service;
     private final MemberRepository memberRepository;
     private final StampRepository stampRepository;
     private final PasswordEncoder passwordEncoder;
@@ -46,6 +49,43 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
         return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+    }
+
+    // 프로필 이미지 등록
+    public void uploadProfileImage(Long memberId, MultipartFile file) {
+        Member member = findVerifiedMember(memberId);
+        String[] uriList = awsS3Service.uploadFile(file);
+        member.setProfileUrl(uriList[0]);
+        member.setPureProfileUrl(uriList[1]);
+
+        memberRepository.save(member);
+    }
+
+    // 프로필 이미지 수정
+    public void updateProfileImage(Long memberId, MultipartFile file) {
+        Member member = findVerifiedMember(memberId);
+        if (member.getProfileUrl() != null) {
+            awsS3Service.deleteFile(member.getPureProfileUrl());
+        }
+
+        // 코드가 중복 되나 uploadProfileImage 메서드를 사용하면 db select 가 한 번 더 발생하게 된다고 판단
+        String[] urlList = awsS3Service.uploadFile(file);
+        member.setProfileUrl(urlList[0]);
+        member.setPureProfileUrl(urlList[1]);
+
+        memberRepository.save(member);
+    }
+
+    // 프로필 이미지 삭제
+    public void deleteProfileImage(Long memberId) {
+        Member member = findVerifiedMember(memberId);
+        if (member.getProfileUrl() != null) {
+            awsS3Service.deleteFile(member.getPureProfileUrl());
+            member.setProfileUrl(null);
+            member.setPureProfileUrl(null);
+
+            memberRepository.save(member);
+        }
     }
 
     public Member findVerifiedMember (Long memberId) {

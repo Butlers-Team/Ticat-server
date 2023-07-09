@@ -44,6 +44,12 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Favorite> favorites;
 
+    // 프로필 이미지 (외부 접근용)
+    private String profileUrl;
+
+    // 프로필 이미지 순수 url (내부에서 접근용 // 수정, 삭제 등)
+    private String pureProfileUrl;
+
     // 관심사 설정 메서드
     public void setInterest(Interest interest) {
         this.interest = interest;
