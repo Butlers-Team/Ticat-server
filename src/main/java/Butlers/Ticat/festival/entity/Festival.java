@@ -1,10 +1,12 @@
 package Butlers.Ticat.festival.entity;
 
+import Butlers.Ticat.calendar.entity.Calendar;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,6 +43,14 @@ public class Festival {
 
     @Embedded
     private DetailFestival detailFestival;
+
+    @OneToMany
+    @JoinColumn(name = "festival")
+    private List<Calendar> calendar = new ArrayList<>();
+
+    public void addCalendar(Calendar calendar) {
+        this.calendar.add(calendar);
+    }
 
 //    @OneToMany(mappedBy = "festival")
 //    private List<Favorite> favorites;
