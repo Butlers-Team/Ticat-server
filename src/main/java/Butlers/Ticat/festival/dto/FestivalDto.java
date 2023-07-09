@@ -1,7 +1,7 @@
 package Butlers.Ticat.festival.dto;
+
 import lombok.Getter;
 import lombok.Setter;
-
 public class FestivalDto {
 
     @Getter
@@ -46,4 +46,6 @@ public class FestivalDto {
         private double mapx;
         private double mapy;
     }
+
+
 }
