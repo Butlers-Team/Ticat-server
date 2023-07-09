@@ -52,8 +52,6 @@ public class Festival {
         this.stamps.add(stamp);
     }
 
-    public Festival(Long contentId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
-        this.contentId = contentId;
       
     public Festival(Long festivalId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
         this.festivalId = festivalId;
