@@ -11,7 +11,7 @@ public class StampDto {
     @Setter
     public static class Post {
         private Long memberId;
-        private Long contentId;
+        private Long festivalId;
     }
 
 
@@ -30,7 +30,7 @@ public class StampDto {
     @Builder
     public static class StampResponse{
 
-        private Long contentId;
+        private Long festivalId;
         private DetailFestival.Status status;
         private LocalDate stampDate;
         private String eventStartDate; // 행사시작일

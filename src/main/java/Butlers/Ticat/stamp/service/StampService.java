@@ -26,11 +26,11 @@ public class StampService {
     }
 
 
-    public Stamp saveStamp(Long memberId, Long contentId) {
+    public Stamp saveStamp(Long memberId, Long festivalId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        Festival festival = festivalRepository.findByContentId(contentId)
+        Festival festival = festivalRepository.findByFestivalId(festivalId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.FESTIVAL_NOT_FOUND));
 
         Stamp stamp = new Stamp();

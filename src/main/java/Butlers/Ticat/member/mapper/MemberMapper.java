@@ -35,7 +35,7 @@ public interface MemberMapper {
     default List<StampDto.StampResponse> getResponses(List<Stamp> stamps) {
         return stamps.stream()
                 .map(stamp -> StampDto.StampResponse.builder()
-                        .contentId(stamp.getFestival().getContentId())
+                        .festivalId(stamp.getFestival().getFestivalId())
                         .status(stamp.getFestival().getDetailFestival().getStatus())
                         .stampDate(stamp.getStampDate())
                         .title(stamp.getFestival().getTitle())
