@@ -1,6 +1,8 @@
 package Butlers.Ticat.festival.entity;
 
+
 import Butlers.Ticat.calendar.entity.Calendar;
+import Butlers.Ticat.stamp.entity.Stamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,11 +18,8 @@ import java.util.List;
 public class Festival {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "festival_id")
-    private Long id;
-
-    private Long contentId; // 콘텐츠 아이디 ( 식별자 )
+    private Long festivalId; //  축제 아이디
     private String title; // 축제 제목
 
     private String address; // 축제 주소
@@ -44,6 +43,7 @@ public class Festival {
     @Embedded
     private DetailFestival detailFestival;
 
+
     @OneToMany
     @JoinColumn(name = "festival")
     private List<Calendar> calendar = new ArrayList<>();
@@ -55,8 +55,21 @@ public class Festival {
 //    @OneToMany(mappedBy = "festival")
 //    private List<Favorite> favorites;
 
-    public Festival(Long contentId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
-        this.contentId = contentId;
+    @OneToMany(mappedBy = "festival")
+    private List<Favorite> favorites;
+
+    @OneToMany
+    @JoinColumn(name = "festival")
+    private List<Stamp> stamps = new ArrayList<>();
+
+    public void addStamp(Stamp stamp) {
+        this.stamps.add(stamp);
+    }
+
+
+      
+    public Festival(Long festivalId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
+        this.festivalId = festivalId;
         this.title = title;
         this.address = address;
         this.area = area;

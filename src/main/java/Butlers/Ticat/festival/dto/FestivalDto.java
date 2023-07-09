@@ -1,14 +1,14 @@
 package Butlers.Ticat.festival.dto;
+
 import lombok.Getter;
 import lombok.Setter;
-
 public class FestivalDto {
 
     @Getter
     @Setter
     public static class ListResponse{
 
-        private Long contentId;
+        private Long festivalId;
         private String status;
         private String title;
         private String image;
@@ -29,7 +29,7 @@ public class FestivalDto {
     @Setter
     public static class Response{
 
-        private Long contentId;
+        private Long festivalId;
         private String status;
         private String eventstartdate; // 행사시작일
 
@@ -46,4 +46,6 @@ public class FestivalDto {
         private double mapx;
         private double mapy;
     }
+
+
 }

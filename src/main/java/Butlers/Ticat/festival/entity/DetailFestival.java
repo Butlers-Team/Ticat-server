@@ -17,9 +17,6 @@ public class DetailFestival {
     private String sponsor1tel; // 주최자 연락처
 
     private String sponsor2; // 주관사 정보
-
-    private String eventDate;
-
     private String eventstartdate; // 행사시작일
 
     private String eventenddate; // 행사 종료일
@@ -51,11 +48,10 @@ public class DetailFestival {
         }
     }
 
-    public DetailFestival(String sponsor1, String sponsor1tel, String sponsor2, String eventDate, String eventstartdate, String eventenddate, String eventhomepage, String playtime, String eventplace, String usetimefestival) {
+    public DetailFestival(String sponsor1, String sponsor1tel, String sponsor2, String eventstartdate, String eventenddate, String eventhomepage, String playtime, String eventplace, String usetimefestival) {
         this.sponsor1 = sponsor1;
         this.sponsor1tel = sponsor1tel;
         this.sponsor2 = sponsor2;
-        this.eventDate = eventDate;
         this.eventstartdate = eventstartdate;
         this.eventenddate = eventenddate;
         this.eventhomepage = eventhomepage;
