@@ -1,10 +1,7 @@
 package Butlers.Ticat.festival.dto;
-import Butlers.Ticat.festival.entity.DetailFestival;
-import lombok.Builder;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 public class FestivalDto {
 
     @Getter
@@ -51,17 +48,4 @@ public class FestivalDto {
     }
 
 
-    @Getter
-    @Setter
-    @Builder
-    public static class StampResponse{
-
-        private Long contentId;
-        private DetailFestival.Status status;
-        private LocalDate stampDate;
-        private String eventStartDate; // 행사시작일
-        private String eventEndDate; // 행사 종료일
-        private String title;
-        private String address;
-    }
 }
