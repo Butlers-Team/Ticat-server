@@ -1,13 +1,21 @@
 package Butlers.Ticat.member.controller;
 
+import Butlers.Ticat.calendar.dto.CalendarDto;
+import Butlers.Ticat.calendar.entity.Calendar;
+import Butlers.Ticat.dto.MultiResponseDto;
 import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.mapper.MemberMapper;
 import Butlers.Ticat.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Positive;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -51,4 +59,27 @@ public class MemberController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    @GetMapping("/members/{member-id}/calendar")
+    public ResponseEntity getMemberCalendar(@PathVariable("member-id") @Positive Long memberId,
+                                           @Positive @RequestParam int page,
+                                           @RequestParam int year, @RequestParam int month,
+                                           @RequestParam(required = false) Integer day) {
+        Member member = memberService.findMember(memberId);
+        Page<Calendar> calendarPage = memberService.getMemberCalendar(member, page -1, year, month, day);
+        List<Calendar> calendars = calendarPage.getContent();
+
+        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getResponses(calendars);
+
+        CalendarDto.Response calendarResponse = CalendarDto.Response.builder()
+                .memberId(member.getMemberId())
+                .festivalList(calendarResponses)
+                .build();
+
+        MultiResponseDto<CalendarDto.Response> multiResponseDto =
+                new MultiResponseDto<>(Collections.singletonList(calendarResponse), calendarPage);
+        return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
+    }
+
 }
