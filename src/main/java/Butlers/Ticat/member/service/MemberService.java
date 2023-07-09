@@ -30,6 +30,7 @@ public class MemberService {
 
     // 로컬 회원 가입
     public void joinInLocal(Member member) {
+        verifyExistingEmail(member.getEmail());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 
@@ -100,6 +101,7 @@ public class MemberService {
         return findVerifiedMember(memberId);
     }
 
+    // 이메일 중복 확인
     private void verifyExistingEmail(String email) {
         Optional<Member> foundMemberByEmail = memberRepository.findByEmail(email);
         if (foundMemberByEmail.isPresent()) {
