@@ -39,4 +39,6 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     @Modifying
     @Query(value = "DELETE FROM favorite WHERE festival_id = :festivalId and member_id = :memberId", nativeQuery = true)
     int downFavorite(long festivalId, long memberId);
+
+    Optional<Festival> findByFestivalId(Long festivalId);
 }

@@ -1,5 +1,12 @@
 package Butlers.Ticat.member.entity;
 
+
+import Butlers.Ticat.stamp.entity.Stamp;
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+
 import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.interest.entity.Interest;
 import lombok.*;
@@ -20,6 +27,12 @@ public class Member {
     private String email;
     private String password;
     private String displayName;
+
+    @OneToMany(mappedBy = "member")
+    private List<Stamp> stampList = new ArrayList<>();
+    public void addStamp(Stamp stamp) {
+        this.stampList.add(stamp);
+    }
 
     // 소셜 로그인 여부
     private boolean isOauthChecked;

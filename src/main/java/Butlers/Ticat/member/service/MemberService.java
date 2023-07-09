@@ -5,11 +5,18 @@ import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.repository.MemberRepository;
+import Butlers.Ticat.stamp.entity.Stamp;
+import Butlers.Ticat.stamp.repository.StampRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -18,6 +25,7 @@ public class MemberService {
 
     private final AwsS3Service awsS3Service;
     private final MemberRepository memberRepository;
+    private final StampRepository stampRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 로컬 회원 가입
@@ -117,4 +125,20 @@ public class MemberService {
         Member findedMember = findVerifiedMember(memberId);
         memberRepository.delete(findedMember);
     }
+    public Page<Stamp> getMemberStamped(Member member, int page, int year, int month, Integer day) {
+        LocalDate startDate;
+        LocalDate endDate;
+
+        if (day != null) {
+            startDate = LocalDate.of(year, month, day);
+            endDate = startDate.plusDays(1);
+        } else {
+            startDate = LocalDate.of(year, month, 1);
+            endDate = startDate.plusMonths(1);
+        }
+
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "stampDate"));
+        return stampRepository.findByMemberAndStampDateBetween(member, startDate, endDate, pageable);
+    }
+
 }
