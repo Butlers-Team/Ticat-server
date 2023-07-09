@@ -21,11 +21,11 @@ public class CalendarService {
     private final CalendarRepository calendarRepository;
     private final MemberService memberService;
     private final FestivalRepository festivalRepository;
-    public Calendar createCalendar(Long contentId, Long memberId) {
+    public Calendar createCalendar(Long festivalId, Long memberId) {
 
         Member member = memberService.findMember(memberId);
 
-        Festival festival = festivalRepository.findByContentId(contentId)
+        Festival festival = festivalRepository.findByFestivalId(festivalId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.FESTIVAL_NOT_FOUND));
 
         Calendar calendar = new Calendar();

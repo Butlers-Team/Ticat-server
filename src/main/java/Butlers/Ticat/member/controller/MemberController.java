@@ -70,8 +70,7 @@ public class MemberController {
     }
 
 
-    @GetMapping("/members/{member-id}/calendar")
-    public ResponseEntity getMemberCalendar(@PathVariable("member-id") @Positive Long memberId,
+
 
     // 프로필 이미지 업로드
     @PostMapping("/profile")
@@ -99,11 +98,11 @@ public class MemberController {
 
         return new ResponseEntity<>("이미지 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
-  
-  
-    @GetMapping("/members/{member-id}/stamps")
-    public ResponseEntity getMemberStamped(@PathVariable("member-id") @Positive Long memberId,
 
+
+
+    @GetMapping("/members/{member-id}/calendar")
+    public ResponseEntity getMemberCalendar(@PathVariable("member-id") @Positive Long memberId,
                                            @Positive @RequestParam int page,
                                            @RequestParam int year, @RequestParam int month,
                                            @RequestParam(required = false) Integer day) {
@@ -112,7 +111,7 @@ public class MemberController {
         Page<Calendar> calendarPage = memberService.getMemberCalendar(member, page -1, year, month, day);
         List<Calendar> calendars = calendarPage.getContent();
 
-        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getResponses(calendars);
+        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getCalendarResponses(calendars);
 
         CalendarDto.Response calendarResponse = CalendarDto.Response.builder()
                 .memberId(member.getMemberId())
@@ -124,10 +123,17 @@ public class MemberController {
         return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
     }
 
+    @GetMapping("/members/{member-id}/stamps")
+    public ResponseEntity getMemberStamped(@PathVariable("member-id") @Positive Long memberId,
+                                           @Positive @RequestParam int page,
+                                           @RequestParam int year, @RequestParam int month,
+                                           @RequestParam(required = false) Integer day) {
+        Member member = memberService.findMember(memberId);
+
         Page<Stamp> stampPage = memberService.getMemberStamped(member, page -1, year, month, day);
         List<Stamp> stamps = stampPage.getContent();
 
-        List<StampDto.StampResponse> stampResponses = memberMapper.getResponses(stamps);
+        List<StampDto.StampResponse> stampResponses = memberMapper.getStampResponses(stamps);
 
         StampDto.Response stampResponse = StampDto.Response.builder()
                 .memberId(member.getMemberId())

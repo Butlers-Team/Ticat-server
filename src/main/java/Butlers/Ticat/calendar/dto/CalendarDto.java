@@ -23,7 +23,7 @@ public class CalendarDto {
     @Builder
     public static class CalendarResponse{
 
-        private Long contentId;
+        private Long festivalId;
         private String category;
         private DetailFestival.Status staus;
         private LocalDate calendarDate;

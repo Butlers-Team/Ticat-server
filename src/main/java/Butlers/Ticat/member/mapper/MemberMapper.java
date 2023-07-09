@@ -38,10 +38,10 @@ public interface MemberMapper {
     Member memberPatchToMember(MemberDto.Patch requestBody);
 
 
-    default List<CalendarDto.CalendarResponse> getResponses(List<Calendar> calendars) {
+    default List<CalendarDto.CalendarResponse> getCalendarResponses(List<Calendar> calendars) {
         return calendars.stream()
                 .map(calendar -> CalendarDto.CalendarResponse.builder()
-                        .contentId(calendar.getFestival().getContentId())
+                        .festivalId(calendar.getFestival().getFestivalId())
                         .staus(calendar.getFestival().getDetailFestival().getStatus())
                         .calendarDate(calendar.getCalendarDate())
                         .title(calendar.getFestival().getTitle())
@@ -53,7 +53,7 @@ public interface MemberMapper {
     }
 
 
-    default List<StampDto.StampResponse> getResponses(List<Stamp> stamps) {
+    default List<StampDto.StampResponse> getStampResponses(List<Stamp> stamps) {
         return stamps.stream()
                 .map(stamp -> StampDto.StampResponse.builder()
                         .festivalId(stamp.getFestival().getFestivalId())
