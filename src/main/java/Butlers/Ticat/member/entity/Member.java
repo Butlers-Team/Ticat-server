@@ -40,6 +40,7 @@ public class Member {
     private List<Calendar> calendars = new ArrayList<>();
     public void addCalendar(Calendar calendar) {
         this.calendars.add(calendar);
+    }
 
     @OneToMany(mappedBy = "member")
     private List<Stamp> stampList = new ArrayList<>();
