@@ -1,6 +1,6 @@
 package Butlers.Ticat.member.dto;
 
-import Butlers.Ticat.festival.dto.FestivalDto;
+import Butlers.Ticat.stamp.dto.StampDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +41,6 @@ public class MemberDto {
     @Builder
     public static class stampResponse {
         private Long memberId;
-        private List<FestivalDto.StampResponse> festivalList;
+        private List<StampDto.StampResponse> festivalList;
     }
 }

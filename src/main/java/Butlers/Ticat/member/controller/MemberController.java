@@ -1,7 +1,6 @@
 package Butlers.Ticat.member.controller;
 
 import Butlers.Ticat.dto.MultiResponseDto;
-import Butlers.Ticat.festival.dto.FestivalDto;
 import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.mapper.MemberMapper;
@@ -71,7 +70,7 @@ public class MemberController {
         Page<Stamp> stampPage = memberService.getMemberStamped(member, page -1, year, month, day);
         List<Stamp> stamps = stampPage.getContent();
 
-        List<FestivalDto.StampResponse> stampResponses = memberMapper.getResponses(stamps);
+        List<StampDto.StampResponse> stampResponses = memberMapper.getResponses(stamps);
 
         StampDto.Response stampResponse = StampDto.Response.builder()
                 .memberId(member.getMemberId())
