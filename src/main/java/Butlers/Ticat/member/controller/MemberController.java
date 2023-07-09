@@ -27,10 +27,9 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity createdMember(@RequestBody MemberDto.Post requestBody) {
-        Member member = memberMapper.memberPostToMember(requestBody);
-        memberService.createMember(member);
+        memberService.joinInLocal(memberMapper.memberPostToMember(requestBody));
 
-        return ResponseEntity.ok().build();
+        return new ResponseEntity("회원가입이 완료되었습니다", HttpStatus.OK);
     }
 
     @GetMapping("/members/{member-id}")
