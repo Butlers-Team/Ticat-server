@@ -1,10 +1,12 @@
 package Butlers.Ticat.festival.entity;
 
+import Butlers.Ticat.stamp.entity.Stamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -44,6 +46,14 @@ public class Festival {
 
 //    @OneToMany(mappedBy = "festival")
 //    private List<Favorite> favorites;
+
+    @OneToMany
+    @JoinColumn(name = "festival")
+    private List<Stamp> stamps = new ArrayList<>();
+
+    public void addStamp(Stamp stamp) {
+        this.stamps.add(stamp);
+    }
 
     public Festival(Long contentId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
         this.contentId = contentId;
