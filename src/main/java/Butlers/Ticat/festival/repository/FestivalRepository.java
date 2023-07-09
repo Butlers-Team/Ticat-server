@@ -3,6 +3,7 @@ package Butlers.Ticat.festival.repository;
 import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Festival;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,6 +29,8 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
 
     List<Festival> findByDetailFestivalStatus(DetailFestival.Status status);
 
+    Page<Festival> findByTitleContainingIgnoreCase(String title, PageRequest of);
+
     @Modifying
     @Query(value = "INSERT INTO favorite (festival_id, member_id, ischecked) " +
             "SELECT :festivalId, :memberId, true " +
@@ -41,4 +44,5 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     int downFavorite(long festivalId, long memberId);
 
     Optional<Festival> findByFestivalId(Long festivalId);
+
 }

@@ -1,5 +1,8 @@
 package Butlers.Ticat.member.controller;
 
+
+import Butlers.Ticat.calendar.dto.CalendarDto;
+import Butlers.Ticat.calendar.entity.Calendar;
 import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.dto.MultiResponseDto;
 import Butlers.Ticat.member.dto.MemberDto;
@@ -14,6 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.Positive;
+import java.util.Collections;
+import java.util.List;
 
 import javax.validation.constraints.Positive;
 import java.util.Collections;
@@ -62,6 +69,10 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @GetMapping("/members/{member-id}/calendar")
+    public ResponseEntity getMemberCalendar(@PathVariable("member-id") @Positive Long memberId,
+
     // 프로필 이미지 업로드
     @PostMapping("/profile")
     public ResponseEntity postProfile(@RequestPart MultipartFile image) {
@@ -92,10 +103,27 @@ public class MemberController {
   
     @GetMapping("/members/{member-id}/stamps")
     public ResponseEntity getMemberStamped(@PathVariable("member-id") @Positive Long memberId,
+
                                            @Positive @RequestParam int page,
                                            @RequestParam int year, @RequestParam int month,
                                            @RequestParam(required = false) Integer day) {
         Member member = memberService.findMember(memberId);
+
+        Page<Calendar> calendarPage = memberService.getMemberCalendar(member, page -1, year, month, day);
+        List<Calendar> calendars = calendarPage.getContent();
+
+        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getResponses(calendars);
+
+        CalendarDto.Response calendarResponse = CalendarDto.Response.builder()
+                .memberId(member.getMemberId())
+                .festivalList(calendarResponses)
+                .build();
+
+        MultiResponseDto<CalendarDto.Response> multiResponseDto =
+                new MultiResponseDto<>(Collections.singletonList(calendarResponse), calendarPage);
+        return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
+    }
+
         Page<Stamp> stampPage = memberService.getMemberStamped(member, page -1, year, month, day);
         List<Stamp> stamps = stampPage.getContent();
 

@@ -1,6 +1,13 @@
 package Butlers.Ticat.member.entity;
 
 
+import Butlers.Ticat.calendar.entity.Calendar;
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+
+
 import Butlers.Ticat.stamp.entity.Stamp;
 import lombok.*;
 
@@ -27,6 +34,12 @@ public class Member {
     private String email;
     private String password;
     private String displayName;
+
+
+    @OneToMany(mappedBy = "member")
+    private List<Calendar> calendars = new ArrayList<>();
+    public void addCalendar(Calendar calendar) {
+        this.calendars.add(calendar);
 
     @OneToMany(mappedBy = "member")
     private List<Stamp> stampList = new ArrayList<>();
@@ -61,5 +74,6 @@ public class Member {
     // 오어스 회원가입을 위한 생성자
     public Member(String email) {
         this.email = email;
+
     }
 }

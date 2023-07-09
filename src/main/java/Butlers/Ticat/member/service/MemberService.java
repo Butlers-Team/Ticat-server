@@ -1,5 +1,8 @@
 package Butlers.Ticat.member.service;
 
+
+import Butlers.Ticat.calendar.entity.Calendar;
+import Butlers.Ticat.calendar.repository.CalendarRepository;
 import Butlers.Ticat.aws.service.AwsS3Service;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
@@ -12,10 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -25,6 +28,8 @@ public class MemberService {
 
     private final AwsS3Service awsS3Service;
     private final MemberRepository memberRepository;
+    private final CalendarRepository calendarRepository;
+//    private final PasswordEncoder passwordEncoder;
     private final StampRepository stampRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -125,7 +130,28 @@ public class MemberService {
         Member findedMember = findVerifiedMember(memberId);
         memberRepository.delete(findedMember);
     }
+
+
+    public Page<Calendar> getMemberCalendar(Member member, int page, int year, int month, Integer day) {
+
+        LocalDate startDate;
+        LocalDate endDate;
+
+        if (day != null) {
+            startDate = LocalDate.of(year, month, day);
+            endDate = startDate.plusDays(1);
+        } else {
+            startDate = LocalDate.of(year, month, 1);
+            endDate = startDate.plusMonths(1);
+        }
+      
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "calendarDate"));
+        return calendarRepository.findByMemberAndCalendarDateBetween(member, startDate, endDate, pageable);
+    }
+      
+      
     public Page<Stamp> getMemberStamped(Member member, int page, int year, int month, Integer day) {
+
         LocalDate startDate;
         LocalDate endDate;
 
@@ -140,5 +166,6 @@ public class MemberService {
         Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "stampDate"));
         return stampRepository.findByMemberAndStampDateBetween(member, startDate, endDate, pageable);
     }
+
 
 }

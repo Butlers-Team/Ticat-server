@@ -97,6 +97,19 @@ public class FestivalController {
         }
     }
 
+
+    // 축제 제목으로 검색
+    @GetMapping("/calendar")
+    public ResponseEntity getFilterFestivalToCalendar(@RequestParam(required = false) String title,
+                                                      @Positive @RequestParam int page,
+                                                      @Positive @RequestParam int size) {
+        Page<Festival> pageFestivals = festivalService.findFestivalsByTitle(title, page, size);
+        List<Festival> festivals = pageFestivals.getContent();
+        return new ResponseEntity<>(new MultiResponseDto<>(
+                mapper.festivalsToFestivalListResponses(festivals)
+                , pageFestivals), HttpStatus.OK);
+    }
+
     // 지도페이지
     @GetMapping("/map")
     public ResponseEntity getFilteredFestivalsByMap(@RequestParam(required = false) List<String> categories,

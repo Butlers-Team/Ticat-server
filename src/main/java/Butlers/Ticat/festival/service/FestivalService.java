@@ -152,4 +152,8 @@ public class FestivalService {
         return festivalRepository.findAll(PageRequest.of(page-1,size,Sort.by("reviewCount").descending()));
     }
 
+    public Page<Festival> findFestivalsByTitle(String title, int page, int size) {
+
+        return festivalRepository.findByTitleContainingIgnoreCase(title,PageRequest.of(page -1, size));
+    }
 }
