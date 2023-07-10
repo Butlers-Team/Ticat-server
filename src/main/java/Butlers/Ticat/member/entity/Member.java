@@ -76,8 +76,8 @@ public class Member {
     }
 
     // 오어스 회원가입을 위한 생성자
-    public Member(String email) {
+    public Member(String id, String email) {
+        this.id = id;
         this.email = email;
-
     }
 }

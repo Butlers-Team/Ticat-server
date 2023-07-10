@@ -58,8 +58,8 @@ public class MemberService {
     }
 
     // 오어스 로그인 중 joinInOauth 에서 MEMBER_EMAIL_EXISTS 예외 발생 시 사용 될 메서드
-    public Member findMemberByEmail(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    public Member findMemberById(String id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
 
         return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
