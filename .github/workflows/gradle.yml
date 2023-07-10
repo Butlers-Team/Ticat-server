@@ -31,5 +31,6 @@ jobs:
           script_stop: true
           script: |
               lsof -i :8080
+              fuser -k -n tcp 8080
 
 
