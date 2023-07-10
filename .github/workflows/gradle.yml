@@ -32,6 +32,7 @@ jobs:
           script: |
               lsof -i :8080
               fuser -k -n tcp 8080
+              cd ..
               git pull origin dev 
 
 
