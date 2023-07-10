@@ -35,23 +35,31 @@ public class MemberService {
 
     // 로컬 회원 가입
     public void joinInLocal(Member member) {
+        verifyExistingId(member.getId());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 
         memberRepository.save(member);
     }
 
+    // 아이디 중복 획인
+    private void verifyExistingId(String id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        if (optionalMember.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_ID_EXISTS);
+        }
+    }
+
     // 오어스 회원 가입
     public Member joinInOauth(Member member) {
-        verifyExistingEmail(member.getEmail());
         member.setOauthChecked(true);
 
         return memberRepository.save(member);
     }
 
     // 오어스 로그인 중 joinInOauth 에서 MEMBER_EMAIL_EXISTS 예외 발생 시 사용 될 메서드
-    public Member findMemberByEmail(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    public Member findMemberById(String id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
 
         return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }

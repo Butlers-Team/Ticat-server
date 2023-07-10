@@ -51,20 +51,22 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
             oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
         }
 
+        String providerId = oAuth2UserInfo.getProviderId();
+        String id = provider + "_" + providerId;
         String email = oAuth2UserInfo.getEmail();
         Member member = null;
 
         try {
-            member = saveMember(email);
+            member = saveMember(id, email);
         } catch (Exception e) {
-            member = memberService.findMemberByEmail(email);
+            member = memberService.findMemberById(id);
         } finally {
             redirect(request, response, member);
         }
     }
 
-    private Member saveMember(String email) {
-        Member member = new Member(email);
+    private Member saveMember(String id, String email) {
+        Member member = new Member(id, email);
         return memberService.joinInOauth(member);
     }
 
