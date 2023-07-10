@@ -47,9 +47,9 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
     private String generateAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("memberId", member.getMemberId());
-        claims.put("email", member.getEmail());
+        claims.put("id", member.getId());
 
-        String subject = member.getEmail();
+        String subject = member.getId();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
@@ -57,8 +57,8 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
         return accessToken;
     }
 
-    private String generateRefreshToken(String email) {
-        String subject = email;
+    private String generateRefreshToken(String id) {
+        String subject = id;
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);

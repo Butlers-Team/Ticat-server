@@ -31,6 +31,9 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
+
+    // 로그인 아이디
+    private String id;
     private String email;
     private String password;
     private String displayName;

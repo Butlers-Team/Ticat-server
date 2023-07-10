@@ -6,6 +6,7 @@ public enum ExceptionCode {
 
     MEMBER_NOT_FOUND(404, "회원을 찾을 수 없습니다"),
     MEMBER_EMAIL_EXISTS(409, "이메일이 이미 있습니다" ),
+    MEMBER_ID_EXISTS(409, "중복된 아이디가 존재합니다"),
     FESTIVAL_NOT_FOUND(404, "축제를 찾을 수 없습니다"),
     STAMP_NOT_FOUND(404, "스탬프를 찾을 수 없습니다"),
     LIKE_NOT_TWICE(409,"좋아요를 두 번 할 수 없습니다"),

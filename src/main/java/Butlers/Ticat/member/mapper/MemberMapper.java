@@ -27,6 +27,7 @@ public interface MemberMapper {
         }
 
         Member member = new Member();
+        member.setId(requestBody.getId());
         member.setEmail(requestBody.getEmail());
         member.setPassword(requestBody.getPassword());
 

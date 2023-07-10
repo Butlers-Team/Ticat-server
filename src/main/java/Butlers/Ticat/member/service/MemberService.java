@@ -35,15 +35,23 @@ public class MemberService {
 
     // 로컬 회원 가입
     public void joinInLocal(Member member) {
+        verifyExistingId(member.getId());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 
         memberRepository.save(member);
     }
 
+    // 아이디 중복 획인
+    private void verifyExistingId(String id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        if (optionalMember.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_ID_EXISTS);
+        }
+    }
+
     // 오어스 회원 가입
     public Member joinInOauth(Member member) {
-        verifyExistingEmail(member.getEmail());
         member.setOauthChecked(true);
 
         return memberRepository.save(member);
