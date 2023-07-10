@@ -30,4 +30,6 @@ jobs:
           port: ${{ secrets.AWS_SSH_PORT }}
           script_stop: true
           script: |
-              ls
+              lsof -i : 8080
+
+
