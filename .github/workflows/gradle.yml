@@ -29,10 +29,10 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: ${{ secrets.AWS_SSH_PORT }}
           script_stop: true
-          script: |
-              lsof -i :8080
-              fuser -k -n tcp 8080
-              cd ..
-              git pull origin dev 
+#           script: |
+#               lsof -i :8080
+#               fuser -k -n tcp 8080
+#               cd ..
+#               git pull origin main
 
 
