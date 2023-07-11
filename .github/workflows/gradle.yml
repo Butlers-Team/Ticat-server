@@ -34,4 +34,4 @@ jobs:
               fuser -k -n tcp 8080
               cd 
               cd Ticat-server
-              git pull origin main
+              
