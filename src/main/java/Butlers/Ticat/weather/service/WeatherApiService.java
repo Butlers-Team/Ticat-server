@@ -114,6 +114,28 @@ public class WeatherApiService {
 
             JSONObject jObject = new JSONObject(data);
             JSONObject response = jObject.getJSONObject("response");
+            JSONObject header = response.getJSONObject("header");
+            String resultCode = header.getString("resultCode");
+
+            // "no data"가 반환되는 경우 DB에서 이전의 날씨 정보를 조회
+            if (resultCode.equals("03")) {
+                if (prevWeather != null) {
+                    log.info("이전 날씨 정보를 사용합니다");
+                    return WeatherDto.Response.builder()
+                            .region(region.getParentRegion() + " " + region.getChildRegion())
+                            .weather(prevWeather)
+                            .message("날씨를 불러왔습니다.").build();
+                }else{
+                    log.info("이전 날씨 정보가 없어 서울 날씨를 불러옵니다");
+                    Optional<Region> optionalSeoulRegion = regionRepository.findById(1L);
+                    Region seoulRegion = optionalSeoulRegion.orElseThrow();  // 예외 처리 로직 추가 해야함
+                    return WeatherDto.Response.builder()
+                            .region(seoulRegion.getParentRegion() + " " + seoulRegion.getChildRegion())
+                            .weather(seoulRegion.getWeather())
+                            .message("날씨를 불러왔습니다.").build();
+                }
+            }
+
             JSONObject body = response.getJSONObject("body");
             JSONObject items = body.getJSONObject("items");
             JSONArray jArray = items.getJSONArray("item");
