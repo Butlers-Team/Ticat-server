@@ -30,8 +30,9 @@ jobs:
           port: ${{ secrets.AWS_SSH_PORT }}
           script_stop: true
           script: |
-              lsof -i :8080
-              fuser -k -n tcp 8080
               wd
+##              lsof -i :8080
+##              fuser -k -n tcp 8080
+
               
             
