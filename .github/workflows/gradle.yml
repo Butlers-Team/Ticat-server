@@ -36,6 +36,11 @@ jobs:
 #       - name: Grant execute permission for gradlew
 #         run: chmod +x ./gradlew
 #         shell: bash
+
+      - name: Git pull
+        run: |
+         git pull origin main
+         cd
       
       - name: Build with Gradle
         run: |
