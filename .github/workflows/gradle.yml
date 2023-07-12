@@ -31,6 +31,7 @@ jobs:
           script_stop: true
           script: |
               pwd
+              ls
 ##              lsof -i :8080
 ##              fuser -k -n tcp 8080
 
