@@ -32,9 +32,15 @@ jobs:
           script: |
               lsof -i :8080
               fuser -k -n tcp 8080
+              
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
       
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build
               
       - name: Run JAR File
-        run: java -jar Ticat-0.0.1-SNAPSHOT.jar
+        run: |
+          cd ~/Ticat-server/build/libs
+          java -jar Ticat-0.0.1-SNAPSHOT.jar
