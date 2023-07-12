@@ -34,7 +34,7 @@ jobs:
               fuser -k -n tcp 8080
       
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: ./gradlew build
               
       - name: Run JAR File
         run: java -jar Ticat-0.0.1-SNAPSHOT.jar
