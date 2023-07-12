@@ -38,11 +38,9 @@ jobs:
 #         run: chmod +x ./gradlew
 #         shell: bash
 
-#       - name: Git pull
-#         run: |
-#          cd $HOME
-#          cd Ticat-server
-#          git pull origin main
+      - name: Git pull
+        run: |
+         ls
       
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
@@ -50,7 +48,8 @@ jobs:
             arguments: build
               
       - name: Run JAR File
-        run: |
+        run: | 
+          ls
           cd libs
           java -jar Ticat-0.0.1-SNAPSHOT.jar
         shell: bash  
