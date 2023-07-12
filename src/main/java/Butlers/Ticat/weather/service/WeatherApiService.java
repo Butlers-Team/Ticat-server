@@ -110,7 +110,7 @@ public class WeatherApiService {
             Double temp = null;
             Double humid = null;
             String sky = "";
-            String rainAmount = "";
+            String pty = "";
 
             JSONObject jObject = new JSONObject(data);
             JSONObject response = jObject.getJSONObject("response");
@@ -127,8 +127,14 @@ public class WeatherApiService {
                     case "T1H":
                         temp = Double.parseDouble((String) fcstValue);
                         break;
-                    case "RN1":
-                        rainAmount = (String)fcstValue;
+                    case "PTY":
+                        pty = (String)fcstValue;
+
+                        if(pty.equals("1")) pty="비";
+                        else if(pty.equals("2")) pty="비/눈";
+                        else if(pty.equals("3")) pty="눈";
+                        else pty ="소나기";
+
                         break;
                     case "SKY":
                         sky = (String) fcstValue;
@@ -144,7 +150,12 @@ public class WeatherApiService {
                 }
             }
 
-            Weather weather = new Weather(temp, rainAmount, humid, currentChangeTime,sky);
+            if(pty.equals("0")){
+                if(sky.equals("맑음")) pty = "맑음";
+                else if(sky.equals("구름 많음")) pty = "구름많음";
+                else pty = "흐림";
+            }
+            Weather weather = new Weather(temp, humid, currentChangeTime,pty);
             region.updateRegionWeather(weather); // DB 업데이트
             return WeatherDto.Response.builder()
                     .region(region.getParentRegion() +" "+ region.getChildRegion())
