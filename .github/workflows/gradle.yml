@@ -41,8 +41,10 @@ jobs:
         run: |
           cd /home/user/Ticat-server
           ./gradlew clean build
+        shell: bash      
               
       - name: Run JAR File
         run: |
           cd /home/user/Ticat-server/build/libs
           java -jar Ticat-0.0.1-SNAPSHOT.jar
+        shell: bash  
