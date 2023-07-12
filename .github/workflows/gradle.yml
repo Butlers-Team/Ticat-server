@@ -30,12 +30,15 @@ jobs:
           port: ${{ secrets.AWS_SSH_PORT }}
           script_stop: true
           script: |
-              pwd
-              ls
+
               cd ./Ticat-server
-              ls
-##              lsof -i :8080
-##              fuser -k -n tcp 8080
+              lsof -i :8080
+              fuser -k -n tcp 8080
+              git pull origin main
+              ./gradlew build
+              cd build/libs
+              java -jar Ticat-0.0.1-SNAPSHOT.jar
+            
 
               
             
