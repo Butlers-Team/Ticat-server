@@ -14,8 +14,6 @@ public class Weather {
 
     private Double temp;
 
-    private String rainAmount;
-
     private Double humid;
 
     private String lastUpdateTime;

@@ -110,10 +110,32 @@ public class WeatherApiService {
             Double temp = null;
             Double humid = null;
             String sky = "";
-            String rainAmount = "";
+            String pty = "";
 
             JSONObject jObject = new JSONObject(data);
             JSONObject response = jObject.getJSONObject("response");
+            JSONObject header = response.getJSONObject("header");
+            String resultCode = header.getString("resultCode");
+
+            // "no data"가 반환되는 경우 DB에서 이전의 날씨 정보를 조회
+            if (resultCode.equals("03")) {
+                if (prevWeather != null) {
+                    log.info("이전 날씨 정보를 사용합니다");
+                    return WeatherDto.Response.builder()
+                            .region(region.getParentRegion() + " " + region.getChildRegion())
+                            .weather(prevWeather)
+                            .message("날씨를 불러왔습니다.").build();
+                }else{
+                    log.info("이전 날씨 정보가 없어 서울 날씨를 불러옵니다");
+                    Optional<Region> optionalSeoulRegion = regionRepository.findById(1L);
+                    Region seoulRegion = optionalSeoulRegion.orElseThrow();  // 예외 처리 로직 추가 해야함
+                    return WeatherDto.Response.builder()
+                            .region(seoulRegion.getParentRegion() + " " + seoulRegion.getChildRegion())
+                            .weather(seoulRegion.getWeather())
+                            .message("날씨를 불러왔습니다.").build();
+                }
+            }
+
             JSONObject body = response.getJSONObject("body");
             JSONObject items = body.getJSONObject("items");
             JSONArray jArray = items.getJSONArray("item");
@@ -127,8 +149,14 @@ public class WeatherApiService {
                     case "T1H":
                         temp = Double.parseDouble((String) fcstValue);
                         break;
-                    case "RN1":
-                        rainAmount = (String)fcstValue;
+                    case "PTY":
+                        pty = (String)fcstValue;
+
+                        if(pty.equals("1")) pty="비";
+                        else if(pty.equals("2")) pty="비/눈";
+                        else if(pty.equals("3")) pty="눈";
+                        else pty ="소나기";
+
                         break;
                     case "SKY":
                         sky = (String) fcstValue;
@@ -144,7 +172,12 @@ public class WeatherApiService {
                 }
             }
 
-            Weather weather = new Weather(temp, rainAmount, humid, currentChangeTime,sky);
+            if(pty.equals("0")){
+                if(sky.equals("맑음")) pty = "맑음";
+                else if(sky.equals("구름 많음")) pty = "구름많음";
+                else pty = "흐림";
+            }
+            Weather weather = new Weather(temp, humid, currentChangeTime,pty);
             region.updateRegionWeather(weather); // DB 업데이트
             return WeatherDto.Response.builder()
                     .region(region.getParentRegion() +" "+ region.getChildRegion())
