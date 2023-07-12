@@ -39,10 +39,10 @@ jobs:
       
       - name: Build with Gradle
         run: |
-          cd Ticat-server
+          cd /home/ubuntu/Ticat-server
           ./gradlew clean build
               
       - name: Run JAR File
         run: |
-          cd ~/Ticat-server/build/libs
+          cd /home/ubuntu/Ticat-server/build/libs
           java -jar Ticat-0.0.1-SNAPSHOT.jar
