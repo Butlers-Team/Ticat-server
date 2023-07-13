@@ -38,7 +38,7 @@ public class MemberService {
         verifyExistingId(member.getId());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
-
+        member.setDisplayName(member.getDisplayName());
         memberRepository.save(member);
     }
 
@@ -147,17 +147,16 @@ public class MemberService {
 
         if (day != null) {
             startDate = LocalDate.of(year, month, day);
-            endDate = startDate.plusDays(1);
+            endDate = startDate;
         } else {
             startDate = LocalDate.of(year, month, 1);
-            endDate = startDate.plusMonths(1);
+            endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
         }
-      
+
         Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "calendarDate"));
-        return calendarRepository.findByMemberAndCalendarDateBetween(member, startDate, endDate, pageable);
+        return calendarRepository.findByMemberAndCalendarDateIsBetween(member, startDate, endDate, pageable);
     }
-      
-      
+
     public Page<Stamp> getMemberStamped(Member member, int page, int year, int month, Integer day) {
 
         LocalDate startDate;
@@ -173,6 +172,23 @@ public class MemberService {
 
         Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "stampDate"));
         return stampRepository.findByMemberAndStampDateBetween(member, startDate, endDate, pageable);
+    }
+
+
+    public Page<Calendar> getMemberSchedule(Member member, int page, int year, int month, Integer day) {
+        LocalDate startDate;
+        LocalDate endDate;
+
+        if (day != null) {
+            startDate = LocalDate.of(year, month, day);
+            endDate = startDate;
+        } else {
+            startDate = LocalDate.of(year, month, 1);
+            endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        }
+
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "scheduleDate"));
+        return calendarRepository.findByMemberAndScheduleDateIsBetween(member, startDate, endDate, pageable);
     }
 
 
