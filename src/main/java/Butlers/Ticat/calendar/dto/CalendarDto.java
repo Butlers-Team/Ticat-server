@@ -26,10 +26,20 @@ public class CalendarDto {
         private Long festivalId;
         private String category;
         private DetailFestival.Status staus;
+        private LocalDate scheduledDate;
         private LocalDate calendarDate;
         private String eventStartDate; // 행사시작일
         private String eventEndDate; // 행사 종료일
         private String title;
         private String address;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class Post {
+        private Long festivalId;
+        private Long memberId;
+        private LocalDate scheduleDate;
     }
 }

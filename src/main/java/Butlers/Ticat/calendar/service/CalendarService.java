@@ -21,7 +21,8 @@ public class CalendarService {
     private final CalendarRepository calendarRepository;
     private final MemberService memberService;
     private final FestivalRepository festivalRepository;
-    public Calendar createCalendar(Long festivalId, Long memberId) {
+    public Calendar createCalendar(Long festivalId, Long memberId, LocalDate scheduleDate) {
+
 
         Member member = memberService.findMember(memberId);
 
@@ -32,27 +33,29 @@ public class CalendarService {
         calendar.setFestival(festival);
         calendar.setMember(member);
         calendar.setCalendarDate(LocalDate.now());
+        calendar.setScheduleDate(scheduleDate);
 
         return calendarRepository.save(calendar);
     }
 
-    public void deleteCalendarById(Long calendarId) {
 
-        Calendar calendar = findVerifiedCalendar(calendarId);
+    public void deleteCalendarById(Long festivalId) {
+
+        Calendar calendar = findVerifiedCalendar(festivalId);
         calendarRepository.delete(calendar);
     }
 
 
-    public Calendar findVerifiedCalendar(Long calendarId) {
+    public Calendar findVerifiedCalendar(Long festivalId) {
 
-        Optional<Calendar> optionalCalendar = calendarRepository.findById(calendarId);
+        Optional<Calendar> optionalCalendar = calendarRepository.findById(festivalId);
 
         return optionalCalendar.orElseThrow(() -> new BusinessLogicException(ExceptionCode.CALENDAR_NOT_FOUND));
     }
 
-    public Calendar findCalendar(Long calendarId) {
+    public Calendar findCalendar(Long festivalId) {
 
-        return calendarRepository.findById(calendarId).get();
+        return calendarRepository.findById(festivalId).get();
     }
 
 }

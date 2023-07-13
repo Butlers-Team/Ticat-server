@@ -35,23 +35,31 @@ public class MemberService {
 
     // 로컬 회원 가입
     public void joinInLocal(Member member) {
+        verifyExistingId(member.getId());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
-
+        member.setDisplayName(member.getDisplayName());
         memberRepository.save(member);
+    }
+
+    // 아이디 중복 획인
+    private void verifyExistingId(String id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        if (optionalMember.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_ID_EXISTS);
+        }
     }
 
     // 오어스 회원 가입
     public Member joinInOauth(Member member) {
-        verifyExistingEmail(member.getEmail());
         member.setOauthChecked(true);
 
         return memberRepository.save(member);
     }
 
     // 오어스 로그인 중 joinInOauth 에서 MEMBER_EMAIL_EXISTS 예외 발생 시 사용 될 메서드
-    public Member findMemberByEmail(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    public Member findMemberById(String id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
 
         return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
@@ -139,17 +147,16 @@ public class MemberService {
 
         if (day != null) {
             startDate = LocalDate.of(year, month, day);
-            endDate = startDate.plusDays(1);
+            endDate = startDate;
         } else {
             startDate = LocalDate.of(year, month, 1);
-            endDate = startDate.plusMonths(1);
+            endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
         }
-      
+
         Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "calendarDate"));
-        return calendarRepository.findByMemberAndCalendarDateBetween(member, startDate, endDate, pageable);
+        return calendarRepository.findByMemberAndCalendarDateIsBetween(member, startDate, endDate, pageable);
     }
-      
-      
+
     public Page<Stamp> getMemberStamped(Member member, int page, int year, int month, Integer day) {
 
         LocalDate startDate;
@@ -165,6 +172,23 @@ public class MemberService {
 
         Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "stampDate"));
         return stampRepository.findByMemberAndStampDateBetween(member, startDate, endDate, pageable);
+    }
+
+
+    public Page<Calendar> getMemberSchedule(Member member, int page, int year, int month, Integer day) {
+        LocalDate startDate;
+        LocalDate endDate;
+
+        if (day != null) {
+            startDate = LocalDate.of(year, month, day);
+            endDate = startDate;
+        } else {
+            startDate = LocalDate.of(year, month, 1);
+            endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        }
+
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "scheduleDate"));
+        return calendarRepository.findByMemberAndScheduleDateIsBetween(member, startDate, endDate, pageable);
     }
 
 

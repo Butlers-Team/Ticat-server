@@ -31,6 +31,9 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
+
+    // 로그인 아이디
+    private String id;
     private String email;
     private String password;
     private String displayName;
@@ -73,8 +76,8 @@ public class Member {
     }
 
     // 오어스 회원가입을 위한 생성자
-    public Member(String email) {
+    public Member(String id, String email) {
+        this.id = id;
         this.email = email;
-
     }
 }
