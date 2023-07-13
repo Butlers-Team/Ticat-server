@@ -66,7 +66,7 @@ public class MemberController {
     public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId) {
         memberService.deleteMember(memberId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("회원 탈퇴가 완료되었습니다",HttpStatus.OK);
     }
 
 
@@ -142,6 +142,28 @@ public class MemberController {
 
         MultiResponseDto<StampDto.Response> multiResponseDto =
                 new MultiResponseDto<>(Collections.singletonList(stampResponse), stampPage);
+        return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/members/{member-id}/schedule")
+    public ResponseEntity getMemberSchedule(@PathVariable("member-id") @Positive Long memberId,
+                                            @Positive @RequestParam int page,
+                                            @RequestParam int year, @RequestParam int month,
+                                            @RequestParam(required = false) Integer day) {
+        Member member = memberService.findMember(memberId);
+
+        Page<Calendar> calendarPage = memberService.getMemberSchedule(member, page -1, year, month, day);
+        List<Calendar> calendars = calendarPage.getContent();
+
+        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getCalendarResponses(calendars);
+
+        CalendarDto.Response calendarResponse = CalendarDto.Response.builder()
+                .memberId(member.getMemberId())
+                .festivalList(calendarResponses)
+                .build();
+
+        MultiResponseDto<CalendarDto.Response> multiResponseDto =
+                new MultiResponseDto<>(Collections.singletonList(calendarResponse), calendarPage);
         return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
     }
 }
