@@ -29,14 +29,6 @@ public class FestivalController {
     private final FestivalService festivalService;
     private final FestivalMapper mapper;
 
-//    @GetMapping
-//    public ResponseEntity getFestivals(@Positive @RequestParam int page,
-//                                       @Positive @RequestParam int size){
-//        Page<Festival> pageFestivals = festivalService.findFestivals(page, size);
-//        List<Festival> festivals = pageFestivals.getContent();
-//
-//        return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
-//    }
 
     // 축제 상세 페이지
     @GetMapping("/{festival-id}")
@@ -53,12 +45,6 @@ public class FestivalController {
         List<Festival> festivals = festivalService.findFestivalsWithinDistance(mapX,mapY,distance);
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
     }
-
-//    @GetMapping("/area")
-//    public ResponseEntity getFestivalsByDistricts(@RequestParam List<String> areas) {
-//        List<Festival> festivals = festivalService.findFestivalByArea(areas);
-//        return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
-//    }
 
     // 축제 메인페이지 배너
     @GetMapping("/banner")
@@ -162,6 +148,7 @@ public class FestivalController {
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
     }
 
+    // 좋아요 하기
     @PostMapping("/{festival-id}/favorite")
     public ResponseEntity<String> postFavorite(@PathVariable("festival-id") @Positive long festivalId) {
         festivalService.createFavorite(festivalId);
@@ -169,6 +156,7 @@ public class FestivalController {
         return ResponseEntity.ok("좋아요");
     }
 
+    //좋아요 취소
     @DeleteMapping("/{festival-id}/favorite")
     public ResponseEntity<String> deleteFavorite(@PathVariable("festival-id") @Positive long festivalId) {
         festivalService.cancleFavorite(festivalId);
@@ -176,6 +164,13 @@ public class FestivalController {
         return ResponseEntity.ok("좋아요 취소");
     }
 
+    //상세페이지 추천축제
+    @GetMapping("/detailrecommend")
+    public ResponseEntity getDetailRecommend(@RequestParam String category){
+        List<Festival> festivals = festivalService.findDetailRecommend(category,ONGOING);
+
+        return new ResponseEntity<>(mapper.festivalsToFestivalListResponses(festivals),HttpStatus.OK);
+    }
 
 }
 
