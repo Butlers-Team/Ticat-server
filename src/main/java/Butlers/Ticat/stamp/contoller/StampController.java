@@ -22,7 +22,7 @@ public class StampController {
                                              @PathVariable("contentId") Long contentId) {
         stampService.saveStamp(memberId, contentId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("스탬프 저장 완료" ,HttpStatus.OK);
     }
 
 }
