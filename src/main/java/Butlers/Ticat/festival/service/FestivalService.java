@@ -100,7 +100,8 @@ public class FestivalService {
 
     // 카테고리와 지역 이용해서 축제 찾기
     public Page<Festival> findByCategoryAndArea(String category,List<String> areas,int page,int size) {
-        return festivalRepository.findByDetailFestivalCategoryAndAreaIn(category,areas,PageRequest.of(page-1,size, Sort.by("festivalId").descending()));
+        List<String> areaList = AreaConverter.convertToSpecialCity(areas);
+        return festivalRepository.findByDetailFestivalCategoryAndAreaIn(category,areaList,PageRequest.of(page-1,size, Sort.by("festivalId").descending()));
     }
 
     // 카테고리 이용해서 축제 찾기
