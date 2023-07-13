@@ -52,9 +52,6 @@ public class Festival {
         this.calendar.add(calendar);
     }
 
-//    @OneToMany(mappedBy = "festival")
-//    private List<Favorite> favorites;
-
     @OneToMany(mappedBy = "festival")
     private List<Favorite> favorites;
 
