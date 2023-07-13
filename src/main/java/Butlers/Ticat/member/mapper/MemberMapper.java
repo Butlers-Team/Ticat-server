@@ -30,6 +30,7 @@ public interface MemberMapper {
         member.setId(requestBody.getId());
         member.setEmail(requestBody.getEmail());
         member.setPassword(requestBody.getPassword());
+        member.setDisplayName(requestBody.getDisplayName());
 
         return member;
     }
@@ -44,6 +45,7 @@ public interface MemberMapper {
                 .map(calendar -> CalendarDto.CalendarResponse.builder()
                         .festivalId(calendar.getFestival().getFestivalId())
                         .staus(calendar.getFestival().getDetailFestival().getStatus())
+                        .scheduledDate(calendar.getScheduleDate())
                         .calendarDate(calendar.getCalendarDate())
                         .title(calendar.getFestival().getTitle())
                         .address(calendar.getFestival().getAddress())

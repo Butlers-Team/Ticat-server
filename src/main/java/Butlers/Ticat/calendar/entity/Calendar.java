@@ -20,6 +20,7 @@ public class Calendar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long calenderId;
     private LocalDate calendarDate;
+    private LocalDate scheduleDate;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

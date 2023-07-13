@@ -28,7 +28,8 @@ public class MemberDto {
         // 비밀번호 확인 (검증 시 필요)
         @NotBlank
         private String confirmPassword;
-
+        @NotBlank
+        private String displayName;
     }
 
     @Getter

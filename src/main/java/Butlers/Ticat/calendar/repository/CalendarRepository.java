@@ -12,7 +12,8 @@ import java.time.LocalDate;
 @Repository
 public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
-    Page<Calendar> findByMemberAndCalendarDateBetween(Member member, LocalDate startDate, LocalDate endDate, Pageable pageable);
+    Page<Calendar> findByMemberAndCalendarDateIsBetween(Member member, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
 
+    Page<Calendar> findByMemberAndScheduleDateIsBetween(Member member, LocalDate startDate, LocalDate endDate, Pageable pageable);
 }
