@@ -6,6 +6,7 @@ import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.festival.entity.Festival;
+import Butlers.Ticat.festival.helper.AreaConverter;
 import Butlers.Ticat.festival.repository.FestivalRepository;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.repository.MemberRepository;
@@ -50,7 +51,9 @@ public class FestivalService {
 
     // 지역에 따라 축제 찾기
     public Page<Festival> findFestivalByArea(List<String> areas,int page,int size) {
-        return festivalRepository.findByAreaIn(areas,PageRequest.of(page-1,size,Sort.by("festivalId").descending()));
+        List<String> areaList = AreaConverter.convertToSpecialCity(areas);
+
+        return festivalRepository.findByAreaIn(areaList,PageRequest.of(page-1,size,Sort.by("festivalId").descending()));
     }
 
     // 메인 배너페이지
@@ -69,6 +72,27 @@ public class FestivalService {
         if (filteredFestivals.size() >= 4) {
             Collections.shuffle(filteredFestivals);
             filteredFestivals = filteredFestivals.subList(0, 4);
+        }
+
+        return filteredFestivals;
+    }
+
+    // 상세페이지 축제 추천
+    public List<Festival> findDetailRecommend(String category,DetailFestival.Status status) {
+
+        List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryAndDetailFestivalStatus(category,status);
+
+        List<Festival> filteredFestivals = new ArrayList<>();
+
+        for (Festival festival : festivals) {
+            if (!festival.getImage().isEmpty()) {
+                filteredFestivals.add(festival);
+            }
+        }
+
+        if (filteredFestivals.size() >= 5) {
+            Collections.shuffle(filteredFestivals);
+            filteredFestivals = filteredFestivals.subList(0, 5);
         }
 
         return filteredFestivals;
