@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 
+import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
+
 
 @Service
 @Transactional
@@ -79,9 +81,9 @@ public class FestivalService {
     }
 
     // 상세페이지 축제 추천
-    public List<Festival> findDetailRecommend(String category,DetailFestival.Status status) {
+    public List<Festival> findDetailRecommend(String category) {
 
-        List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryAndDetailFestivalStatus(category,status);
+        List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryAndDetailFestivalStatus(category,ONGOING);
 
         List<Festival> filteredFestivals = new ArrayList<>();
 
@@ -98,6 +100,7 @@ public class FestivalService {
 
         return filteredFestivals;
     }
+
 
     // 카테고리와 지역 이용해서 축제 찾기
     public Page<Festival> findByCategoryAndArea(String category,List<String> areas,int page,int size) {
