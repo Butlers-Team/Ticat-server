@@ -31,6 +31,8 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
 
     List<Festival> findByDetailFestivalCategoryAndDetailFestivalStatus(String category,DetailFestival.Status status);
 
+    List<Festival> findByDetailFestivalCategoryInAndDetailFestivalStatus(List<String> categories,DetailFestival.Status status);
+
     Page<Festival> findByTitleContainingIgnoreCase(String title, PageRequest of);
 
     @Modifying
