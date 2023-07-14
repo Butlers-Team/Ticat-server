@@ -37,7 +37,7 @@ jobs:
               fuser -k -n tcp 8080
               git pull origin main
               ls
-              echo ${{ secrets.APPLICATION_YML }} | base64 --decode > /src/main/resources/application.yml
+              echo ${{ secrets.APPLICATION_YML }} | base64 --decode > /home/ubuntu/Ticat-server/src/main/resources/application.yml
               ./gradlew build
               cd build/libs
               nohup java -jar Ticat-0.0.1-SNAPSHOT.jar 1>/dev/null 2>&1 &
