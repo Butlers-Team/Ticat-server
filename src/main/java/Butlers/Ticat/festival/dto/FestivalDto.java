@@ -47,5 +47,10 @@ public class FestivalDto {
         private double mapy;
     }
 
+    @Getter
+    @Setter
+    public static class DistanceResponse {
+        private double km;
+    }
 
 }
