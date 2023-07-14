@@ -30,6 +30,7 @@ public class FestivalDto {
     public static class Response{
 
         private Long festivalId;
+        private String category;
         private String status;
         private String eventstartdate; // 행사시작일
 
