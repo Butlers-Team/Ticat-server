@@ -3,6 +3,7 @@ package Butlers.Ticat.festival.service;
 import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
+import Butlers.Ticat.festival.dto.FestivalDto;
 import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.festival.entity.Festival;
@@ -180,5 +181,23 @@ public class FestivalService {
     public Page<Festival> findFestivalsByTitle(String title, int page, int size) {
 
         return festivalRepository.findByTitleContainingIgnoreCase(title,PageRequest.of(page -1, size));
+    }
+
+    // 두 좌표 사이의 거리 계산하는 기능
+    public FestivalDto.DistanceResponse calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double earthRadius = 6371; // 지구 반지름 (단위: km)
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        FestivalDto.DistanceResponse distanceResponse = new FestivalDto.DistanceResponse();
+        distanceResponse.setKm(earthRadius * c);
+
+        return distanceResponse;
     }
 }
