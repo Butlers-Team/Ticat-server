@@ -38,7 +38,7 @@ jobs:
               git pull origin main
               ls
               pwd
-              echo ${{ secrets.APPLICATION_YML }} | base64 --decode > main/resources/application.yml            
+              echo ${{ secrets.APPLICATION_YML }} | base64 --decode > src/main/resources/application.yml            
               ./gradlew build
               cd build/libs
               nohup java -jar Ticat-0.0.1-SNAPSHOT.jar 1>/dev/null 2>&1 &
