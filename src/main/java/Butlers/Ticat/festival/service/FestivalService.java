@@ -101,6 +101,29 @@ public class FestivalService {
         return filteredFestivals;
     }
 
+    // 메인페이지 회원 관심사로 축제 추천
+    public List<Festival> findMainRecommend() {
+
+        //로그인한 멤버 불러오기
+        Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
+
+        List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryInAndDetailFestivalStatus(member.getInterest().getCategories(),ONGOING);
+
+        List<Festival> filteredFestivals = new ArrayList<>();
+
+        for (Festival festival : festivals) {
+            if (!festival.getImage().isEmpty()) {
+                filteredFestivals.add(festival);
+            }
+        }
+
+        if (filteredFestivals.size() >= 5) {
+            Collections.shuffle(filteredFestivals);
+            filteredFestivals = filteredFestivals.subList(0, 5);
+        }
+
+        return filteredFestivals;
+    }
 
     // 카테고리와 지역 이용해서 축제 찾기
     public Page<Festival> findByCategoryAndArea(String category,List<String> areas,int page,int size) {
