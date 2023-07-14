@@ -172,5 +172,13 @@ public class FestivalController {
         return new ResponseEntity<>(mapper.festivalsToFestivalListResponses(festivals),HttpStatus.OK);
     }
 
+    // 두 좌표 사이 거리 구하기
+    @GetMapping("/km")
+    public ResponseEntity getKm(@RequestParam @Positive double lat1,@RequestParam @Positive double lon1 , @RequestParam @Positive double lat2,@RequestParam @Positive double lon2){
+        FestivalDto.DistanceResponse distanceResponse = festivalService.calculateDistance(lat1, lon1, lat2, lon2);
+
+
+        return new ResponseEntity<>(distanceResponse,HttpStatus.OK);
+    }
 }
 
