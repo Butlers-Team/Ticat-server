@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface FestivalMapper {
-
+    @Mapping(source = "detailFestival.category", target = "category")
     @Mapping(source = "detailFestival.eventstartdate", target = "eventstartdate")
     @Mapping(source = "detailFestival.eventenddate", target = "eventenddate")
     @Mapping(source = "detailFestival.overview", target = "overview")
