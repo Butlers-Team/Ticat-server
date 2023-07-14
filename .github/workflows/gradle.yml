@@ -20,6 +20,12 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
+          
+          
+      - name: Set Yml
+        run: |
+          echo ${{ secrets.APPLICATION_YML }} | base64 --decode > ./Ticat-server/src/main/resources/application.yml
+
 
       - name: SSH Commands
         uses: appleboy/ssh-action@v0.1.6
@@ -39,8 +45,6 @@ jobs:
               nohup java -jar Ticat-0.0.1-SNAPSHOT.jar 1>/dev/null 2>&1 &
             
             
-      - name: Set Yml
-        run: |
-          ls
+     
 
               
