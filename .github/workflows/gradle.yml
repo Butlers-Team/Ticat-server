@@ -24,7 +24,7 @@ jobs:
           
       - name: Set Yml
         run: |
-          echo ${{ secrets.APPLICATION_YML }} | base64 --decode > ./Ticat-server/src/main/resources/application.yml
+          echo ${{ secrets.APPLICATION_YML }} | base64 --decode > /home/ubuntu/Ticat-server/src/main/resources/application.yml
 
 
       - name: SSH Commands
