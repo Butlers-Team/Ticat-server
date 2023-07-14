@@ -172,6 +172,12 @@ public class FestivalController {
         return new ResponseEntity<>(mapper.festivalsToFestivalListResponses(festivals),HttpStatus.OK);
     }
 
+    @GetMapping("/mainrecommend")
+    public ResponseEntity getMainRecommend(){
+        List<Festival> festivals = festivalService.findMainRecommend();
+
+        return new ResponseEntity<>(mapper.festivalsToFestivalListResponses(festivals),HttpStatus.OK);
+    }
 
     // 두 좌표 사이 거리 구하기
     @GetMapping("/km")
