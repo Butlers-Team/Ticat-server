@@ -29,10 +29,10 @@ jobs:
         run: |
           ls
           
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-        shell: bash
-        working-directory: ${{env.working-directory}}
+#       - name: Grant execute permission for gradlew
+#         run: chmod +x gradlew
+#         shell: bash
+#         working-directory: ${{env.working-directory}}
         
       - name: Build with Gradle
         run: ./gradlew bootJar
