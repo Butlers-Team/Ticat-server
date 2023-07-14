@@ -12,8 +12,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./Ticat-server
+#     env:
+#       working-directory: ./Ticat-server
       
     steps:
       - name: Checkout
@@ -29,12 +29,12 @@ jobs:
         run: |
           ls
           
-#       - name: Grant execute permission for gradlew
-#         run: chmod +x gradlew
-#         shell: bash
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        shell: bash
 #         working-directory: ${{env.working-directory}}
         
       - name: Build with Gradle
         run: ./gradlew bootJar
         shell: bash
-        working-directory: ${{env.working-directory}}
+#         working-directory: ${{env.working-directory}}
