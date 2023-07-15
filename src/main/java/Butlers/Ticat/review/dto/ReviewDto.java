@@ -8,7 +8,7 @@ import java.util.List;
 public class ReviewDto {
 
     @Getter
-    public static class Post {
+    public static class PostPatch {
         String content;
         double rating;
     }

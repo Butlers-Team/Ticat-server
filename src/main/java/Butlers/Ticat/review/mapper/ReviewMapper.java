@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
-    default Review postToReview(ReviewDto.Post requestBody, long memberId, long festivalId) {
+    default Review postToReview(ReviewDto.PostPatch requestBody, long memberId, long festivalId) {
         Member member = new Member();
         member.setMemberId(memberId);
         Festival festival = new Festival();
@@ -20,6 +20,17 @@ public interface ReviewMapper {
         Review review = new Review();
         review.setMember(member);
         review.setFestival(festival);
+        review.setContent(requestBody.getContent());
+        review.setRate(requestBody.getRating());
+
+        return review;
+    }
+
+    default Review patchToReveiw(ReviewDto.PostPatch requestBody, long memberId, long reviewId) {
+        Member member = new Member();
+        member.setMemberId(memberId);
+        Review review = new Review();
+        review.setMember(member);
         review.setContent(requestBody.getContent());
         review.setRate(requestBody.getRating());
 

@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,16 +35,61 @@ public class ReviewService {
     public void registerReview(Review review, List<MultipartFile> files) {
         long memberId = review.getMember().getMemberId();
 
-        // 로그인 여부 확인
-        if (memberId == NUMBER_OF_NON_LOGIN) {
-            throw new BusinessLogicException(ExceptionCode.AVAILABLE_AFTER_LOGIN);
-        }
+        checkLogin(memberId);
 
         Member member = memberService.findVerifiedMember(memberId);
         Festival festival = festivalService.findFestival(review.getFestival().getFestivalId());
         review.setMember(member);
         review.setFestival(festival);
 
+        uploadPicture(review, files);
+
+        reviewRepository.save(review);
+    }
+
+    // 리뷰 수정
+    public void updateReview(Review review, List<MultipartFile> files) {
+        long memberId = review.getMember().getMemberId();
+
+        checkLogin(memberId);
+
+        Review findedReview = findVerifiedReview(review.getReviewId());
+
+        checkAuthor(memberId, findedReview);
+
+        findedReview.setContent(review.getContent());
+        findedReview.setRate(review.getRate());
+
+        deletePicture(review);
+
+        uploadPicture(findedReview, files);
+
+        reviewRepository.save(findedReview);
+    }
+
+    // 기존에 업로드 된 사진 삭제
+    private void deletePicture(Review review) {
+        for (String[] picture : review.getPictures()) {
+            awsS3Service.deleteFile(picture[1]);
+        }
+    }
+
+    // 작성자 확인
+    private static void checkAuthor(long memberId, Review findedReview) {
+        if (findedReview.getMember().getMemberId() != memberId) {
+            throw new BusinessLogicException(ExceptionCode.ONLY_AUTHOR);
+        }
+    }
+
+    // 로그인 확인
+    private static void checkLogin(long memberId) {
+        if (memberId == NUMBER_OF_NON_LOGIN) {
+            throw new BusinessLogicException(ExceptionCode.AVAILABLE_AFTER_LOGIN);
+        }
+    }
+
+    // 사진 업로드
+    private void uploadPicture(Review review, List<MultipartFile> files) {
         // 사진이 첨부되어 있을경우 처리
         if (files != null) {
             if (files.size() > 4) {
@@ -56,12 +102,29 @@ public class ReviewService {
             }
             review.setPictures(pictures);
         }
+    }
 
-        reviewRepository.save(review);
+    // 리뷰 찾기
+    private Review findVerifiedReview(long reviewId) {
+        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
+
+        return optionalReview.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.REVIEW_NOT_FOUND));
     }
 
     // 축제 상세 페이지에 속한 리뷰 리스트 불러오기
     public Page<Review> getReviewListInFestivalDetail(long festivalId, int page, int size) {
         return reviewRepository.findAllByFestivalFestivalId(festivalId, PageRequest.of(page - 1, size, Sort.by("reviewId").descending()));
+    }
+
+    // 리뷰 삭제
+    public void deleteReview(long memberId, long reviewId) {
+        checkLogin(memberId);
+
+        Review review = findVerifiedReview(reviewId);
+
+        checkAuthor(memberId, review);
+        deletePicture(review);
+        reviewRepository.delete(review);
     }
 }

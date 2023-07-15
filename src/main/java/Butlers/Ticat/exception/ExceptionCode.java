@@ -12,6 +12,8 @@ public enum ExceptionCode {
     PASSWORD_DOES_NOT_MATCH(409, "입력하신 비밀번호가 일치하지 않습니다."),
     CANT_UPLOAD_MORE_THAN_FOUR(409, "사진은 4개 초과해서 업로드 할 수 없습니다."),
     AVAILABLE_AFTER_LOGIN(403, "로그인 후 이용가능합니다."),
+    REVIEW_NOT_FOUND(404, "해당 리뷰를 찾을 수 없습니다."),
+    ONLY_AUTHOR(403, "리뷰 작성자만 수정이 가능합니다."),
     LIKE_NOT_CANCEL(204,"좋아요를 취소할 수 없습니다"),
     CALENDAR_NOT_FOUND(404,"일정을 찾을 수 없습니다");
     @Getter

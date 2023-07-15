@@ -27,13 +27,25 @@ public class ReviewController {
     @PostMapping(path = "/festivals/{festival-id}/reviews",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity postReview(@PathVariable("festival-id") long festivalId,
-                                     @RequestPart ReviewDto.Post review,
+                                     @RequestPart ReviewDto.PostPatch review,
                                      @RequestPart(required = false) List<MultipartFile> reviewImage) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 
         reviewService.registerReview(reviewMapper.postToReview(review, authenticationMemberId, festivalId), reviewImage);
 
         return new ResponseEntity<>("리뷰 등록이 완료되었습니다.", HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/reviews/{review-id}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity patchReview(@PathVariable("review-id") long reviewId,
+                                      @RequestPart ReviewDto.PostPatch review,
+                                      @RequestPart(required = false) List<MultipartFile> reviewImage) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.updateReview(reviewMapper.patchToReveiw(review, authenticationMemberId, reviewId), reviewImage);
+
+        return new ResponseEntity<>("리뷰 수정이 완료되었습니다.", HttpStatus.OK);
     }
 
     @GetMapping("/festivals/{festival-id}/reviews")
@@ -44,5 +56,14 @@ public class ReviewController {
         List<Review> reviews = pageReviews.getContent();
 
         return new ResponseEntity<>(new MultiResponseDto<>(reviewMapper.reviewToResponseInFestival(reviews), pageReviews), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/review/{review-id}")
+    public ResponseEntity deleteReview(@PathVariable("review-id") long reviewId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.deleteReview(authenticationMemberId, reviewId);
+
+        return new ResponseEntity<>("리뷰 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 }
