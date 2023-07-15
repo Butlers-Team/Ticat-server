@@ -72,7 +72,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, Member member) throws IOException {
         String accessToken = delegateAccessToken(member);
-        String refreshToken = delegateRefreshToken(member.getEmail());
+        String refreshToken = delegateRefreshToken(member.getId());
         String addedAccessToken = "Bearer " + accessToken;
 
         response.setHeader("Authorization", addedAccessToken);
@@ -116,8 +116,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         queryParams.add("Refresh", refreshToken);
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http:/localhost")
-                .port(8080)
+                .scheme("http:/localhost:3000/callback/true")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
@@ -131,8 +130,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         queryParams.add("Refresh", refreshToken);
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http:/localhost")
-                .port(8080)
+                .fromUriString("http://localhost:3000")
+                .path("/callback/false")
                 .queryParams(queryParams)
                 .build()
                 .toUri();

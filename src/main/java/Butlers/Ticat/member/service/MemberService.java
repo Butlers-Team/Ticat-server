@@ -53,6 +53,7 @@ public class MemberService {
     // 오어스 회원 가입
     public Member joinInOauth(Member member) {
         member.setOauthChecked(true);
+        verifyExistingId(member.getId());
 
         return memberRepository.save(member);
     }

@@ -2,18 +2,13 @@ package Butlers.Ticat.auth.handler;
 
 import Butlers.Ticat.auth.jwt.JwtTokenizer;
 import Butlers.Ticat.member.entity.Member;
-import Butlers.Ticat.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,14 +29,23 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
         if (principal instanceof Member) {
             Member member = (Member) principal;
 
-//            if (member.getDisplayName() == null || member.getInterest().getInterests() == null) {
-//                log.info("# Need Resist Interest");
-//                String accessToken = generateAccessToken(member);
-//                String refreshToken = generateRefreshToken(member.getEmail());
-//                String uri = createInterestUri(accessToken, refreshToken).toString();
-//                response.sendRedirect(uri);
-//            }
+            if (member.getDisplayName() == null || member.getInterest().getCategories() == null) {
+                log.info("# Need Resist Interest");
+                String accessToken = generateAccessToken(member);
+                String refreshToken = generateRefreshToken(member.getId());
+                String addedAccessToken = "Bearer " + accessToken;
+
+                response.setHeader("Authorization", addedAccessToken);
+                response.setHeader("Refresh", refreshToken);
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write("닉네임 설정 및 관심사 등록이 필요합니다."); // 클라이언트에게 관심사 등록이 필요하다는 정보를 전달
+                response.getWriter().flush();
+                return;
+            }
         }
+
+        // 관심사 등록이 필요하지 않은 경우
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     private String generateAccessToken(Member member) {
@@ -64,19 +68,5 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
         String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
         return refreshToken;
-    }
-
-    private URI createInterestUri(String accessToken, String refreshToken) {
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("Authorization", accessToken);
-        queryParams.add("Refresh", refreshToken);
-        return UriComponentsBuilder
-                .newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(8080)
-                .queryParams(queryParams)
-                .build()
-                .toUri();
     }
 }
