@@ -91,4 +91,12 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 댓글 수정이 완료되었습니다.", HttpStatus.OK);
     }
 
+    @DeleteMapping("comments/{comment-id}")
+    public ResponseEntity deleteComment(@PathVariable("comment-id") long commentId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.deleteReviewComment(authenticationMemberId, commentId);
+
+        return new ResponseEntity<>("리뷰 댓글 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
+    }
 }

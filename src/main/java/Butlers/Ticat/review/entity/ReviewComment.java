@@ -27,4 +27,12 @@ public class ReviewComment {
 
     // 덧글 내용
     private String content;
+
+    // 리뷰 설정 메서드
+    public void setReview(Review review) {
+        this.review = review;
+        if (!review.getComments().contains(this)) {
+            review.addComment(this);
+        }
+    }
 }

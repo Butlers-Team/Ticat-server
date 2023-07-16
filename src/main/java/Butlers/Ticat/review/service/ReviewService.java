@@ -168,4 +168,14 @@ public class ReviewService {
         return optionalReviewComment.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.REVIEW_COMMENT_NOT_FOUND));
     }
+
+    // 리뷰 댓글 삭제
+    public void deleteReviewComment(long memberId, long reviewCommentId) {
+        checkLogin(memberId);
+
+        ReviewComment reviewComment = findVerifiedReviewComment(reviewCommentId);
+
+        checkAuthor(memberId, reviewComment.getMember().getMemberId());
+        reviewCommentRepository.delete(reviewComment);
+    }
 }

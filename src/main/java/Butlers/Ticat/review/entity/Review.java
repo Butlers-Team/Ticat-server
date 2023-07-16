@@ -37,4 +37,16 @@ public class Review {
     // 리뷰 이미지 S3 주소
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String[]> pictures = new ArrayList<>();
+
+    // 리뷰 댓글 1:N 매핑
+    @OneToMany(mappedBy = "review")
+    private List<ReviewComment> comments = new ArrayList<>();
+
+    // 리뷰 댓글 추가 메서드
+    public void addComment(ReviewComment reviewComment) {
+        this.comments.add(reviewComment);
+        if (reviewComment.getReview() != this) {
+            reviewComment.setReview(this);
+        }
+    }
 }
