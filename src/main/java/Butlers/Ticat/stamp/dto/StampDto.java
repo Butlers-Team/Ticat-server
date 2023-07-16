@@ -31,6 +31,7 @@ public class StampDto {
     public static class StampResponse{
 
         private Long festivalId;
+        private String category;
         private DetailFestival.Status status;
         private LocalDate stampDate;
         private String eventStartDate; // 행사시작일
