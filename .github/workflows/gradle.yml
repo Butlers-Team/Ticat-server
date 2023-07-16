@@ -20,6 +20,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
+          
+        
 
       - name: SSH Commands
         uses: appleboy/ssh-action@v0.1.6
@@ -31,13 +33,17 @@ jobs:
           script_stop: true
           script: |
               cd ./Ticat-server
-              lsof -i :8080
-              fuser -k -n tcp 8080
+              lsof -i :8080 || true
+              fuser -k -n tcp 8080 || true
               git pull origin main
+              ls
+              pwd
+              echo ${{ secrets.APPLICATION_YML }} | base64 --decode > src/main/resources/application.yml            
               ./gradlew build
               cd build/libs
               nohup java -jar Ticat-0.0.1-SNAPSHOT.jar 1>/dev/null 2>&1 &
             
+              
+     
 
               
-            
