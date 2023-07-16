@@ -46,7 +46,7 @@ public class ReviewController {
                                       @RequestPart(required = false) List<MultipartFile> reviewImage) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 
-        reviewService.updateReview(reviewMapper.patchToReveiw(review, authenticationMemberId, reviewId), reviewImage);
+        reviewService.updateReview(reviewMapper.patchToReview(review, authenticationMemberId, reviewId), reviewImage);
 
         return new ResponseEntity<>("리뷰 수정이 완료되었습니다.", HttpStatus.OK);
     }
@@ -91,7 +91,7 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 댓글 수정이 완료되었습니다.", HttpStatus.OK);
     }
 
-    @DeleteMapping("comments/{comment-id}")
+    @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity deleteComment(@PathVariable("comment-id") long commentId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 

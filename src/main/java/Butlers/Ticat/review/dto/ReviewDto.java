@@ -22,5 +22,6 @@ public class ReviewDto {
         String content;
         double rating;
         List<String> pictures;
+        List<ReviewCommentDto.Response> comments;
     }
 }

@@ -129,6 +129,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(new JwtParseInterceptor(jwtUtils()))
         .addPathPatterns("/interest")
         .addPathPatterns("/festivals/**")
-        .addPathPatterns("/profile");
+        .addPathPatterns("/profile")
+        .addPathPatterns("/reviews/**")
+        .addPathPatterns("/comments/**");
     }
 }

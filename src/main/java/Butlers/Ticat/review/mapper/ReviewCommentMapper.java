@@ -30,7 +30,7 @@ public interface ReviewCommentMapper {
         ReviewComment reviewComment = new ReviewComment();
         reviewComment.setMember(member);
         reviewComment.setReviewCommentId(reviewCommentId);
-        reviewComment.setContent(reviewComment.getContent());
+        reviewComment.setContent(requestBody.getContent());
 
         return reviewComment;
     }

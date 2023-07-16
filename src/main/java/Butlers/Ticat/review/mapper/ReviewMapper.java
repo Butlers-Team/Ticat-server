@@ -2,8 +2,10 @@ package Butlers.Ticat.review.mapper;
 
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.member.entity.Member;
+import Butlers.Ticat.review.dto.ReviewCommentDto;
 import Butlers.Ticat.review.dto.ReviewDto;
 import Butlers.Ticat.review.entity.Review;
+import Butlers.Ticat.review.entity.ReviewComment;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -26,10 +28,11 @@ public interface ReviewMapper {
         return review;
     }
 
-    default Review patchToReveiw(ReviewDto.PostPatch requestBody, long memberId, long reviewId) {
+    default Review patchToReview(ReviewDto.PostPatch requestBody, long memberId, long reviewId) {
         Member member = new Member();
         member.setMemberId(memberId);
         Review review = new Review();
+        review.setReviewId(reviewId);
         review.setMember(member);
         review.setContent(requestBody.getContent());
         review.setRate(requestBody.getRating());
@@ -51,11 +54,27 @@ public interface ReviewMapper {
                 .displayName(member.getDisplayName())
                 .content(review.getContent())
                 .rating(review.getRate())
-                .pictures(pictures).build();
+                .pictures(pictures)
+                .comments(reviewsCommentToResponses(review.getComments())).build();
     }
     default List<ReviewDto.ResponseInFestival> reviewToResponseInFestival(List<Review> reviews) {
         return reviews.stream()
                 .map(review -> reviewToResponseListElementInFestival(review))
                 .collect(Collectors.toList());
+    }
+
+    default List<ReviewCommentDto.Response> reviewsCommentToResponses(List<ReviewComment> reviewComments) {
+        return reviewComments.stream()
+                .map(reviewComment -> reviewCommentToResponse(reviewComment))
+                .collect(Collectors.toList());
+    }
+    default ReviewCommentDto.Response reviewCommentToResponse(ReviewComment reviewComment) {
+        Member member = reviewComment.getMember();
+
+        return ReviewCommentDto.Response.builder()
+                .reviewCommentId(reviewComment.getReviewCommentId())
+                .memberId(member.getMemberId())
+                .displayName(member.getDisplayName())
+                .content(reviewComment.getContent()).build();
     }
 }
