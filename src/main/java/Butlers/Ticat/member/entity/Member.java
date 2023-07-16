@@ -106,4 +106,13 @@ public class Member {
         this.id = id;
         this.email = email;
     }
+
+    // 회원 최근목록 저장을 위한 관계 설정
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberRecent> memberRecentList = new ArrayList<>();
+    public void addMemberRecent(MemberRecent memberRecent) {
+        memberRecent.setMember(this);
+        this.memberRecentList.add(memberRecent);
+    }
+
 }
