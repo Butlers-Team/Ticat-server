@@ -1,5 +1,6 @@
 package Butlers.Ticat.stamp.contoller;
 
+import Butlers.Ticat.stamp.entity.Stamp;
 import Butlers.Ticat.stamp.service.StampService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,15 @@ public class StampController {
     @PostMapping("/{memberId}/{contentId}")
     public ResponseEntity postStampFestivals(@PathVariable("memberId") Long memberId,
                                              @PathVariable("contentId") Long contentId) {
-        stampService.saveStamp(memberId, contentId);
+        Stamp stamp = stampService.saveStamp(memberId, contentId);
 
-        return new ResponseEntity<>("스탬프 저장 완료" ,HttpStatus.OK);
+        boolean isSaved = stamp != null;
+
+        if (isSaved) {
+            return new ResponseEntity<>("스탬프 저장 완료", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("스탬프 저장 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
