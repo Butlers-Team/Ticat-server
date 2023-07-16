@@ -16,6 +16,7 @@ public class ReviewCommentDto {
         private long reviewCommentId;
         private long memberId;
         private String displayName;
+        private String profileUrl;
         private String content;
     }
 }

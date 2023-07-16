@@ -52,6 +52,7 @@ public interface ReviewMapper {
                 .reviewId(review.getReviewId())
                 .memberId(member.getMemberId())
                 .displayName(member.getDisplayName())
+                .profileUrl(member.getProfileUrl())
                 .content(review.getContent())
                 .rating(review.getRate())
                 .pictures(pictures)
@@ -75,6 +76,7 @@ public interface ReviewMapper {
                 .reviewCommentId(reviewComment.getReviewCommentId())
                 .memberId(member.getMemberId())
                 .displayName(member.getDisplayName())
+                .profileUrl(member.getProfileUrl())
                 .content(reviewComment.getContent()).build();
     }
 }

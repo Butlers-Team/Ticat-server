@@ -19,6 +19,7 @@ public class ReviewDto {
         long reviewId;
         long memberId;
         String displayName;
+        String profileUrl;
         String content;
         double rating;
         List<String> pictures;
