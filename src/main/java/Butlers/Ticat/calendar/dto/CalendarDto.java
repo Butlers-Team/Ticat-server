@@ -25,7 +25,7 @@ public class CalendarDto {
 
         private Long festivalId;
         private String category;
-        private DetailFestival.Status staus;
+        private DetailFestival.Status status;
         private LocalDate scheduledDate;
         private LocalDate calendarDate;
         private String eventStartDate; // 행사시작일
