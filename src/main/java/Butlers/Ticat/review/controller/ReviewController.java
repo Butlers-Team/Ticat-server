@@ -51,6 +51,16 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 수정이 완료되었습니다.", HttpStatus.OK);
     }
 
+    // 리뷰 수정 전 권한 확인 요청
+    @GetMapping("/reviews/{review-id}")
+    public ResponseEntity beforePatchRequestCheckReviewModificationPermission(@PathVariable("review-id") long reviewId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.checkReviewModificationPermission(authenticationMemberId, reviewId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     // 축제 상세페이지 내부 리뷰 리스트 불러오기
     @GetMapping("/festivals/{festival-id}/reviews")
     public ResponseEntity getReviewsInFestivalDetail(@PathVariable("festival-id") long festivalId,
@@ -92,12 +102,22 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 댓글 수정이 완료되었습니다.", HttpStatus.OK);
     }
 
+    // 리뷰 댓글 수정 전 권한 확인
+    @GetMapping("/comments/{comment-id}")
+    public ResponseEntity beforePatchRequestCheckReviewCommentModificationPermission(@PathVariable("comment-id") long reviewCommentId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.checkReviewModificationPermission(authenticationMemberId, reviewCommentId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity deleteComment(@PathVariable("comment-id") long commentId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 
         reviewService.deleteReviewComment(authenticationMemberId, commentId);
 
-        return new ResponseEntity<>("리뷰 댓글 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("리뷰 댓글 삭제가 완료되었습니다.", HttpStatus.OK);
     }
 }

@@ -70,6 +70,12 @@ public class ReviewService {
         reviewRepository.save(findedReview);
     }
 
+    // 리뷰 수정 요청 전 권한 확인 메서드
+    public void checkReviewModificationPermission(long memberId, long reviewId) {
+        checkLogin(memberId);
+        checkAuthor(memberId, findVerifiedReview(reviewId).getMember().getMemberId());
+    }
+
     // 기존에 업로드 된 사진 삭제
     private void deletePicture(Review review) {
         for (String[] picture : review.getPictures()) {
@@ -159,6 +165,12 @@ public class ReviewService {
         findedReviewComment.setContent((reviewComment.getContent()));
 
         reviewCommentRepository.save(findedReviewComment);
+    }
+
+    // 리뷰 댓글 수정 요청 전 권한 확인 메서드
+    public void checkReviewCommentModificationPermission(long memberId, long reviewCommentId) {
+        checkLogin(memberId);
+        checkAuthor(memberId, findVerifiedReviewComment(reviewCommentId).getMember().getMemberId());
     }
 
     // 리뷰 댓글 찾기
