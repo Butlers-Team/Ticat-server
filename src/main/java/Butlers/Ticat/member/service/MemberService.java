@@ -7,6 +7,7 @@ import Butlers.Ticat.aws.service.AwsS3Service;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.member.entity.Member;
+import Butlers.Ticat.member.entity.MemberRecent;
 import Butlers.Ticat.member.repository.MemberRepository;
 import Butlers.Ticat.stamp.entity.Stamp;
 import Butlers.Ticat.stamp.repository.StampRepository;
@@ -20,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -192,5 +193,22 @@ public class MemberService {
         return calendarRepository.findByMemberAndScheduleDateIsBetween(member, startDate, endDate, pageable);
     }
 
+    public void addRecentFestival(Member member, Long festivalId) {
+        MemberRecent memberRecent = new MemberRecent(festivalId);
+        member.addMemberRecent(memberRecent);
+
+        memberRepository.save(member);
+    }
+
+    public List<Long> getRecentFestivals(Member member) {
+        List<MemberRecent> memberRecentList = member.getMemberRecentList();
+        Set<Long> recentFestivalsSet = new LinkedHashSet<>();
+
+        for (int i = memberRecentList.size() - 1; i >= 0 && recentFestivalsSet.size() < 5; i--) {
+            recentFestivalsSet.add(memberRecentList.get(i).getFestivalId());
+        }
+
+        return new ArrayList<>(recentFestivalsSet);
+    }
 
 }

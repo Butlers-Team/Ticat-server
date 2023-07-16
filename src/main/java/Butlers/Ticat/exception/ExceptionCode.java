@@ -16,7 +16,8 @@ public enum ExceptionCode {
     REVIEW_COMMENT_NOT_FOUND(404, "해당 댓글을 찾을 수 없습니다."),
     ONLY_AUTHOR(403, "리뷰 작성자만 수정이 가능합니다."),
     LIKE_NOT_CANCEL(204,"좋아요를 취소할 수 없습니다"),
-    CALENDAR_NOT_FOUND(404,"일정을 찾을 수 없습니다");
+    CALENDAR_NOT_FOUND(404,"일정을 찾을 수 없습니다"),
+    STAMP_ALREADY_EXISTS(409, "스탬프가 이미 저장되어있습니다" );
     @Getter
     private int status;
     @Getter

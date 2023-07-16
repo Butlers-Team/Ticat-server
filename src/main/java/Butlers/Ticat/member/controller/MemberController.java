@@ -166,4 +166,24 @@ public class MemberController {
                 new MultiResponseDto<>(Collections.singletonList(calendarResponse), calendarPage);
         return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
     }
+
+    @PostMapping("/recent/{member-id}")
+    public ResponseEntity addRecentFestival(@RequestParam Long festivalId,
+                                            @Positive @PathVariable("member-id") Long memberId) {
+
+        Member member = memberService.findMember(memberId);
+        memberService.addRecentFestival(member, festivalId);
+
+        return ResponseEntity.ok("저장 완료");
+    }
+
+    @GetMapping("/recent/{member-id}")
+    public ResponseEntity getRecentFestivals(@PathVariable("member-id") Long memberId) {
+        Member member = memberService.findMember(memberId);
+
+        List<Long> recentFestivals = memberService.getRecentFestivals(member);
+
+        return ResponseEntity.ok(recentFestivals);
+
+    }
 }
