@@ -28,6 +28,14 @@ public class ReviewComment {
     // 덧글 내용
     private String content;
 
+    // 회원 설정 메서드
+    public void setMember(Member member) {
+        this.member = member;
+        if (!member.getReviewComments().contains(this)) {
+            member.addReviewComment(this);
+        }
+    }
+
     // 리뷰 설정 메서드
     public void setReview(Review review) {
         this.review = review;

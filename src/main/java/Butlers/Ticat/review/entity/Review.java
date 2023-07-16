@@ -42,6 +42,14 @@ public class Review {
     @OneToMany(mappedBy = "review")
     private List<ReviewComment> comments = new ArrayList<>();
 
+    // 회원 설정 메서드
+    public void setMember(Member member) {
+        this.member = member;
+        if (!member.getReviews().contains(this)) {
+            member.addReview(this);
+        }
+    }
+
     // 리뷰 댓글 추가 메서드
     public void addComment(ReviewComment reviewComment) {
         this.comments.add(reviewComment);

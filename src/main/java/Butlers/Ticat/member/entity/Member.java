@@ -2,6 +2,8 @@ package Butlers.Ticat.member.entity;
 
 
 import Butlers.Ticat.calendar.entity.Calendar;
+import Butlers.Ticat.review.entity.Review;
+import Butlers.Ticat.review.entity.ReviewComment;
 import lombok.*;
 
 import javax.persistence.*;
@@ -67,11 +69,35 @@ public class Member {
     // 프로필 이미지 순수 url (내부에서 접근용 // 수정, 삭제 등)
     private String pureProfileUrl;
 
+    // 리뷰 1:N 매핑
+    @OneToMany(mappedBy = "member")
+    private List<Review> reviews = new ArrayList<>();
+
+    // 리뷰 댓글 1:N 매핑
+    @OneToMany(mappedBy = "member")
+    private List<ReviewComment> reviewComments = new ArrayList<>();
+
     // 관심사 설정 메서드
     public void setInterest(Interest interest) {
         this.interest = interest;
         if (interest.getMember() != this) {
             interest.setMember(this);
+        }
+    }
+
+    // 리뷰 추가 메서드
+    public void addReview(Review review) {
+        this.reviews.add(review);
+        if (review.getMember() != this) {
+            review.setMember(this);
+        }
+    }
+
+    // 리뷰 댓글 추가 메서드
+    public void addReviewComment(ReviewComment reviewComment) {
+        this.reviewComments.add(reviewComment);
+        if (reviewComment.getMember() != this) {
+            reviewComment.setMember(this);
         }
     }
 

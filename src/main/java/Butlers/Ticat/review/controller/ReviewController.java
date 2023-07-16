@@ -51,6 +51,7 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 수정이 완료되었습니다.", HttpStatus.OK);
     }
 
+    // 축제 상세페이지 내부 리뷰 리스트 불러오기
     @GetMapping("/festivals/{festival-id}/reviews")
     public ResponseEntity getReviewsInFestivalDetail(@PathVariable("festival-id") long festivalId,
                                     @Positive @RequestParam int page,
