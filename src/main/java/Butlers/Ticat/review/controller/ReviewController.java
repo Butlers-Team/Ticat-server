@@ -2,8 +2,10 @@ package Butlers.Ticat.review.controller;
 
 import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.dto.MultiResponseDto;
+import Butlers.Ticat.review.dto.ReviewCommentDto;
 import Butlers.Ticat.review.dto.ReviewDto;
 import Butlers.Ticat.review.entity.Review;
+import Butlers.Ticat.review.mapper.ReviewCommentMapper;
 import Butlers.Ticat.review.mapper.ReviewMapper;
 import Butlers.Ticat.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
+    private final ReviewCommentMapper reviewCommentMapper;
 
     @PostMapping(path = "/festivals/{festival-id}/reviews",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -58,7 +61,7 @@ public class ReviewController {
         return new ResponseEntity<>(new MultiResponseDto<>(reviewMapper.reviewToResponseInFestival(reviews), pageReviews), HttpStatus.OK);
     }
 
-    @DeleteMapping("/review/{review-id}")
+    @DeleteMapping("/reviews/{review-id}")
     public ResponseEntity deleteReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 
@@ -66,4 +69,26 @@ public class ReviewController {
 
         return new ResponseEntity<>("리뷰 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
+
+    // 리뷰 댓글
+    @PostMapping("/reviews/{review-id}/comments")
+    public ResponseEntity postComment(@PathVariable("review-id") long reviewId,
+                                      @RequestBody ReviewCommentDto.PostPatch comment) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.registerReviewComment(reviewCommentMapper.postToReviewComment(comment, authenticationMemberId, reviewId));
+
+        return new ResponseEntity<>("리뷰 댓글 등록이 완료되었습니다.", HttpStatus.OK);
+    }
+
+    @PatchMapping("/comments/{comment-id}")
+    public ResponseEntity patchComment(@PathVariable("comment-id") long commentId,
+                                       @RequestBody ReviewCommentDto.PostPatch comment) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.updateReviewComment(reviewCommentMapper.patchToReviewComment(comment, authenticationMemberId, commentId));
+
+        return new ResponseEntity<>("리뷰 댓글 수정이 완료되었습니다.", HttpStatus.OK);
+    }
+
 }

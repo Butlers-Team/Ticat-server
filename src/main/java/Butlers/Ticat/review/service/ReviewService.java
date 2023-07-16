@@ -8,6 +8,8 @@ import Butlers.Ticat.festival.service.FestivalService;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.service.MemberService;
 import Butlers.Ticat.review.entity.Review;
+import Butlers.Ticat.review.entity.ReviewComment;
+import Butlers.Ticat.review.repository.ReviewCommentRepository;
 import Butlers.Ticat.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ public class ReviewService {
     private static long NUMBER_OF_NON_LOGIN = -1;
 
     private final ReviewRepository reviewRepository;
+    private final ReviewCommentRepository reviewCommentRepository;
     private final MemberService memberService;
     private final FestivalService festivalService;
     private final AwsS3Service awsS3Service;
@@ -55,7 +58,7 @@ public class ReviewService {
 
         Review findedReview = findVerifiedReview(review.getReviewId());
 
-        checkAuthor(memberId, findedReview);
+        checkAuthor(memberId, findedReview.getMember().getMemberId());
 
         findedReview.setContent(review.getContent());
         findedReview.setRate(review.getRate());
@@ -75,8 +78,8 @@ public class ReviewService {
     }
 
     // 작성자 확인
-    private static void checkAuthor(long memberId, Review findedReview) {
-        if (findedReview.getMember().getMemberId() != memberId) {
+    private static void checkAuthor(long memberId, long authorId) {
+        if (authorId != memberId) {
             throw new BusinessLogicException(ExceptionCode.ONLY_AUTHOR);
         }
     }
@@ -123,8 +126,46 @@ public class ReviewService {
 
         Review review = findVerifiedReview(reviewId);
 
-        checkAuthor(memberId, review);
+        checkAuthor(memberId, review.getMember().getMemberId());
         deletePicture(review);
         reviewRepository.delete(review);
+    }
+
+    // 리뷰 댓글 등록
+    public void registerReviewComment(ReviewComment reviewComment) {
+        long memberId = reviewComment.getMember().getMemberId();
+
+        checkLogin(memberId);
+
+        Member member = memberService.findVerifiedMember(memberId);
+        Review review = findVerifiedReview(reviewComment.getReview().getReviewId());
+
+        reviewComment.setMember(member);
+        reviewComment.setReview(review);
+
+        reviewCommentRepository.save(reviewComment);
+    }
+
+    // 리뷰 댓글 수정
+    public void updateReviewComment(ReviewComment reviewComment) {
+        long memberId = reviewComment.getMember().getMemberId();
+
+        checkLogin(memberId);
+
+        ReviewComment findedReviewComment = findVerifiedReviewComment(reviewComment.getReviewCommentId());
+
+        checkAuthor(memberId, findedReviewComment.getMember().getMemberId());
+
+        findedReviewComment.setContent((reviewComment.getContent()));
+
+        reviewCommentRepository.save(findedReviewComment);
+    }
+
+    // 리뷰 댓글 찾기
+    private ReviewComment findVerifiedReviewComment(long reviewCommentId) {
+        Optional<ReviewComment> optionalReviewComment = reviewCommentRepository.findById(reviewCommentId);
+
+        return optionalReviewComment.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.REVIEW_COMMENT_NOT_FOUND));
     }
 }
