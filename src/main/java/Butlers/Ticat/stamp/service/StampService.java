@@ -33,6 +33,12 @@ public class StampService {
         Festival festival = festivalRepository.findByFestivalId(festivalId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.FESTIVAL_NOT_FOUND));
 
+        boolean isStampExists = stampRepository.existsByMemberAndFestival(member, festival);
+
+        if (isStampExists) {
+            throw new BusinessLogicException(ExceptionCode.STAMP_ALREADY_EXISTS);
+        }
+
         Stamp stamp = new Stamp();
 
         stamp.setMember(member);
