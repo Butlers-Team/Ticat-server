@@ -1,5 +1,6 @@
 package Butlers.Ticat.stamp.contoller;
 
+import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.stamp.entity.Stamp;
 import Butlers.Ticat.stamp.service.StampService;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,12 @@ public class StampController {
 
     }
 
-    @PostMapping("/{memberId}/{contentId}")
-    public ResponseEntity postStampFestivals(@PathVariable("memberId") Long memberId,
-                                             @PathVariable("contentId") Long contentId) {
-        Stamp stamp = stampService.saveStamp(memberId, contentId);
+    @PostMapping("/{contentId}")
+    public ResponseEntity postStampFestivals(@PathVariable("contentId") Long contentId) {
+
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        Stamp stamp = stampService.saveStamp(jwtId, contentId);
 
         boolean isSaved = stamp != null;
 

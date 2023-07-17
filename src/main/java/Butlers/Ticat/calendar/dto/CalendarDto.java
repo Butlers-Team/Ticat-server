@@ -24,6 +24,7 @@ public class CalendarDto {
     public static class CalendarResponse{
 
         private Long festivalId;
+        private Long calendarId;
         private String category;
         private DetailFestival.Status status;
         private LocalDate scheduledDate;
@@ -39,7 +40,6 @@ public class CalendarDto {
     @Builder
     public static class Post {
         private Long festivalId;
-        private Long memberId;
         private LocalDate scheduleDate;
     }
 }

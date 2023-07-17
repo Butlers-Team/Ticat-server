@@ -36,7 +36,6 @@ public class MemberDto {
     @Setter
     public static class Patch {
 
-        private Long memberId;
         private String displayName;
         private String password;
 
