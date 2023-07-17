@@ -1,6 +1,6 @@
 package Butlers.Ticat.auth.handler;
 
-import Butlers.Ticat.auth.jwt.JwtTokenizer;
+import Butlers.Ticat.auth.jwt.TokenService;
 import Butlers.Ticat.auth.userinfo.GoogleUserInfo;
 import Butlers.Ticat.auth.userinfo.KakaoUserInfo;
 import Butlers.Ticat.auth.userinfo.NaverUserInfo;
@@ -22,16 +22,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
+    private final TokenService tokenService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -71,42 +69,20 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, Member member) throws IOException {
-        String accessToken = delegateAccessToken(member);
-        String refreshToken = delegateRefreshToken(member.getId());
-        String addedAccessToken = "Bearer " + accessToken;
+        String accessToken = tokenService.delegateAccessToken(member);
+        String refreshToken = tokenService.delegateRefreshToken(member);
 
-        response.setHeader("Authorization", addedAccessToken);
+        response.setHeader("Authorization", accessToken);
         response.setHeader("Refresh", refreshToken);
 
         String uri;
 
         if (member.getDisplayName() == null || member.getInterest().getCategories() == null) {
-            uri = createInterestUri(accessToken, refreshToken). toString();
+            uri = createInterestUri(accessToken, refreshToken).toString();
         } else {
-            uri = createUri(addedAccessToken, refreshToken).toString();
+            uri = createUri(accessToken, refreshToken).toString();
         }
         getRedirectStrategy().sendRedirect(request, response, uri);
-    }
-    private String delegateAccessToken(Member member) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("memberId", member.getMemberId());
-        claims.put("email", member.getEmail());
-
-        String subject = member.getEmail();
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
-
-        return accessToken;
-    }
-
-    private String delegateRefreshToken(String username) {
-        String subject = username;
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
-
-        return refreshToken;
     }
 
     // 콜백 Uri
