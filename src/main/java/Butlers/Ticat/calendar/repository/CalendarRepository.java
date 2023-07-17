@@ -1,6 +1,7 @@
 package Butlers.Ticat.calendar.repository;
 
 import Butlers.Ticat.calendar.entity.Calendar;
+import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,6 @@ public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
 
     Page<Calendar> findByMemberAndScheduleDateIsBetween(Member member, LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+    boolean existsByFestivalAndMemberAndScheduleDate(Festival festival, Member member, LocalDate scheduleDate);
 }
