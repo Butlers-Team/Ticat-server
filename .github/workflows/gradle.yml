@@ -35,7 +35,7 @@ jobs:
               cd ./Ticat-server
               lsof -i :8080 || true
               fuser -k -n tcp 8080 || true
-              git pull origin main
+              git pull origin dev
               echo ${{ secrets.APPLICATION_YML }} | base64 --decode > src/main/resources/application.yml            
               ./gradlew build
               cd build/libs
