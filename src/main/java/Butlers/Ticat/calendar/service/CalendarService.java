@@ -29,6 +29,11 @@ public class CalendarService {
         Festival festival = festivalRepository.findByFestivalId(festivalId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.FESTIVAL_NOT_FOUND));
 
+        boolean isDuplicate = calendarRepository.existsByFestivalAndMemberAndScheduleDate(festival, member, scheduleDate);
+        if (isDuplicate) {
+            throw new BusinessLogicException(ExceptionCode.DUPLICATE_CALENDAR_REGISTRATION);
+        }
+
         Calendar calendar = new Calendar();
         calendar.setFestival(festival);
         calendar.setMember(member);
@@ -39,10 +44,18 @@ public class CalendarService {
     }
 
 
-    public void deleteCalendarById(Long festivalId) {
+    public void deleteCalendarById(Long festivalId, Long memberId) {
+
+        memberService.findMember(memberId);
 
         Calendar calendar = findVerifiedCalendar(festivalId);
-        calendarRepository.delete(calendar);
+
+        if (calendar.getMember().getMemberId().equals(memberId)) {
+            calendarRepository.delete(calendar);
+        } else {
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+        }
+
     }
 
 
