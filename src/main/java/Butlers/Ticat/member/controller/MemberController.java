@@ -178,19 +178,24 @@ public class MemberController {
         return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/recent/{member-id}")
-    public ResponseEntity addRecentFestival(@RequestParam Long festivalId,
-                                            @Positive @PathVariable("member-id") Long memberId) {
+    @PostMapping("/recent")
+    public ResponseEntity addRecentFestival(@RequestParam Long festivalId) {
 
-        Member member = memberService.findMember(memberId);
+
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        Member member = memberService.findMember(jwtId);
         memberService.addRecentFestival(member, festivalId);
 
         return ResponseEntity.ok("저장 완료");
     }
 
-    @GetMapping("/recent/{member-id}")
-    public ResponseEntity getRecentFestivals(@PathVariable("member-id") Long memberId) {
-        Member member = memberService.findMember(memberId);
+    @GetMapping("/recent")
+    public ResponseEntity getRecentFestivals() {
+
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        Member member = memberService.findMember(jwtId);
 
         List<Long> recentFestivals = memberService.getRecentFestivals(member);
 
