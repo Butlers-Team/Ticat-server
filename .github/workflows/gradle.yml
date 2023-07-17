@@ -4,7 +4,7 @@ name: Ticat-deploy to Amazon EC2
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
     
 permissions:
   contents: read
