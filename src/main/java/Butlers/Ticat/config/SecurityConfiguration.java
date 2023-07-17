@@ -5,6 +5,7 @@ import Butlers.Ticat.auth.filter.JwtVerificationFilter;
 import Butlers.Ticat.auth.handler.*;
 import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.auth.jwt.JwtTokenizer;
+import Butlers.Ticat.auth.jwt.TokenService;
 import Butlers.Ticat.auth.utils.JwtUtils;
 import Butlers.Ticat.member.service.MemberService;
 import org.springframework.context.annotation.Bean;
@@ -32,9 +33,11 @@ import java.util.Arrays;
 public class SecurityConfiguration implements WebMvcConfigurer {
 
     private final MemberService memberService;
+    private final TokenService tokenService;
 
-    public SecurityConfiguration(@Lazy MemberService memberService) {
+    public SecurityConfiguration(@Lazy MemberService memberService, @Lazy TokenService tokenService) {
         this.memberService = memberService;
+        this.tokenService = tokenService;
     }
 
     @Bean
@@ -72,7 +75,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                         .anyRequest().permitAll()
                 )
                 .oauth2Login()
-                .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer(), memberService));
+                .successHandler(new OAuth2MemberSuccessHandler(memberService, tokenService));
         return http.build();
     }
 
@@ -103,7 +106,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer());
             jwtAuthenticationFilter.setFilterProcessesUrl("/login");
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer()));
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(tokenService));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtUtils());
