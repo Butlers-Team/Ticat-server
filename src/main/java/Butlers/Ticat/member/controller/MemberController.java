@@ -41,30 +41,35 @@ public class MemberController {
         return new ResponseEntity("회원가입이 완료되었습니다", HttpStatus.OK);
     }
 
-    @GetMapping("/members/{member-id}")
-    public ResponseEntity findMember(@PathVariable("member-id") Long memberId) {
+    @GetMapping("/members")
+    public ResponseEntity findMember() {
+
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
 
         return new ResponseEntity<>(memberMapper.memberToMemberResponse(
-                memberService.findMember(memberId)), HttpStatus.OK);
+                memberService.findMember(jwtId)), HttpStatus.OK);
     }
 
-    @PatchMapping("/members/{member-id}")
-    public ResponseEntity updateMember(@PathVariable("member-id") Long memberId,
-                                       @RequestBody MemberDto.Patch requestBody) {
-        requestBody.setMemberId(memberId);
+    @PatchMapping("/members")
+    public ResponseEntity updateMember(@RequestBody MemberDto.Patch requestBody) {
+
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
 
         Member member = memberMapper.memberPatchToMember(requestBody);
 
+        member.setMemberId(jwtId);
         memberService.updateMember(member);
 
         return new ResponseEntity<>(memberMapper.memberToMemberResponse(
-                memberService.findMember(memberId)), HttpStatus.OK);
+                memberService.findMember(jwtId)), HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/members/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId) {
-        memberService.deleteMember(memberId);
+    @DeleteMapping("/members")
+    public ResponseEntity deleteMember() {
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        memberService.deleteMember(jwtId);
 
         return new ResponseEntity<>("회원 탈퇴가 완료되었습니다",HttpStatus.OK);
     }
@@ -101,12 +106,14 @@ public class MemberController {
 
 
 
-    @GetMapping("/members/{member-id}/calendar")
-    public ResponseEntity getMemberCalendar(@PathVariable("member-id") @Positive Long memberId,
-                                           @Positive @RequestParam int page,
+    @GetMapping("/members/calendar")
+    public ResponseEntity getMemberCalendar(@Positive @RequestParam int page,
                                            @RequestParam int year, @RequestParam int month,
                                            @RequestParam(required = false) Integer day) {
-        Member member = memberService.findMember(memberId);
+
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        Member member = memberService.findMember(jwtId);
 
         Page<Calendar> calendarPage = memberService.getMemberCalendar(member, page -1, year, month, day);
         List<Calendar> calendars = calendarPage.getContent();
@@ -123,12 +130,14 @@ public class MemberController {
         return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/members/{member-id}/stamps")
-    public ResponseEntity getMemberStamped(@PathVariable("member-id") @Positive Long memberId,
-                                           @Positive @RequestParam int page,
+    @GetMapping("/members/stamps")
+    public ResponseEntity getMemberStamped(@Positive @RequestParam int page,
                                            @RequestParam int year, @RequestParam int month,
                                            @RequestParam(required = false) Integer day) {
-        Member member = memberService.findMember(memberId);
+
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        Member member = memberService.findMember(jwtId);
 
         Page<Stamp> stampPage = memberService.getMemberStamped(member, page -1, year, month, day);
         List<Stamp> stamps = stampPage.getContent();
@@ -145,12 +154,14 @@ public class MemberController {
         return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/members/{member-id}/schedule")
-    public ResponseEntity getMemberSchedule(@PathVariable("member-id") @Positive Long memberId,
-                                            @Positive @RequestParam int page,
+    @GetMapping("/members/schedule")
+    public ResponseEntity getMemberSchedule(@Positive @RequestParam int page,
                                             @RequestParam int year, @RequestParam int month,
                                             @RequestParam(required = false) Integer day) {
-        Member member = memberService.findMember(memberId);
+
+        long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        Member member = memberService.findMember(jwtId);
 
         Page<Calendar> calendarPage = memberService.getMemberSchedule(member, page -1, year, month, day);
         List<Calendar> calendars = calendarPage.getContent();
