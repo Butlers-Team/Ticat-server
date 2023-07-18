@@ -7,6 +7,7 @@ import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.auth.jwt.JwtTokenizer;
 import Butlers.Ticat.auth.jwt.TokenService;
 import Butlers.Ticat.auth.utils.JwtUtils;
+import Butlers.Ticat.member.repository.MemberRepository;
 import Butlers.Ticat.member.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,10 +35,12 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     private final MemberService memberService;
     private final TokenService tokenService;
+    private final MemberRepository memberRepository;
 
-    public SecurityConfiguration(@Lazy MemberService memberService, @Lazy TokenService tokenService) {
+    public SecurityConfiguration(@Lazy MemberService memberService, @Lazy TokenService tokenService, MemberRepository memberRepository) {
         this.memberService = memberService;
         this.tokenService = tokenService;
+        this.memberRepository = memberRepository;
     }
 
     @Bean
@@ -109,7 +112,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(tokenService));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtUtils());
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtUtils(), tokenService, memberRepository);
 
             builder
                     .addFilter(jwtAuthenticationFilter)
