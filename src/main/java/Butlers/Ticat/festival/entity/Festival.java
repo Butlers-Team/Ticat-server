@@ -45,7 +45,7 @@ public class Festival {
     private DetailFestival detailFestival;
 
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "festival")
     private List<Calendar> calendar = new ArrayList<>();
 
@@ -53,15 +53,15 @@ public class Festival {
         this.calendar.add(calendar);
     }
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "festival")
     private List<Favorite> favorites;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "festival")
     private List<Stamp> stamps = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "festival")
     private List<Review> reviews = new ArrayList<>();
 
