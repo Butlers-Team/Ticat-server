@@ -18,11 +18,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ReviewService {
 
@@ -44,10 +46,20 @@ public class ReviewService {
         Festival festival = festivalService.findFestival(review.getFestival().getFestivalId());
         review.setMember(member);
         review.setFestival(festival);
+        reviewRateCreate(review, festival);
 
         uploadPicture(review, files);
 
         reviewRepository.save(review);
+    }
+
+    // 리뷰 생성시 리뷰 평점,카운트 수정
+    private void reviewRateCreate(Review review, Festival festival) {
+        int newReviewCount = festival.getReviews().size() + 1;
+        double newReviewRating = (festival.getReviewRating() * festival.getReviews().size() + review.getRate()) / newReviewCount;
+
+        festival.setReviewCount(newReviewCount);
+        festival.setReviewRating(newReviewRating);
     }
 
     // 리뷰 수정
@@ -61,13 +73,25 @@ public class ReviewService {
         checkAuthor(memberId, findedReview.getMember().getMemberId());
 
         findedReview.setContent(review.getContent());
-        findedReview.setRate(review.getRate());
+        reviewRateUpdate(review, findedReview);
 
         deletePicture(review);
 
         uploadPicture(findedReview, files);
 
         reviewRepository.save(findedReview);
+    }
+
+    // 리뷰 수정시 리뷰 평점,카운트 수정
+    private void reviewRateUpdate(Review review, Review findedReview) {
+        Festival festival = festivalService.findFestival(findedReview.getFestival().getFestivalId());
+        double oldRating = findedReview.getRate();
+        findedReview.setRate(review.getRate());
+        double newRating = review.getRate();
+        int reviewCount = festival.getReviewCount();
+        double reviewRating = festival.getReviewRating();
+        reviewRating = (reviewRating * reviewCount - oldRating + newRating) / reviewCount;
+        festival.setReviewRating(reviewRating);
     }
 
     // 리뷰 수정 요청 전 권한 확인 메서드
@@ -133,10 +157,31 @@ public class ReviewService {
         Review review = findVerifiedReview(reviewId);
 
         checkAuthor(memberId, review.getMember().getMemberId());
+        reviewRateDelete(review);
+
         deletePicture(review);
         reviewRepository.delete(review);
     }
 
+    // 리뷰 삭제시 축제 평점,카운트 수정
+    private void reviewRateDelete(Review review) {
+        Festival festival = festivalService.findFestival(review.getFestival().getFestivalId());
+        int currentReviewCount = festival.getReviews().size();
+        double currentReviewRating = festival.getReviewRating();
+
+        if (currentReviewCount > 1) {
+            int newReviewCount = currentReviewCount - 1;
+            double totalReviewRating = currentReviewRating * currentReviewCount;
+            double deletedReviewRate = review.getRate();
+            double newReviewRating = (totalReviewRating - deletedReviewRate) / newReviewCount;
+
+            festival.setReviewCount(newReviewCount);
+            festival.setReviewRating(newReviewRating);
+        } else {
+            festival.setReviewCount(0);
+            festival.setReviewRating(0.0);
+        }
+    }
     // 리뷰 댓글 등록
     public void registerReviewComment(ReviewComment reviewComment) {
         long memberId = reviewComment.getMember().getMemberId();
