@@ -53,7 +53,8 @@ public class Festival {
         this.calendar.add(calendar);
     }
 
-    @OneToMany(mappedBy = "festival")
+    @OneToMany
+    @JoinColumn(name = "festival")
     private List<Favorite> favorites;
 
     @OneToMany
