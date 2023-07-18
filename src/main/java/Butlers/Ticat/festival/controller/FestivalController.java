@@ -32,8 +32,9 @@ public class FestivalController {
     @GetMapping("/{festival-id}")
     public ResponseEntity getFestival(@Positive @PathVariable("festival-id") long festivalId){
         Festival festival = festivalService.findFestival(festivalId);
+        FestivalDto.Response ResponseFestival = festivalService.isFestivalLiked(mapper.festivalToResponse(festival));
 
-        return new ResponseEntity<>(mapper.festivalToResponse(festival),HttpStatus.OK);
+        return new ResponseEntity<>(ResponseFestival,HttpStatus.OK);
     }
 
     @GetMapping("/distance")
