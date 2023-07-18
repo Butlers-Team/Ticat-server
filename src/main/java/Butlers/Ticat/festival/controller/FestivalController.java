@@ -5,7 +5,6 @@ import Butlers.Ticat.dto.SingleResponseDto;
 import Butlers.Ticat.festival.dto.FestivalDto;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.mapper.FestivalMapper;
-import Butlers.Ticat.festival.service.FestivalApiService;
 import Butlers.Ticat.festival.service.FestivalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
-import java.io.IOException;
 import java.util.List;
 
 import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
