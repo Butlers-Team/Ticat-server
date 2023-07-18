@@ -2,6 +2,7 @@ package Butlers.Ticat.festival.entity;
 
 
 import Butlers.Ticat.calendar.entity.Calendar;
+import Butlers.Ticat.review.entity.Review;
 import Butlers.Ticat.stamp.entity.Stamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +45,7 @@ public class Festival {
     private DetailFestival detailFestival;
 
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "festival")
     private List<Calendar> calendar = new ArrayList<>();
 
@@ -52,19 +53,22 @@ public class Festival {
         this.calendar.add(calendar);
     }
 
-    @OneToMany(mappedBy = "festival")
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "festival")
     private List<Favorite> favorites;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "festival")
     private List<Stamp> stamps = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "festival")
+    private List<Review> reviews = new ArrayList<>();
 
     public void addStamp(Stamp stamp) {
         this.stamps.add(stamp);
     }
 
-
-      
     public Festival(Long festivalId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
         this.festivalId = festivalId;
         this.title = title;
