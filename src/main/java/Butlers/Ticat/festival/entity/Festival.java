@@ -45,24 +45,20 @@ public class Festival {
     private DetailFestival detailFestival;
 
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "festival")
+    @OneToMany(mappedBy = "fesitval",cascade = CascadeType.REMOVE)
     private List<Calendar> calendar = new ArrayList<>();
 
     public void addCalendar(Calendar calendar) {
         this.calendar.add(calendar);
     }
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "festival")
+    @OneToMany(mappedBy = "fesitval",cascade = CascadeType.REMOVE)
     private List<Favorite> favorites;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "festival")
+    @OneToMany(mappedBy = "fesitval",cascade = CascadeType.REMOVE)
     private List<Stamp> stamps = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "festival")
+    @OneToMany(mappedBy = "fesitval",cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();
 
     public void addStamp(Stamp stamp) {
