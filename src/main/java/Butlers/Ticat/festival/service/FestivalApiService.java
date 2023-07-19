@@ -232,7 +232,7 @@ public class FestivalApiService {
             }
         }
     }
-    @Scheduled(cron = "0 3 0 * * *") // 매일 0시 3분 실행
+    @Scheduled(cron = "0 1 0 * * *") // 매일 0시 1분 실행
     public void checkStatus(){
         List<Festival> festivalList = festivalRepository.findAll();
 
@@ -245,14 +245,12 @@ public class FestivalApiService {
     }
 
     // 스케줄러를 사용해 지정 시간이 되면 데이터를 불러오도록 설정
-    @Scheduled(cron = "0 1 0 * * *") // 매일 0시 1분 실행
+    @Scheduled(cron = "15 0 0 * * *") // 매일 0시 0분 15초 실행
     public void insertDataDetailScheduler() throws IOException {
         List<Festival> festivalList = festivalRepository.findAll(Sort.by(Sort.Direction.DESC, "festivalId"));
 
         for (int i = 0; i < Math.min(festivalList.size(), 10); i++) {
             Festival festival = festivalList.get(i);
-
-            if(festival.getDetailFestival().getEventstartdate() != null) continue;
 
             StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B551011/KorService1/detailIntro1");
             urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + serviceKey);
@@ -316,7 +314,7 @@ public class FestivalApiService {
     }
 
     // 스케줄러를 사용해 지정 시간이 되면 데이터를 불러오도록 설정
-    @Scheduled(cron = "0 2 0 * * *") // 매일 0시 2분 실행
+    @Scheduled(cron = "30 0 0 * * *") // 매일 0시 0분 30초 실행
     public void insertDataOverViewScheduler() throws IOException {
         List<Festival> festivalList = festivalRepository.findAll(Sort.by(Sort.Direction.DESC, "festivalId"));
 
