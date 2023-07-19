@@ -4,6 +4,7 @@ package Butlers.Ticat.member.entity;
 import Butlers.Ticat.calendar.entity.Calendar;
 import Butlers.Ticat.review.entity.Review;
 import Butlers.Ticat.review.entity.ReviewComment;
+import Butlers.Ticat.review.entity.ReviewRecommend;
 import lombok.*;
 
 import javax.persistence.*;
@@ -77,6 +78,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<ReviewComment> reviewComments = new ArrayList<>();
 
+    // 리뷰 추천 1:N 매핑
+    @OneToMany(mappedBy = "member")
+    private List<ReviewRecommend> reviewRecommends = new ArrayList<>();
+
     // 관심사 설정 메서드
     public void setInterest(Interest interest) {
         this.interest = interest;
@@ -98,6 +103,14 @@ public class Member {
         this.reviewComments.add(reviewComment);
         if (reviewComment.getMember() != this) {
             reviewComment.setMember(this);
+        }
+    }
+
+    // 리뷰 추천 추가 메서드
+    public void addRecommend(ReviewRecommend recommend) {
+        this.reviewRecommends.add(recommend);
+        if (recommend.getMember() != this) {
+            recommend.setMember(this);
         }
     }
 

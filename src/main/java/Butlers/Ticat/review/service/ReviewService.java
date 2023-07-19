@@ -9,7 +9,9 @@ import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.service.MemberService;
 import Butlers.Ticat.review.entity.Review;
 import Butlers.Ticat.review.entity.ReviewComment;
+import Butlers.Ticat.review.entity.ReviewRecommend;
 import Butlers.Ticat.review.repository.ReviewCommentRepository;
+import Butlers.Ticat.review.repository.ReviewRecommendRepository;
 import Butlers.Ticat.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewCommentRepository reviewCommentRepository;
+    private final ReviewRecommendRepository reviewRecommendRepository;
     private final MemberService memberService;
     private final FestivalService festivalService;
     private final AwsS3Service awsS3Service;
@@ -150,6 +153,11 @@ public class ReviewService {
         return reviewRepository.findAllByFestivalFestivalId(festivalId, PageRequest.of(page - 1, size, Sort.by("reviewId").descending()));
     }
 
+    // 리뷰에 속한 리뷰 댓글 리스트 불러오기
+    public Page<ReviewComment> getReviewCommentListInReview(long reviewId, int page, int size) {
+        return reviewCommentRepository.findAllByReviewReviewId(reviewId, PageRequest.of(page - 1, size, Sort.by("reviewCommentId").descending()));
+    }
+
     // 리뷰 삭제
     public void deleteReview(long memberId, long reviewId) {
         checkLogin(memberId);
@@ -182,6 +190,58 @@ public class ReviewService {
             festival.setReviewRating(0.0);
         }
     }
+
+    // 리뷰 추천
+    public ReviewRecommend recommendReview(long memberId, long reviewId) {
+        Member member = memberService.findVerifiedMember(memberId);
+        Review review = findVerifiedReview(reviewId);
+
+        ReviewRecommend reviewRecommend = findReviewRecommend(member, review);
+
+        if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.NON) {
+            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.RECOMMEND);
+            review.setLiked(review.getLiked() + 1);
+        } else {
+            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.NON);
+            review.setLiked(review.getLiked() - 1);
+        }
+
+        return reviewRecommendRepository.save(reviewRecommend);
+    }
+
+    // 리뷰 비추천
+    public ReviewRecommend unrecommendReivew(long memberId, long reviewId) {
+        Member member = memberService.findVerifiedMember(memberId);
+        Review review = findVerifiedReview(reviewId);
+
+        ReviewRecommend reviewRecommend = findReviewRecommend(member, review);
+
+        if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.NON) {
+            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.UNRECOMMENDED);
+            review.setDisliked(review.getDisliked() + 1);
+        } else {
+            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.NON);
+            review.setDisliked(review.getDisliked() - 1);
+        }
+
+        return reviewRecommendRepository.save(reviewRecommend);
+    }
+
+    // 리뷰 추천 객체 찾기 (없을 경우 새로운 객체를 반환)
+    private ReviewRecommend findReviewRecommend(Member member, Review review) {
+        Optional<ReviewRecommend> optionalReviewRecommend = reviewRecommendRepository.findByMemberAndReview(member, review);
+
+        if (optionalReviewRecommend.isPresent()) {
+            return optionalReviewRecommend.get();
+        } else {
+            ReviewRecommend reviewRecommend = new ReviewRecommend();
+            reviewRecommend.setMember(member);
+            reviewRecommend.setReview(review);
+
+            return reviewRecommend;
+        }
+    }
+
     // 리뷰 댓글 등록
     public void registerReviewComment(ReviewComment reviewComment) {
         long memberId = reviewComment.getMember().getMemberId();
@@ -193,6 +253,7 @@ public class ReviewService {
 
         reviewComment.setMember(member);
         reviewComment.setReview(review);
+        increaseReviewCommentCount(review);
 
         reviewCommentRepository.save(reviewComment);
     }
@@ -233,6 +294,20 @@ public class ReviewService {
         ReviewComment reviewComment = findVerifiedReviewComment(reviewCommentId);
 
         checkAuthor(memberId, reviewComment.getMember().getMemberId());
+
+        Review review = reviewComment.getReview();
+        decreaseReviewCommentCount(review);
+
         reviewCommentRepository.delete(reviewComment);
+    }
+
+    // 리뷰 댓글 등록 시 리뷰의 댓글 수 증가
+    private void increaseReviewCommentCount(Review review) {
+        review.setCommentCount(review.getCommentCount() + 1);
+    }
+
+    // 리뷰 댓글 제거 시 리뷰의 댓글 수 차감
+    private void decreaseReviewCommentCount(Review review) {
+        review.setCommentCount(review.getCommentCount() - 1);
     }
 }

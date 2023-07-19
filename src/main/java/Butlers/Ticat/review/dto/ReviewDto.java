@@ -23,6 +23,8 @@ public class ReviewDto {
         String content;
         double rating;
         List<String> pictures;
-        List<ReviewCommentDto.Response> comments;
+        int liked;
+        int disliked;
+        int commentCount;
     }
 }
