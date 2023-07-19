@@ -5,6 +5,7 @@ import Butlers.Ticat.dto.MultiResponseDto;
 import Butlers.Ticat.review.dto.ReviewCommentDto;
 import Butlers.Ticat.review.dto.ReviewDto;
 import Butlers.Ticat.review.entity.Review;
+import Butlers.Ticat.review.entity.ReviewComment;
 import Butlers.Ticat.review.mapper.ReviewCommentMapper;
 import Butlers.Ticat.review.mapper.ReviewMapper;
 import Butlers.Ticat.review.service.ReviewService;
@@ -72,6 +73,17 @@ public class ReviewController {
         return new ResponseEntity<>(new MultiResponseDto<>(reviewMapper.reviewToResponseInFestival(reviews), pageReviews), HttpStatus.OK);
     }
 
+    // 리뷰에 속한 댓글 리스트 불러오기
+    @GetMapping("/reviews/{review-id}/comments")
+    public ResponseEntity getReviewComments(@PathVariable("review-id") long reviewId,
+                                            @Positive @RequestParam int page,
+                                            @Positive @RequestParam int size) {
+        Page<ReviewComment> pageReviewComments = reviewService.getReviewCommentListInReview(reviewId, page, size);
+        List<ReviewComment> comments = pageReviewComments.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(reviewCommentMapper.reviewsCommentToResponses(comments), pageReviewComments), HttpStatus.OK);
+    }
+
     @DeleteMapping("/reviews/{review-id}")
     public ResponseEntity deleteReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
@@ -81,7 +93,7 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/reviews/{review-id}/good")
+    @PostMapping("/reviews/{review-id}/liked")
     public ResponseEntity postRecommendReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 
@@ -90,7 +102,7 @@ public class ReviewController {
         return new ResponseEntity<>("해당 리뷰를 추천했습니다.", HttpStatus.OK);
     }
 
-    @PostMapping("reviews/{review-id}/bad")
+    @PostMapping("reviews/{review-id}/disliked")
     public ResponseEntity postUnrecommendReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 

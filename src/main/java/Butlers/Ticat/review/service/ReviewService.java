@@ -153,6 +153,11 @@ public class ReviewService {
         return reviewRepository.findAllByFestivalFestivalId(festivalId, PageRequest.of(page - 1, size, Sort.by("reviewId").descending()));
     }
 
+    // 리뷰에 속한 리뷰 댓글 리스트 불러오기
+    public Page<ReviewComment> getReviewCommentListInReview(long reviewId, int page, int size) {
+        return reviewCommentRepository.findAllByReviewReviewId(reviewId, PageRequest.of(page - 1, size, Sort.by("reviewCommentId").descending()));
+    }
+
     // 리뷰 삭제
     public void deleteReview(long memberId, long reviewId) {
         checkLogin(memberId);
@@ -195,7 +200,7 @@ public class ReviewService {
 
         if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.NON) {
             reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.RECOMMEND);
-            review.setRecommend(review.getRecommend() + 1);
+            review.setLiked(review.getLiked() + 1);
 
             reviewRecommendRepository.save(reviewRecommend);
         }
@@ -210,7 +215,7 @@ public class ReviewService {
 
         if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.NON) {
             reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.UNRECOMMENDED);
-            review.setUnrecommended(review.getUnrecommended() + 1);
+            review.setDisliked(review.getDisliked() + 1);
 
             reviewRecommendRepository.save(reviewRecommend);
         }

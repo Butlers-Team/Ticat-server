@@ -46,10 +46,10 @@ public class Review {
     private int commentCount = 0;
 
     // 추천
-    private int recommend = 0;
+    private int liked = 0;
 
     // 비추천
-    private int unrecommended = 0;
+    private int disliked = 0;
 
     // 리뷰 추천 1:N 매핑
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
