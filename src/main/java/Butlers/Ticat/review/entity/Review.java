@@ -39,7 +39,7 @@ public class Review {
     private List<String[]> pictures = new ArrayList<>();
 
     // 리뷰 댓글 1:N 매핑
-    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<ReviewComment> comments = new ArrayList<>();
 
     // 회원 설정 메서드
