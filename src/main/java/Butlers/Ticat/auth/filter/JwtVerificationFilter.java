@@ -60,7 +60,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                     String newAccessToken = tokenService.delegateAccessToken(member);
 
                     response.setHeader("Authorization", newAccessToken);
-                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("액세스 토큰이 갱신되었습니다");
                 } else {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
