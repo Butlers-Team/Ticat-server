@@ -138,7 +138,7 @@ public class ReviewController {
     public ResponseEntity beforePatchRequestCheckReviewCommentModificationPermission(@PathVariable("comment-id") long reviewCommentId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 
-        reviewService.checkReviewModificationPermission(authenticationMemberId, reviewCommentId);
+        reviewService.checkReviewCommentModificationPermission(authenticationMemberId, reviewCommentId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
