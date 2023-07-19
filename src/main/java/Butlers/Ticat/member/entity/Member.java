@@ -41,13 +41,13 @@ public class Member {
     private String displayName;
 
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Calendar> calendars = new ArrayList<>();
     public void addCalendar(Calendar calendar) {
         this.calendars.add(calendar);
     }
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Stamp> stampList = new ArrayList<>();
     public void addStamp(Stamp stamp) {
         this.stampList.add(stamp);
