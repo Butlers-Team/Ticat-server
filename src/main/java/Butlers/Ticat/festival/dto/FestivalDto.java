@@ -46,6 +46,7 @@ public class FestivalDto {
         private String playtime;
         private double mapx;
         private double mapy;
+        private boolean isLiked;
     }
 
     @Getter

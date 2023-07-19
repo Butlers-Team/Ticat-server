@@ -8,6 +8,7 @@ import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.helper.AreaConverter;
+import Butlers.Ticat.festival.repository.FavoriteRepository;
 import Butlers.Ticat.festival.repository.FestivalRepository;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.repository.MemberRepository;
@@ -16,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,8 +32,8 @@ public class FestivalService {
 
     private final FestivalRepository festivalRepository;
     private final MemberService memberService;
-
     private final MemberRepository memberRepository;
+    private final FavoriteRepository favoriteRepository;
 
     // 전체 리스트
     public Page<Festival> findFestivals(int page, int size){
@@ -49,6 +49,7 @@ public class FestivalService {
     public Festival findFestival(long festivalId) {
         Optional<Festival> optionalFestival = festivalRepository.findById(festivalId);
         Festival festival = optionalFestival.orElseThrow();
+
         return festival;
     }
 
@@ -161,6 +162,8 @@ public class FestivalService {
         //로그인한 멤버 불러오기
         Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
 
+
+
         festival.getFavorites().stream()
                 .filter(f -> f.getMember() == member)
                 .findFirst().orElseThrow(() -> new BusinessLogicException(ExceptionCode.LIKE_NOT_CANCEL));
@@ -170,6 +173,23 @@ public class FestivalService {
         festival.setLikeCount(festival.getLikeCount() - 1);
     }
 
+    // 좋아요 했는지 안했는지 체크
+    public FestivalDto.Response isFestivalLiked(FestivalDto.Response festival){
+        try{
+            long memberId = JwtParseInterceptor.getAuthenticatedMemberId();
+            boolean isLiked = isFestivalLikedByMember(festival.getFestivalId(), memberId);
+            festival.setLiked(isLiked);
+            return festival;
+        }catch (Exception e){
+            return festival;
+        }
+    }
+
+    // Favorite 엔티티에서 festivalId와 memberId를 기준으로 조회하여 좋아요 여부를 확인하는 로직
+    public boolean isFestivalLikedByMember(long festivalId, long memberId) {
+        Optional<Favorite> favorite = favoriteRepository.findByFestivalFestivalIdAndMemberMemberId(festivalId, memberId);
+        return favorite.isPresent();
+    }
 
     //여러개의 카테고리로 축제 찾기 최신순
     public Page<Festival> findByCategories(List<String> categories ,int page,int size){

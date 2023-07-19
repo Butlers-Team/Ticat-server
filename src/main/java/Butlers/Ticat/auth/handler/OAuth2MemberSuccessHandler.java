@@ -87,30 +87,17 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     // 콜백 Uri
     private URI createUri(String accessToken, String refreshToken) {
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("Authorization", accessToken);
-        queryParams.add("Refresh", refreshToken);
-        return UriComponentsBuilder
-                .newInstance()
-                .scheme("http:/localhost:3000/callback/true")
-                .queryParams(queryParams)
-                .build()
-                .toUri();
-
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://d99pqcn6hzkdg.cloudfront.net/callback/true")
+                .queryParam("Authorization", accessToken)
+                .queryParam("Refresh", refreshToken);
+        return builder.build().toUri();
     }
 
     // 콜백 Uri(관심사 등록 필요)
     private URI createInterestUri(String accessToken, String refreshToken) {
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("Authorization", accessToken);
-        queryParams.add("Refresh", refreshToken);
-        return UriComponentsBuilder
-                .newInstance()
-                .fromUriString("http://localhost:3000")
-                .path("/callback/false")
-                .queryParams(queryParams)
-                .build()
-                .toUri();
-
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://d99pqcn6hzkdg.cloudfront.net/callback/false")
+                .queryParam("Authorization", accessToken)
+                .queryParam("Refresh", refreshToken);
+        return builder.build().toUri();
     }
 }
