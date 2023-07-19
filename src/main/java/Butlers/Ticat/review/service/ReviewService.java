@@ -193,6 +193,7 @@ public class ReviewService {
 
     // 리뷰 추천
     public ReviewRecommend recommendReview(long memberId, long reviewId) {
+        checkLogin(memberId);
         Member member = memberService.findVerifiedMember(memberId);
         Review review = findVerifiedReview(reviewId);
 
@@ -211,6 +212,7 @@ public class ReviewService {
 
     // 리뷰 비추천
     public ReviewRecommend unrecommendReivew(long memberId, long reviewId) {
+        checkLogin(memberId);
         Member member = memberService.findVerifiedMember(memberId);
         Review review = findVerifiedReview(reviewId);
 
