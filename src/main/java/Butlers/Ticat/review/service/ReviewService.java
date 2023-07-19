@@ -192,7 +192,7 @@ public class ReviewService {
     }
 
     // 리뷰 추천
-    public void recommendReview(long memberId, long reviewId) {
+    public ReviewRecommend recommendReview(long memberId, long reviewId) {
         Member member = memberService.findVerifiedMember(memberId);
         Review review = findVerifiedReview(reviewId);
 
@@ -201,13 +201,16 @@ public class ReviewService {
         if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.NON) {
             reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.RECOMMEND);
             review.setLiked(review.getLiked() + 1);
-
-            reviewRecommendRepository.save(reviewRecommend);
+        } else {
+            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.NON);
+            review.setLiked(review.getLiked() - 1);
         }
+
+        return reviewRecommendRepository.save(reviewRecommend);
     }
 
     // 리뷰 비추천
-    public void unrecommendReivew(long memberId, long reviewId) {
+    public ReviewRecommend unrecommendReivew(long memberId, long reviewId) {
         Member member = memberService.findVerifiedMember(memberId);
         Review review = findVerifiedReview(reviewId);
 
@@ -216,9 +219,12 @@ public class ReviewService {
         if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.NON) {
             reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.UNRECOMMENDED);
             review.setDisliked(review.getDisliked() + 1);
-
-            reviewRecommendRepository.save(reviewRecommend);
+        } else {
+            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.NON);
+            review.setDisliked(review.getDisliked() - 1);
         }
+
+        return reviewRecommendRepository.save(reviewRecommend);
     }
 
     // 리뷰 추천 객체 찾기 (없을 경우 새로운 객체를 반환)

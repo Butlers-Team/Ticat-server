@@ -6,6 +6,7 @@ import Butlers.Ticat.review.dto.ReviewCommentDto;
 import Butlers.Ticat.review.dto.ReviewDto;
 import Butlers.Ticat.review.entity.Review;
 import Butlers.Ticat.review.entity.ReviewComment;
+import Butlers.Ticat.review.entity.ReviewRecommend;
 import Butlers.Ticat.review.mapper.ReviewCommentMapper;
 import Butlers.Ticat.review.mapper.ReviewMapper;
 import Butlers.Ticat.review.service.ReviewService;
@@ -97,19 +98,26 @@ public class ReviewController {
     public ResponseEntity postRecommendReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 
-        reviewService.recommendReview(authenticationMemberId, reviewId);
+        ReviewRecommend reviewRecommend = reviewService.recommendReview(authenticationMemberId, reviewId);
 
-        return new ResponseEntity<>("해당 리뷰를 추천했습니다.", HttpStatus.OK);
+        if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.RECOMMEND) {
+            return new ResponseEntity<>("해당 리뷰를 추천했습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("해당 리뷰에 대한 추천을 취소했습니다.", HttpStatus.OK);
+        }
     }
 
     @PostMapping("reviews/{review-id}/disliked")
     public ResponseEntity postUnrecommendReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
 
-        reviewService.unrecommendReivew(authenticationMemberId, reviewId);
+        ReviewRecommend reviewRecommend = reviewService.unrecommendReivew(authenticationMemberId, reviewId);
 
-        return new ResponseEntity<>("해당 리뷰를 비추천했습니다.", HttpStatus.OK);
-
+        if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.UNRECOMMENDED) {
+            return new ResponseEntity<>("해당 리뷰를 비추천했습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("해당 리뷰에 대한 비추천을 취소했습니다.", HttpStatus.OK);
+        }
     }
 
     // 리뷰 댓글
