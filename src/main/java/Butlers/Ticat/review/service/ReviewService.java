@@ -193,6 +193,7 @@ public class ReviewService {
 
         reviewComment.setMember(member);
         reviewComment.setReview(review);
+        increaseReviewCommentCount(review);
 
         reviewCommentRepository.save(reviewComment);
     }
@@ -233,6 +234,20 @@ public class ReviewService {
         ReviewComment reviewComment = findVerifiedReviewComment(reviewCommentId);
 
         checkAuthor(memberId, reviewComment.getMember().getMemberId());
+
+        Review review = reviewComment.getReview();
+        decreaseReviewCommentCount(review);
+
         reviewCommentRepository.delete(reviewComment);
+    }
+
+    // 리뷰 댓글 등록 시 리뷰의 댓글 수 증가
+    private void increaseReviewCommentCount(Review review) {
+        review.setCommentCount(review.getCommentCount() + 1);
+    }
+
+    // 리뷰 댓글 제거 시 리뷰의 댓글 수 차감
+    private void decreaseReviewCommentCount(Review review) {
+        review.setCommentCount(review.getCommentCount() - 1);
     }
 }

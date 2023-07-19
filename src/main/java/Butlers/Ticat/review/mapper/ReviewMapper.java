@@ -56,6 +56,7 @@ public interface ReviewMapper {
                 .content(review.getContent())
                 .rating(review.getRate())
                 .pictures(pictures)
+                .commentCount(review.getCommentCount())
                 .comments(reviewsCommentToResponses(review.getComments())).build();
     }
     default List<ReviewDto.ResponseInFestival> reviewToResponseInFestival(List<Review> reviews) {
