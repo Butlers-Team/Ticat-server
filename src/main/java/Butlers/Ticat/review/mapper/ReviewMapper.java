@@ -56,6 +56,8 @@ public interface ReviewMapper {
                 .content(review.getContent())
                 .rating(review.getRate())
                 .pictures(pictures)
+                .recommend(review.getRecommend())
+                .unrecommended(review.getUnrecommended())
                 .commentCount(review.getCommentCount())
                 .comments(reviewsCommentToResponses(review.getComments())).build();
     }

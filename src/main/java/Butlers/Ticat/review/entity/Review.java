@@ -51,6 +51,10 @@ public class Review {
     // 비추천
     private int unrecommended = 0;
 
+    // 리뷰 추천 1:N 매핑
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<ReviewRecommend> reviewRecommends = new ArrayList<>();
+
     // 회원 설정 메서드
     public void setMember(Member member) {
         this.member = member;
@@ -64,6 +68,14 @@ public class Review {
         this.comments.add(reviewComment);
         if (reviewComment.getReview() != this) {
             reviewComment.setReview(this);
+        }
+    }
+
+    // 리뷰 추천 추가 매서드
+    public void addRecommend(ReviewRecommend recommend) {
+        this.reviewRecommends.add(recommend);
+        if (recommend.getReview() != this) {
+            recommend.setReview(this);
         }
     }
 }

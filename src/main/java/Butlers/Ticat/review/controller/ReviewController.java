@@ -81,6 +81,25 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 
+    @PostMapping("/reviews/{review-id}/good")
+    public ResponseEntity postRecommendReview(@PathVariable("review-id") long reviewId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.recommendReview(authenticationMemberId, reviewId);
+
+        return new ResponseEntity<>("해당 리뷰를 추천했습니다.", HttpStatus.OK);
+    }
+
+    @PostMapping("reviews/{review-id}/bad")
+    public ResponseEntity postUnrecommendReview(@PathVariable("review-id") long reviewId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.unrecommendReivew(authenticationMemberId, reviewId);
+
+        return new ResponseEntity<>("해당 리뷰를 비추천했습니다.", HttpStatus.OK);
+
+    }
+
     // 리뷰 댓글
     @PostMapping("/reviews/{review-id}/comments")
     public ResponseEntity postComment(@PathVariable("review-id") long reviewId,
