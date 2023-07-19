@@ -37,4 +37,10 @@ public class FestivalApiController {
         return ResponseEntity.ok("행사상세2 불러오기");
     }
 
+    @PostMapping("/status")
+    public ResponseEntity<String> checkStatus() {
+        festivalApiService.checkStatus();
+
+        return ResponseEntity.ok("상태값 설정");
+    }
 }

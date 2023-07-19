@@ -1,5 +1,7 @@
 package Butlers.Ticat.weather.service;
 
+import Butlers.Ticat.exception.BusinessLogicException;
+import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.weather.dto.WeatherDto;
 import Butlers.Ticat.weather.entity.Region;
 import Butlers.Ticat.weather.entity.Weather;
@@ -38,7 +40,7 @@ public class WeatherApiService {
     public WeatherDto.Response getRegionWeather(Long regionId){
         // 1. 날씨 정보를 요청한 지역 조회
         Optional<Region> optionalRegion = regionRepository.findById(regionId);
-        Region region = optionalRegion.orElseThrow();  // 예외 처리 로직 추가 해야함
+        Region region = optionalRegion.orElseThrow(() -> new BusinessLogicException(ExceptionCode.REGION_NOT_FOUND));
 
         StringBuilder urlBuilder =  new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst");
 
