@@ -94,6 +94,14 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 
+    // 리뷰 좋아요 확인
+    @GetMapping("/reviews/{review-id}/check")
+    public ResponseEntity checkReviewLike(@PathVariable("review-id") long reviewId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        return new ResponseEntity<>(reviewService.checkLike(authenticationMemberId, reviewId), HttpStatus.OK);
+    }
+
     @PostMapping("/reviews/{review-id}/liked")
     public ResponseEntity postRecommendReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
