@@ -42,6 +42,15 @@ public class Review {
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<ReviewComment> comments = new ArrayList<>();
 
+    // 리뷰 댓글 수
+    private int commentCount = 0;
+
+    // 추천
+    private int recommend = 0;
+
+    // 비추천
+    private int unrecommended = 0;
+
     // 회원 설정 메서드
     public void setMember(Member member) {
         this.member = member;
