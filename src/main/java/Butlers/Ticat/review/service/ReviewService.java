@@ -191,8 +191,21 @@ public class ReviewService {
         }
     }
 
+    // 리뷰 추천 여부 확인
+    public String checkLike(long memberId, long reviewId) {
+        if (memberId == NUMBER_OF_NON_LOGIN) {
+            return "";
+        } else {
+            Member member = memberService.findVerifiedMember(memberId);
+            Review review = findVerifiedReview(reviewId);
+
+            return findReviewRecommend(member, review).getRecommendStatus().getStatus();
+        }
+    }
+
     // 리뷰 추천
     public ReviewRecommend recommendReview(long memberId, long reviewId) {
+        checkLogin(memberId);
         Member member = memberService.findVerifiedMember(memberId);
         Review review = findVerifiedReview(reviewId);
 
@@ -211,6 +224,7 @@ public class ReviewService {
 
     // 리뷰 비추천
     public ReviewRecommend unrecommendReivew(long memberId, long reviewId) {
+        checkLogin(memberId);
         Member member = memberService.findVerifiedMember(memberId);
         Review review = findVerifiedReview(reviewId);
 
