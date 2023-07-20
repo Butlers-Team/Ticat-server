@@ -15,15 +15,11 @@ public class Region {
     @Id
     @Column(name = "region_id")
     private Long id;
-
     @Column(name = "region_parent")
     private String parentRegion;
-
     @Column(name = "region_child")
     private String childRegion;
-
     private double nx;
-
     private double ny;
 
     @Embedded
