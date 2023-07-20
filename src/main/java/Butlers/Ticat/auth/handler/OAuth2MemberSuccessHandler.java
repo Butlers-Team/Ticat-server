@@ -38,21 +38,29 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
 
         String provider = oauth2Token.getAuthorizedClientRegistrationId();
+        String profileImage = null;
+
         if(provider.equals("google")) {
             log.info("구글 로그인 요청");
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+            profileImage = oAuth2UserInfo.getProfileImage();
         } else if(provider.equals("kakao")) {
             log.info("카카오 로그인 요청");
             oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
+            profileImage = oAuth2UserInfo.getProfileImage();
         } else if(provider.equals("naver")) {
             log.info("네이버 로그인 요청");
             oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
+
+            // 기본 프로필 이미지가 아닐경우에 이미지를 가져옴
+            if (!oAuth2UserInfo.getProfileImage().equals("https://ssl.pstatic.net/static/pwe/address/img_profile.png")) {
+                profileImage = oAuth2UserInfo.getProfileImage();
+            }
         }
 
         String providerId = oAuth2UserInfo.getProviderId();
         String id = provider + "_" + providerId;
-        String email = oAuth2UserInfo.getEmail();
-        String profileImage = oAuth2UserInfo.getProfileImage();
+        String email = null;
         Member member = null;
 
         try {
