@@ -14,9 +14,8 @@ public class FestivalDto {
         private String image;
         private String address;
         private String category;
-        private String eventstartdate; // 행사시작일
-
-        private String eventenddate; // 행사 종료일
+        private String eventstartdate;
+        private String eventenddate;
         private double reviewRating;
         private Integer reviewCount;
         private Integer likeCount;
@@ -32,16 +31,15 @@ public class FestivalDto {
         private Long festivalId;
         private String category;
         private String status;
-        private String eventstartdate; // 행사시작일
-
-        private String eventenddate; // 행사 종료일
+        private String eventstartdate;
+        private String eventenddate;
         private String image;
         private String title;
         private String address;
         private String overview;
         private String tel;
         private String eventhomepage;
-        private String eventplace; // 이게 비어있다면 주소 그대로 노출
+        private String eventplace;
         private String price;
         private String playtime;
         private double mapx;
