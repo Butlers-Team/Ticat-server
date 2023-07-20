@@ -23,10 +23,8 @@ import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
 @RequiredArgsConstructor
 @Validated
 public class FestivalController {
-
     private final FestivalService festivalService;
     private final FestivalMapper mapper;
-
 
     // 축제 상세 페이지
     @GetMapping("/{festival-id}")
@@ -81,7 +79,6 @@ public class FestivalController {
             }
         }
     }
-
 
     // 축제 제목으로 검색
     @GetMapping("/calendar")
