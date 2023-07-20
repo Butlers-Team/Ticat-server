@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 public class WeatherApiController {
-
     private final WeatherApiService weatherApiService;
 
     private final RegionService regionService;
