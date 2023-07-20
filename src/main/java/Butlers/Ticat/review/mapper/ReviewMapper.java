@@ -56,7 +56,9 @@ public interface ReviewMapper {
                 .content(review.getContent())
                 .rating(review.getRate())
                 .pictures(pictures)
-                .comments(reviewsCommentToResponses(review.getComments())).build();
+                .liked(review.getLiked())
+                .disliked(review.getDisliked())
+                .commentCount(review.getCommentCount()).build();
     }
     default List<ReviewDto.ResponseInFestival> reviewToResponseInFestival(List<Review> reviews) {
         return reviews.stream()
@@ -64,19 +66,5 @@ public interface ReviewMapper {
                 .collect(Collectors.toList());
     }
 
-    default List<ReviewCommentDto.Response> reviewsCommentToResponses(List<ReviewComment> reviewComments) {
-        return reviewComments.stream()
-                .map(reviewComment -> reviewCommentToResponse(reviewComment))
-                .collect(Collectors.toList());
-    }
-    default ReviewCommentDto.Response reviewCommentToResponse(ReviewComment reviewComment) {
-        Member member = reviewComment.getMember();
 
-        return ReviewCommentDto.Response.builder()
-                .reviewCommentId(reviewComment.getReviewCommentId())
-                .memberId(member.getMemberId())
-                .displayName(member.getDisplayName())
-                .profileUrl(member.getProfileUrl())
-                .content(reviewComment.getContent()).build();
-    }
 }

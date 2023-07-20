@@ -24,4 +24,9 @@ public class KakaoUserInfo implements OAuth2UserInfo {
         // kakao_account라는 Map에서 추출
         return (String) ((Map) attributes.get("kakao_account")).get("email");
     }
+
+    @Override
+    public String getProfileImage() {
+        return (String) ((Map) attributes.get("kakao_account")).get("profile_image");
+    }
 }
