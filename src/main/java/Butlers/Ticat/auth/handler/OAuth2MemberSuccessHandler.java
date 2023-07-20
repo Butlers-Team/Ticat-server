@@ -52,10 +52,11 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String providerId = oAuth2UserInfo.getProviderId();
         String id = provider + "_" + providerId;
         String email = oAuth2UserInfo.getEmail();
+        String profileImage = oAuth2UserInfo.getProfileImage();
         Member member = null;
 
         try {
-            member = saveMember(id, email);
+            member = saveMember(id, email, profileImage);
         } catch (Exception e) {
             member = memberService.findMemberById(id);
         } finally {
@@ -63,8 +64,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         }
     }
 
-    private Member saveMember(String id, String email) {
-        Member member = new Member(id, email);
+    private Member saveMember(String id, String email, String profileImage) {
+        Member member = new Member(id, email, profileImage);
         return memberService.joinInOauth(member);
     }
 

@@ -115,9 +115,10 @@ public class Member {
     }
 
     // 오어스 회원가입을 위한 생성자
-    public Member(String id, String email) {
+    public Member(String id, String email, String profileUrl) {
         this.id = id;
         this.email = email;
+        this.profileUrl = profileUrl;
     }
 
     // 회원 최근목록 저장을 위한 관계 설정
