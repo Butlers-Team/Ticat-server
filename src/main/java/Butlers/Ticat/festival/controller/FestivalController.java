@@ -171,6 +171,7 @@ public class FestivalController {
         return new ResponseEntity<>(mapper.festivalsToFestivalListResponses(festivals),HttpStatus.OK);
     }
 
+    // 메인화면 관심사로 축제 추천
     @GetMapping("/mainrecommend")
     public ResponseEntity getMainRecommend(){
         List<Festival> festivals = festivalService.findMainRecommend();
