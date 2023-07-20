@@ -79,7 +79,7 @@ public class MemberService {
     // 프로필 이미지 수정
     public void updateProfileImage(Long memberId, MultipartFile file) {
         Member member = findVerifiedMember(memberId);
-        if (member.getProfileUrl() != null) {
+        if (member.getPureProfileUrl() != null) {
             awsS3Service.deleteFile(member.getPureProfileUrl());
         }
 
