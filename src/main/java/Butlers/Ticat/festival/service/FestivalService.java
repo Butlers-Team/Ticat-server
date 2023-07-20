@@ -24,7 +24,6 @@ import java.util.*;
 
 import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
