@@ -13,9 +13,7 @@ public class NaverBlogDto {
         private String title;
         private String link;
         private String description;
-
         private String bloggername;
-
         private String postdate;
     }
 }
