@@ -51,6 +51,15 @@ public class MemberService {
         }
     }
 
+    // 로컬 회원가입 시 이메일 중복 확인
+    // false -> 로컬 회원가입
+    public void verifyExistingEmail(String email) {
+        Optional<Member> foundMemberByEmail = memberRepository.findByEmailAndIsOauthChecked(email, false);
+        if (foundMemberByEmail.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_EMAIL_EXISTS);
+        }
+    }
+
     // 오어스 회원 가입
     public Member joinInOauth(Member member) {
         member.setOauthChecked(true);
@@ -113,13 +122,6 @@ public class MemberService {
 
     public Member findMember(Long memberId) {
         return findVerifiedMember(memberId);
-    }
-
-    private void verifyExistingEmail(String email) {
-        Optional<Member> foundMemberByEmail = memberRepository.findByEmail(email);
-        if (foundMemberByEmail.isPresent()) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_EMAIL_EXISTS);
-        }
     }
 
     public Member updateMember(Member member) {

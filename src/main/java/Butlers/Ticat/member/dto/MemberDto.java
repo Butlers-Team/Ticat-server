@@ -56,4 +56,10 @@ public class MemberDto {
         private Long memberId;
         private List<StampDto.StampResponse> festivalList;
     }
+
+    @Getter
+    public static class email {
+        @Email
+        private String email;
+    }
 }
