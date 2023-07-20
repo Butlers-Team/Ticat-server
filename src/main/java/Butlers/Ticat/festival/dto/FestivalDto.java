@@ -7,7 +7,6 @@ public class FestivalDto {
     @Getter
     @Setter
     public static class ListResponse{
-
         private Long festivalId;
         private String status;
         private String title;
@@ -27,7 +26,6 @@ public class FestivalDto {
     @Getter
     @Setter
     public static class Response{
-
         private Long festivalId;
         private String category;
         private String status;

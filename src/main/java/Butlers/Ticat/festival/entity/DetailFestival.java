@@ -13,24 +13,16 @@ public class DetailFestival {
 
     private String category;
     private String sponsor1; // 주최자 정보
-
     private String sponsor1tel; // 주최자 연락처
-
     private String sponsor2; // 주관사 정보
     private String eventstartdate; // 행사시작일
-
     private String eventenddate; // 행사 종료일
-
     @Column(length = 1000)
     private String eventhomepage; // 홈페이지
-
     private String playtime; //공연시간
-
     private String eventplace; // 행사장소
-
     @Column(length = 1000)
     private String usetimefestival; // 이용요금
-
     @Column(length = 2000)
     private String overview; // 상세 정보
 
@@ -64,7 +56,6 @@ public class DetailFestival {
         this.category = category;
         this.overview = overview;
     }
-
 
     public enum Status {
         PLANNED("진행 예정"),

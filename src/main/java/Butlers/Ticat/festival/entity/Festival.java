@@ -22,48 +22,33 @@ public class Festival {
     @Column(name = "festival_id")
     private Long festivalId; //  축제 아이디
     private String title; // 축제 제목
-
     private String address; // 축제 주소
-
     private String area; // 축제 위치
-
     private String image; // 축제 사진
-
     private double mapx; // 축제 x좌표
-
     private double mapy; // 축제 y좌표
-
     private String tel; // 축제 전화번호
-
     private Integer likeCount = 0;
-
     private double reviewRating = 0;
-
     private Integer reviewCount = 0;
-
     @Embedded
     private DetailFestival detailFestival;
-
-
     @OneToMany(mappedBy = "festival",cascade = CascadeType.REMOVE)
     private List<Calendar> calendar = new ArrayList<>();
+    @OneToMany(mappedBy = "festival",cascade = CascadeType.REMOVE)
+    private List<Favorite> favorites;
+    @OneToMany(mappedBy = "festival",cascade = CascadeType.REMOVE)
+    private List<Stamp> stamps = new ArrayList<>();
+    @OneToMany(mappedBy = "festival",cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
 
     public void addCalendar(Calendar calendar) {
         this.calendar.add(calendar);
     }
-
-    @OneToMany(mappedBy = "festival",cascade = CascadeType.REMOVE)
-    private List<Favorite> favorites;
-
-    @OneToMany(mappedBy = "festival",cascade = CascadeType.REMOVE)
-    private List<Stamp> stamps = new ArrayList<>();
-
-    @OneToMany(mappedBy = "festival",cascade = CascadeType.REMOVE)
-    private List<Review> reviews = new ArrayList<>();
-
     public void addStamp(Stamp stamp) {
         this.stamps.add(stamp);
     }
+    public void updateDetailFestival(DetailFestival detailFestival) { this.detailFestival = detailFestival; }
 
     public Festival(Long festivalId, String title, String address, String area, String image, double mapx, double mapy, String tel) {
         this.festivalId = festivalId;
@@ -75,6 +60,4 @@ public class Festival {
         this.mapy = mapy;
         this.tel = tel;
     }
-
-    public void updateDetailFestival(DetailFestival detailFestival) { this.detailFestival = detailFestival; }
 }
