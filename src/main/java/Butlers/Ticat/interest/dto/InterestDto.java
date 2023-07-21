@@ -1,5 +1,6 @@
 package Butlers.Ticat.interest.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,12 @@ public class InterestDto {
 
         @NotBlank
         // 닉네임 등록과 관심사 등록을 같은 메서드에서 진행하므로 포함
+        private String displayName;
+        private List<String> categories;
+    }
+
+    @Builder
+    public static class PostResponse {
         private String displayName;
         private List<String> categories;
     }

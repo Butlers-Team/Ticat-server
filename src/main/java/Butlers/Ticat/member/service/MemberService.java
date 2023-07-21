@@ -6,6 +6,8 @@ import Butlers.Ticat.calendar.repository.CalendarRepository;
 import Butlers.Ticat.aws.service.AwsS3Service;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
+import Butlers.Ticat.interest.entity.Interest;
+import Butlers.Ticat.interest.repository.InterestRepository;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.entity.MemberRecent;
 import Butlers.Ticat.member.repository.MemberRepository;
@@ -18,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.*;
@@ -30,21 +31,26 @@ public class MemberService {
     private final AwsS3Service awsS3Service;
     private final MemberRepository memberRepository;
     private final CalendarRepository calendarRepository;
-//    private final PasswordEncoder passwordEncoder;
     private final StampRepository stampRepository;
+    private final InterestRepository interestRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 로컬 회원 가입
     public void joinInLocal(Member member) {
         verifyExistingId(member.getId());
+        verifyExistingEmail(member.getEmail());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
         member.setDisplayName(member.getDisplayName());
-        memberRepository.save(member);
+
+        Interest interest = new Interest();
+        interest.setMember(memberRepository.save(member));
+
+        interestRepository.save(interest);
     }
 
     // 아이디 중복 획인
-    private void verifyExistingId(String id) {
+    public void verifyExistingId(String id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
         if (optionalMember.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_ID_EXISTS);

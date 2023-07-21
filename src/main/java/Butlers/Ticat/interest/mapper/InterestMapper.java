@@ -18,4 +18,10 @@ public interface InterestMapper {
 
         return interest;
     }
+
+    default InterestDto.PostResponse interestToPostResponse(Interest interest) {
+        return InterestDto.PostResponse.builder()
+                .displayName(interest.getMember().getDisplayName())
+                .categories(interest.getCategories()).build();
+    }
 }
