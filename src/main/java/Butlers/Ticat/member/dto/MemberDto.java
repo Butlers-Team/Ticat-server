@@ -47,6 +47,9 @@ public class MemberDto {
 
         private Long memberId;
         private String displayName;
+        private String email;
+        private String profileUrl;
+        private String pureProfileUrl;
 
     }
 
@@ -55,6 +58,12 @@ public class MemberDto {
     public static class stampResponse {
         private Long memberId;
         private List<StampDto.StampResponse> festivalList;
+    }
+
+    @Getter
+    public static class id {
+        @NotNull
+        private String id;
     }
 
     @Getter

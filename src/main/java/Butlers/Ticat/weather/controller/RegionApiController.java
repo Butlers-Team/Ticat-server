@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/region")
 @RequiredArgsConstructor
 public class RegionApiController {
-
     private final RegionService regionService;
 
     @PostMapping

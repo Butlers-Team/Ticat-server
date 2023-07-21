@@ -13,7 +13,6 @@ import java.io.IOException;
 @RequestMapping("/festival")
 @RequiredArgsConstructor
 public class FestivalApiController {
-
     private final FestivalApiService festivalApiService;
 
     @PostMapping("/list")

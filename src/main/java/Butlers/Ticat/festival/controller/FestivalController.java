@@ -23,10 +23,8 @@ import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
 @RequiredArgsConstructor
 @Validated
 public class FestivalController {
-
     private final FestivalService festivalService;
     private final FestivalMapper mapper;
-
 
     // 축제 상세 페이지
     @GetMapping("/{festival-id}")
@@ -58,30 +56,23 @@ public class FestivalController {
                                                @RequestParam(required = false) List<String> areas,
                                                @Positive @RequestParam int page,
                                                @Positive @RequestParam int size) {
+        Page<Festival> pageFestivals;
         if (category == null || category.equalsIgnoreCase("전체")) {
             if (areas != null && !areas.isEmpty()) {
-                Page<Festival> pageFestivals = festivalService.findFestivalByArea(areas,page,size);
-                List<Festival> festivals = pageFestivals.getContent();
-                return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+                pageFestivals = festivalService.findFestivalByArea(areas, page, size);
             } else {
-                Page<Festival> pageFestivals = festivalService.findFestivals(page, size);
-                List<Festival> festivals = pageFestivals.getContent();
-                return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+                pageFestivals = festivalService.findFestivals(page, size);
             }
         } else {
             if (areas != null && !areas.isEmpty()) {
-                Page<Festival> pageFestivals = festivalService.findByCategoryAndArea(category, areas, page, size);
-                List<Festival> festivals = pageFestivals.getContent();
-                return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+                pageFestivals = festivalService.findByCategoryAndArea(category, areas, page, size);
             } else {
-
-                Page<Festival> pageFestivals = festivalService.findByCategory(category,page, size);
-                List<Festival> festivals = pageFestivals.getContent();
-                return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals),pageFestivals), HttpStatus.OK);
+                pageFestivals = festivalService.findByCategory(category, page, size);
             }
         }
+        List<Festival> festivals = pageFestivals.getContent();
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
     }
-
 
     // 축제 제목으로 검색
     @GetMapping("/calendar")
@@ -105,44 +96,37 @@ public class FestivalController {
         List<Festival> festivals;
 
         if (categories != null && !categories.isEmpty()) {
-            if (sortBy != null) {
-                switch (sortBy) {
-                    case "likeCount":
-                        pageFestivals = festivalService.findByCategoriesAndSortByLikeCount(categories, page, size);
-                        break;
-                    case "reviewRating":
-                        pageFestivals = festivalService.findByCategoriesAndSortByReviewRating(categories, page, size);
-                        break;
-                    case "reviewCount":
-                        pageFestivals = festivalService.findByCategoriesAndSortByReviewCount(categories, page, size);
-                        break;
-                    default:
-                        pageFestivals = festivalService.findByCategories(categories, page, size);
-                        break;
-                }
-            } else {
-                pageFestivals = festivalService.findByCategories(categories, page, size);
+            switch (sortBy) {
+                case "likeCount":
+                    pageFestivals = festivalService.findByCategoriesAndSortByLikeCount(categories, page, size);
+                    break;
+                case "reviewRating":
+                    pageFestivals = festivalService.findByCategoriesAndSortByReviewRating(categories, page, size);
+                    break;
+                case "reviewCount":
+                    pageFestivals = festivalService.findByCategoriesAndSortByReviewCount(categories, page, size);
+                    break;
+                default:
+                    pageFestivals = festivalService.findByCategories(categories, page, size);
+                    break;
             }
         } else {
-            if (sortBy != null) {
-                switch (sortBy) {
-                    case "likeCount":
-                        pageFestivals = festivalService.findFestivalsByLikeCount(page, size);
-                        break;
-                    case "reviewRating":
-                        pageFestivals = festivalService.findFestivalsByReviewRating(page, size);
-                        break;
-                    case "reviewCount":
-                        pageFestivals = festivalService.findFestivalsByReviewCount(page, size);
-                        break;
-                    default:
-                        pageFestivals = festivalService.findFestivals(page, size);
-                        break;
-                }
-            } else {
-                pageFestivals = festivalService.findFestivals(page, size);
+            switch (sortBy) {
+                case "likeCount":
+                    pageFestivals = festivalService.findFestivalsByLikeCount(page, size);
+                    break;
+                case "reviewRating":
+                    pageFestivals = festivalService.findFestivalsByReviewRating(page, size);
+                    break;
+                case "reviewCount":
+                    pageFestivals = festivalService.findFestivalsByReviewCount(page, size);
+                    break;
+                default:
+                    pageFestivals = festivalService.findFestivals(page, size);
+                    break;
             }
         }
+
         festivals = pageFestivals.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
     }
@@ -171,6 +155,7 @@ public class FestivalController {
         return new ResponseEntity<>(mapper.festivalsToFestivalListResponses(festivals),HttpStatus.OK);
     }
 
+    // 메인화면 관심사로 축제 추천
     @GetMapping("/mainrecommend")
     public ResponseEntity getMainRecommend(){
         List<Festival> festivals = festivalService.findMainRecommend();

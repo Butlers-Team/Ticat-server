@@ -35,7 +35,15 @@ public interface MemberMapper {
         return member;
     }
 
-    MemberDto.Response memberToMemberResponse(Member member);
+    default MemberDto.Response memberToMemberResponse(Member member) {
+        return MemberDto.Response.builder()
+                .memberId(member.getMemberId())
+                .displayName(member.getDisplayName())
+                .email(member.getEmail())
+                .profileUrl(member.getProfileUrl())
+                .pureProfileUrl(member.getPureProfileUrl())
+                .build();
+    }
 
     Member memberPatchToMember(MemberDto.Patch requestBody);
 

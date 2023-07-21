@@ -11,12 +11,8 @@ import javax.persistence.Embeddable;
 @Embeddable
 @Getter
 public class Weather {
-
     private Double temp;
-
     private Double humid;
-
     private String lastUpdateTime;
-
     private String sky;
 }

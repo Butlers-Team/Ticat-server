@@ -24,12 +24,10 @@ import java.util.*;
 
 import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class FestivalService {
-
     private final FestivalRepository festivalRepository;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
@@ -161,8 +159,6 @@ public class FestivalService {
 
         //로그인한 멤버 불러오기
         Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
-
-
 
         festival.getFavorites().stream()
                 .filter(f -> f.getMember() == member)

@@ -74,6 +74,14 @@ public class MemberController {
         return new ResponseEntity<>("회원 탈퇴가 완료되었습니다",HttpStatus.OK);
     }
 
+    // 아이디 체크
+    @PostMapping("/id")
+    public ResponseEntity postCheckId(@RequestBody MemberDto.id id) {
+        memberService.verifyExistingId(id.getId());
+
+        return new ResponseEntity<>("사용 가능한 아이디 입니다.", HttpStatus.OK);
+    }
+
     // 이메일 체크
     @PostMapping("/email")
     public ResponseEntity postCheckEmail(@RequestBody MemberDto.email email) {

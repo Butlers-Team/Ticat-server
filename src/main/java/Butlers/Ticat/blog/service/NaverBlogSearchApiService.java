@@ -56,10 +56,6 @@ public class NaverBlogSearchApiService {
             NaverBlogDto.Response blogPost = new NaverBlogDto.Response(title, link, description, bloggername, postdate);
             blogPosts.add(blogPost);
         }
-
-
-//        System.out.println(responseBody);
-
         return blogPosts;
     }
 
