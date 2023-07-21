@@ -82,17 +82,17 @@ public class MemberService {
     }
 
     // 프로필 이미지 등록
-    public void uploadProfileImage(Long memberId, MultipartFile file) {
+    public Member uploadProfileImage(Long memberId, MultipartFile file) {
         Member member = findVerifiedMember(memberId);
-        String[] uriList = awsS3Service.uploadFile(file);
-        member.setProfileUrl(uriList[0]);
-        member.setPureProfileUrl(uriList[1]);
+        String[] urlList = awsS3Service.uploadFile(file);
+        member.setProfileUrl(urlList[0]);
+        member.setPureProfileUrl(urlList[1]);
 
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
     // 프로필 이미지 수정
-    public void updateProfileImage(Long memberId, MultipartFile file) {
+    public Member updateProfileImage(Long memberId, MultipartFile file) {
         Member member = findVerifiedMember(memberId);
         if (member.getPureProfileUrl() != null) {
             awsS3Service.deleteFile(member.getPureProfileUrl());
@@ -103,7 +103,7 @@ public class MemberService {
         member.setProfileUrl(urlList[0]);
         member.setPureProfileUrl(urlList[1]);
 
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
     // 프로필 이미지 삭제
