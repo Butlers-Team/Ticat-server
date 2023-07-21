@@ -58,6 +58,12 @@ public class MemberDto {
     }
 
     @Getter
+    public static class id {
+        @NotNull
+        private String id;
+    }
+
+    @Getter
     public static class email {
         @Email
         private String email;
