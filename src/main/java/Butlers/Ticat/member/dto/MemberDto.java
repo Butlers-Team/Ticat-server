@@ -47,6 +47,9 @@ public class MemberDto {
 
         private Long memberId;
         private String displayName;
+        private String email;
+        private String profileUrl;
+        private String pureProfileUrl;
 
     }
 
