@@ -76,4 +76,24 @@ public class MemberDto {
     public static class ProfileUrl {
         private String profileUrl;
     }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class recentFestivalResponse {
+        private Long festivalId;
+        private String title;
+        private String address;
+        private String eventStartDate;
+        private String eventEndDate;
+        private String imageUrl;
+    }
+
+    @Getter
+    @Builder
+    @Setter
+    public static class recentResponse {
+        private Long festivalId;
+        private List<MemberDto.recentFestivalResponse> festivalResponseList;
+    }
 }

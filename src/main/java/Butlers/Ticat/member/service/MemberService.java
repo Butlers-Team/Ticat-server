@@ -6,6 +6,8 @@ import Butlers.Ticat.calendar.repository.CalendarRepository;
 import Butlers.Ticat.aws.service.AwsS3Service;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
+import Butlers.Ticat.festival.entity.Festival;
+import Butlers.Ticat.festival.repository.FestivalRepository;
 import Butlers.Ticat.interest.entity.Interest;
 import Butlers.Ticat.interest.repository.InterestRepository;
 import Butlers.Ticat.member.entity.Member;
@@ -34,6 +36,7 @@ public class MemberService {
     private final StampRepository stampRepository;
     private final InterestRepository interestRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FestivalRepository festivalRepository;
 
     // 로컬 회원 가입
     public void joinInLocal(Member member) {
@@ -205,21 +208,34 @@ public class MemberService {
     }
 
     public void addRecentFestival(Member member, Long festivalId) {
-        MemberRecent memberRecent = new MemberRecent(festivalId);
-        member.addMemberRecent(memberRecent);
+        Optional<Festival> optionalFestival = festivalRepository.findByFestivalId(festivalId);
 
-        memberRepository.save(member);
+        if (optionalFestival.isPresent()) {
+            Festival festival = optionalFestival.get();
+            MemberRecent memberRecent = new MemberRecent(festival);
+            member.addMemberRecent(memberRecent);
+
+            memberRepository.save(member);
+        } else {
+            throw new BusinessLogicException(ExceptionCode.FESTIVAL_NOT_FOUND);
+        }
     }
 
-    public List<Long> getRecentFestivals(Member member) {
+    public List<MemberRecent> getRecentFestival(Member member) {
         List<MemberRecent> memberRecentList = member.getMemberRecentList();
-        Set<Long> recentFestivalsSet = new LinkedHashSet<>();
+        List<MemberRecent> recentFestivals = new ArrayList<>();
+        Set<Long> festivalIds = new HashSet<>();
 
-        for (int i = memberRecentList.size() - 1; i >= 0 && recentFestivalsSet.size() < 5; i--) {
-            recentFestivalsSet.add(memberRecentList.get(i).getFestivalId());
+        for (int i = memberRecentList.size() - 1; i >= 0 && recentFestivals.size() < 5; i--) {
+            MemberRecent recent = memberRecentList.get(i);
+            Long festivalId = recent.getFestival().getFestivalId();
+            if (!festivalIds.contains(festivalId)) {
+                recentFestivals.add(recent);
+                festivalIds.add(festivalId);
+            }
         }
 
-        return new ArrayList<>(recentFestivalsSet);
+        return recentFestivals;
     }
 
 }
