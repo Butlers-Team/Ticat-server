@@ -21,7 +21,6 @@ public interface InterestMapper {
 
     default InterestDto.PostResponse interestToPostResponse(Interest interest) {
         return InterestDto.PostResponse.builder()
-                .displayName(interest.getMember().getDisplayName())
-                .categories(interest.getCategories()).build();
+                .displayName(interest.getMember().getDisplayName()).build();
     }
 }

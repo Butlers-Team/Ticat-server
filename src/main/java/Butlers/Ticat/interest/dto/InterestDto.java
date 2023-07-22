@@ -20,6 +20,5 @@ public class InterestDto {
     @Builder
     public static class PostResponse {
         private String displayName;
-        private List<String> categories;
     }
 }
