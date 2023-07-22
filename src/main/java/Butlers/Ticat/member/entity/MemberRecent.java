@@ -1,5 +1,6 @@
 package Butlers.Ticat.member.entity;
 
+import Butlers.Ticat.festival.entity.Festival;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,14 +17,16 @@ public class MemberRecent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberRecentId;
 
-    private Long festivalId;
-
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public MemberRecent(Long festivalId) {
-        this.festivalId = festivalId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "festival_id")
+    private Festival festival;
+
+    public MemberRecent(Festival festival) {
+        this.festival = festival;
     }
 
     public void setMember(Member member) {
