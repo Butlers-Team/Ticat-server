@@ -17,6 +17,7 @@ public class InterestDto {
         private List<String> categories;
     }
 
+    @Getter
     @Builder
     public static class PostResponse {
         private String displayName;
