@@ -32,6 +32,9 @@ public class MemberDetailsService implements UserDetailsService {
             setMemberId(member.getMemberId());
             setId(member.getId());
             setPassword(member.getPassword());
+            setProfileUrl(member.getProfileUrl());
+            setDisplayName(member.getDisplayName());
+            setInterest(member.getInterest());
         }
 
 

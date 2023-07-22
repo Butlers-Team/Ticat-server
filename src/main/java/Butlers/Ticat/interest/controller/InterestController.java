@@ -2,6 +2,7 @@ package Butlers.Ticat.interest.controller;
 
 import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.interest.dto.InterestDto;
+import Butlers.Ticat.interest.entity.Interest;
 import Butlers.Ticat.interest.mapper.InterestMapper;
 import Butlers.Ticat.interest.service.InterestService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,10 @@ public class InterestController {
     private final InterestMapper interestMapper;
 
     @PostMapping("/interest")
-    public ResponseEntity postInterest(@RequestBody InterestDto.Post interest) {
+    public ResponseEntity postInterest(@RequestBody InterestDto.Post requestBody) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
-        interestService.registerInterest(interestMapper.postToInterest(authenticationMemberId, interest));
+        Interest interest = interestService.registerInterest(interestMapper.postToInterest(authenticationMemberId, requestBody));
 
-        return new ResponseEntity<>("관심사 등록이 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(interestMapper.interestToPostResponse(interest), HttpStatus.OK);
     }
 }

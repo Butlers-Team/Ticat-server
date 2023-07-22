@@ -81,4 +81,9 @@ public interface MemberMapper {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    default MemberDto.ProfileUrl memberToProfileUrl(Member member) {
+        return MemberDto.ProfileUrl.builder()
+                .profileUrl(member.getProfileUrl()).build();
+    }
 }

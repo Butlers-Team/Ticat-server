@@ -71,4 +71,9 @@ public class MemberDto {
         @Email
         private String email;
     }
+
+    @Builder
+    public static class ProfileUrl {
+        private String profileUrl;
+    }
 }

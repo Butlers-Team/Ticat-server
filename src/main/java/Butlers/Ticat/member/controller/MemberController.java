@@ -95,18 +95,18 @@ public class MemberController {
     @PostMapping("/profile")
     public ResponseEntity postProfile(@RequestPart MultipartFile image) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
-        memberService.uploadProfileImage(authenticationMemberId, image);
+        Member member = memberService.uploadProfileImage(authenticationMemberId, image);
 
-        return new ResponseEntity<>("이미지 등록이 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(memberMapper.memberToProfileUrl(member), HttpStatus.OK);
     }
 
     // 프로필 이미지 수정
     @PatchMapping("/profile")
     public ResponseEntity patchProfile(@RequestBody MultipartFile image) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
-        memberService.updateProfileImage(authenticationMemberId, image);
+        Member member = memberService.updateProfileImage(authenticationMemberId, image);
 
-        return new ResponseEntity<>("이미지 변경이 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(memberMapper.memberToProfileUrl(member), HttpStatus.OK);
     }
 
     // 프로필 이미지 삭제

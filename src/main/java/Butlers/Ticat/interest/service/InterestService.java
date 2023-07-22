@@ -15,11 +15,12 @@ public class InterestService {
     private final InterestRepository interestRepository;
 
     // 관심사 등록
-    public void registerInterest(Interest interest) {
+    public Interest registerInterest(Interest interest) {
         Member member = memberService.findVerifiedMember(interest.getMember().getMemberId());
         member.setDisplayName(interest.getMember().getDisplayName());
-        interest.setMember(member);
+        Interest memberInterest = member.getInterest();
+        memberInterest.setCategories(interest.getCategories());
 
-        interestRepository.save(interest);
+        return interestRepository.save(memberInterest);
     }
 }
