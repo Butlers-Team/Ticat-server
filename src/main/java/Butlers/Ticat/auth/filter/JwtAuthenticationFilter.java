@@ -47,6 +47,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", refreshToken);
 
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("profileUrl", member.getProfileUrl());
+        responseData.put("displayName", member.getDisplayName());
+        responseData.put("memberId", member.getMemberId());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponseBody = objectMapper.writeValueAsString(responseData);
+
+        response.setContentType("application/json");
+
+        // Write the JSON data to the response body
+        response.getWriter().write(jsonResponseBody);
+        response.getWriter().flush();
+
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 

@@ -9,6 +9,7 @@ import Butlers.Ticat.exception.ExceptionCode;
 
 import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
+import Butlers.Ticat.member.entity.MemberRecent;
 import Butlers.Ticat.stamp.dto.StampDto;
 import Butlers.Ticat.stamp.entity.Stamp;
 import org.mapstruct.Mapper;
@@ -78,6 +79,24 @@ public interface MemberMapper {
                         .address(stamp.getFestival().getAddress())
                         .eventStartDate(stamp.getFestival().getDetailFestival().getEventstartdate())
                         .eventEndDate(stamp.getFestival().getDetailFestival().getEventenddate())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    default MemberDto.ProfileUrl memberToProfileUrl(Member member) {
+        return MemberDto.ProfileUrl.builder()
+                .profileUrl(member.getProfileUrl()).build();
+    }
+
+    default List<MemberDto.recentFestivalResponse> getRecentResponses(List<MemberRecent> recents) {
+        return recents.stream()
+                .map(recent -> MemberDto.recentFestivalResponse.builder()
+                        .festivalId(recent.getFestival().getFestivalId())
+                        .title(recent.getFestival().getTitle())
+                        .address(recent.getFestival().getAddress())
+                        .eventStartDate(recent.getFestival().getDetailFestival().getEventstartdate())
+                        .eventEndDate(recent.getFestival().getDetailFestival().getEventenddate())
+                        .imageUrl(recent.getFestival().getImage())
                         .build())
                 .collect(Collectors.toList());
     }

@@ -43,6 +43,8 @@ public class FestivalDto {
         private double mapx;
         private double mapy;
         private boolean isLiked;
+        private double reviewRating;
+        private Integer reviewCount;
     }
 
     @Getter

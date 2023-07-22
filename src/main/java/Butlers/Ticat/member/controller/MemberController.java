@@ -7,6 +7,7 @@ import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.dto.MultiResponseDto;
 import Butlers.Ticat.member.dto.MemberDto;
 import Butlers.Ticat.member.entity.Member;
+import Butlers.Ticat.member.entity.MemberRecent;
 import Butlers.Ticat.member.mapper.MemberMapper;
 import Butlers.Ticat.member.service.MemberService;
 import Butlers.Ticat.stamp.dto.StampDto;
@@ -22,9 +23,6 @@ import javax.validation.constraints.Positive;
 import java.util.Collections;
 import java.util.List;
 
-import javax.validation.constraints.Positive;
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping
@@ -95,18 +93,18 @@ public class MemberController {
     @PostMapping("/profile")
     public ResponseEntity postProfile(@RequestPart MultipartFile image) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
-        memberService.uploadProfileImage(authenticationMemberId, image);
+        Member member = memberService.uploadProfileImage(authenticationMemberId, image);
 
-        return new ResponseEntity<>("이미지 등록이 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(memberMapper.memberToProfileUrl(member), HttpStatus.OK);
     }
 
     // 프로필 이미지 수정
     @PatchMapping("/profile")
     public ResponseEntity patchProfile(@RequestBody MultipartFile image) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
-        memberService.updateProfileImage(authenticationMemberId, image);
+        Member member = memberService.updateProfileImage(authenticationMemberId, image);
 
-        return new ResponseEntity<>("이미지 변경이 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(memberMapper.memberToProfileUrl(member), HttpStatus.OK);
     }
 
     // 프로필 이미지 삭제
@@ -211,9 +209,8 @@ public class MemberController {
 
         Member member = memberService.findMember(jwtId);
 
-        List<Long> recentFestivals = memberService.getRecentFestivals(member);
+        List<MemberRecent> memberFestival = memberService.getRecentFestival(member);
 
-        return ResponseEntity.ok(recentFestivals);
-
+        return new ResponseEntity(memberMapper.getRecentResponses(memberFestival), HttpStatus.OK);
     }
 }
