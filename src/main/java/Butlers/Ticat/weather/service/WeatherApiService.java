@@ -153,8 +153,7 @@ public class WeatherApiService {
                         break;
                     case "PTY":
                         pty = (String)fcstValue;
-                        if(pty.equals("1")) pty="비";
-                        else if(pty.equals("2")) pty="비/눈";
+                        if(pty.equals("1") || pty.equals("2")) pty="비";
                         else if(pty.equals("3")) pty="눈";
                         else pty ="소나기";
                         break;
