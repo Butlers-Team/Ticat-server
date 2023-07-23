@@ -46,7 +46,7 @@ public class FestivalController {
     // 축제 메인페이지 배너
     @GetMapping("/banner")
     public ResponseEntity getFestivalsByStatus() {
-        List<Festival> festivals = festivalService.findFestivalByStatus(ONGOING);
+        List<Festival> festivals = festivalService.findFestivalByStatus();
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.festivalsToFestivalListResponses(festivals)),HttpStatus.OK);
     }
 

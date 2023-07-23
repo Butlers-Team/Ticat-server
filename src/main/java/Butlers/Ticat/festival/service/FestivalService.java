@@ -59,9 +59,9 @@ public class FestivalService {
     }
 
     // 메인 배너페이지
-    public List<Festival> findFestivalByStatus(DetailFestival.Status status) {
+    public List<Festival> findFestivalByStatus() {
 
-        List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(status);
+        List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING);
 
         List<Festival> filteredFestivals = new ArrayList<>();
 
