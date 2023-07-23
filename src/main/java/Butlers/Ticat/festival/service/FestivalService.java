@@ -115,14 +115,14 @@ public class FestivalService {
                 }
             }
 
-            if (filteredFestivals.size() >= 5) {
+            if (filteredFestivals.size() >= 6) {
                 Collections.shuffle(filteredFestivals);
-                filteredFestivals = filteredFestivals.subList(0, 5);
+                filteredFestivals = filteredFestivals.subList(0, 6);
             }
 
             return filteredFestivals;
         }catch (Exception e){
-            List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING);
+            List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING,Sort.by("likeCount").descending());
 
             List<Festival> filteredFestivals = new ArrayList<>();
 
@@ -132,9 +132,8 @@ public class FestivalService {
                 }
             }
 
-            if (filteredFestivals.size() >= 5) {
-                Collections.shuffle(filteredFestivals);
-                filteredFestivals = filteredFestivals.subList(0, 5);
+            if (filteredFestivals.size() >= 6) {
+                filteredFestivals = filteredFestivals.subList(0, 6);
             }
 
             return filteredFestivals;
