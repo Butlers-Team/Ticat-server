@@ -140,7 +140,7 @@ public class FestivalController {
     }
 
     //좋아요 취소
-    @PostMapping("/{festival-id}/unfavorite")
+    @DeleteMapping("/{festival-id}/unfavorite")
     public ResponseEntity<String> deleteFavorite(@PathVariable("festival-id") @Positive long festivalId) {
         festivalService.cancleFavorite(festivalId);
 
