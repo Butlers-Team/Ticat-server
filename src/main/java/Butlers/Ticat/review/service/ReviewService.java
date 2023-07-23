@@ -248,6 +248,22 @@ public class ReviewService {
         reviewRecommendRepository.save(reviewRecommend);
     }
 
+    // 리뷰 추천 취소
+    public void cancelRecommendReview(long memberId, long reviewId) {
+        checkLogin(memberId);
+        Member member = memberService.findVerifiedMember(memberId);
+        Review review = findVerifiedReview(reviewId);
+
+        ReviewRecommend reviewRecommend = findReviewRecommend(member, review);
+
+        if(reviewRecommend.isLiked() && !reviewRecommend.isDisliked()) {
+            reviewRecommend.setLiked(false);
+            review.setLikedCount(review.getLikedCount() - 1);
+        }
+
+        reviewRecommendRepository.save(reviewRecommend);
+    }
+
     // 리뷰 비추천
     public void unrecommendReview(long memberId, long reviewId) {
         checkLogin(memberId);
@@ -259,6 +275,22 @@ public class ReviewService {
         if (!reviewRecommend.isLiked() && !reviewRecommend.isDisliked()) {
             reviewRecommend.setDisliked(true);
             review.setDislikedCount(review.getDislikedCount() + 1);
+        }
+
+        reviewRecommendRepository.save(reviewRecommend);
+    }
+
+    // 리뷰 비추천 취소
+    public void cancelUnrecommendReview(long memberId, long reviewId) {
+        checkLogin(memberId);
+        Member member = memberService.findVerifiedMember(memberId);
+        Review review = findVerifiedReview(reviewId);
+
+        ReviewRecommend reviewRecommend = findReviewRecommend(member, review);
+
+        if(!reviewRecommend.isLiked() && reviewRecommend.isDisliked()) {
+            reviewRecommend.setDisliked(false);
+            review.setDislikedCount(review.getDislikedCount() - 1);
         }
 
         reviewRecommendRepository.save(reviewRecommend);

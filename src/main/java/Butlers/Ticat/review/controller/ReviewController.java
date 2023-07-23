@@ -98,6 +98,7 @@ public class ReviewController {
         return new ResponseEntity<>("리뷰 삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 
+    // 리뷰 좋아요
     @PostMapping("/reviews/{review-id}/liked")
     public ResponseEntity postRecommendReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
@@ -107,6 +108,17 @@ public class ReviewController {
         return new ResponseEntity<>("해당 리뷰를 추천했습니다.", HttpStatus.OK);
     }
 
+    // 리뷰 좋아요 취소
+    @DeleteMapping("/reviews/{review-id}/liked")
+    public ResponseEntity deleteRecommendReview(@PathVariable("review-id") long reviewId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.cancelRecommendReview(authenticationMemberId, reviewId);
+
+        return new ResponseEntity<>("리뷰 추천을 취소 했습니다.", HttpStatus.OK);
+    }
+
+    // 리뷰 싫어요
     @PostMapping("reviews/{review-id}/disliked")
     public ResponseEntity postUnrecommendReview(@PathVariable("review-id") long reviewId) {
         long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
@@ -114,6 +126,16 @@ public class ReviewController {
         reviewService.unrecommendReview(authenticationMemberId, reviewId);
 
         return new ResponseEntity<>("해당 리뷰를 비추천했습니다.", HttpStatus.OK);
+    }
+
+    // 리뷰 싫어요 취소
+    @DeleteMapping("reviews/{review-id}/disliked")
+    public ResponseEntity DeleteUnrecommendReview(@PathVariable("review-id") long reviewId) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        reviewService.cancelUnrecommendReview(authenticationMemberId, reviewId);
+
+        return new ResponseEntity<>("리뷰 비추천을 취소 했습니다.", HttpStatus.OK);
     }
 
     // 리뷰 댓글
