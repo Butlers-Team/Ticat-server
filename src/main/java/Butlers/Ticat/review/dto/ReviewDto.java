@@ -23,8 +23,10 @@ public class ReviewDto {
         String content;
         double rating;
         List<String> pictures;
-        int liked;
-        int disliked;
+        int likedCount;
+        int dislikedCount;
         int commentCount;
+        boolean liked;
+        boolean disliked;
     }
 }

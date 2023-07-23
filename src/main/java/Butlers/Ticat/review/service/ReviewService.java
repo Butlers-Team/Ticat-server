@@ -9,6 +9,7 @@ import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.service.MemberService;
 import Butlers.Ticat.review.entity.Review;
 import Butlers.Ticat.review.entity.ReviewComment;
+import Butlers.Ticat.review.entity.ReviewPlus;
 import Butlers.Ticat.review.entity.ReviewRecommend;
 import Butlers.Ticat.review.repository.ReviewCommentRepository;
 import Butlers.Ticat.review.repository.ReviewRecommendRepository;
@@ -24,6 +25,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -191,54 +193,107 @@ public class ReviewService {
         }
     }
 
-    // 리뷰 추천 여부 확인
-    public String checkLike(long memberId, long reviewId) {
-        if (memberId == NUMBER_OF_NON_LOGIN) {
-            return "";
+    public List<ReviewPlus> reviewToPlus(List<Review> reviews, long memberId) {
+        Member member;
+        if (memberId != NUMBER_OF_NON_LOGIN) {
+            member = memberService.findVerifiedMember(memberId);
         } else {
-            Member member = memberService.findVerifiedMember(memberId);
-            Review review = findVerifiedReview(reviewId);
-
-            return findReviewRecommend(member, review).getRecommendStatus().getStatus();
+            member = new Member();
+            member.setMemberId(memberId);
         }
+        List<ReviewPlus> reviewPluses = new ArrayList<>();
+
+        for (Review review : reviews) {
+            ReviewPlus reviewPlus = new ReviewPlus(
+                    review.getReviewId(),
+                    review.getMember(),
+                    review.getContent(),
+                    review.getRate(),
+                    review.getPictures(),
+                    review.getComments(),
+                    review.getCommentCount(),
+                    review.getLikedCount(),
+                    review.getDislikedCount(),
+                    false,
+                    false
+            );
+
+            for (ReviewRecommend recommend : review.getReviewRecommends()) {
+                if (recommend.getMember().equals(member)) {
+                    reviewPlus.setLiked(recommend.isLiked());
+                    reviewPlus.setDisliked(recommend.isDisliked());
+                    break;
+                }
+            }
+
+            reviewPluses.add(reviewPlus);
+        }
+
+        return reviewPluses;
     }
 
     // 리뷰 추천
-    public ReviewRecommend recommendReview(long memberId, long reviewId) {
+    public void recommendReview(long memberId, long reviewId) {
         checkLogin(memberId);
         Member member = memberService.findVerifiedMember(memberId);
         Review review = findVerifiedReview(reviewId);
 
         ReviewRecommend reviewRecommend = findReviewRecommend(member, review);
 
-        if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.NON) {
-            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.RECOMMEND);
-            review.setLiked(review.getLiked() + 1);
-        } else {
-            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.NON);
-            review.setLiked(review.getLiked() - 1);
+        if (!reviewRecommend.isLiked() && !reviewRecommend.isDisliked()) {
+            reviewRecommend.setLiked(true);
+            review.setLikedCount(review.getLikedCount() + 1);
         }
 
-        return reviewRecommendRepository.save(reviewRecommend);
+        reviewRecommendRepository.save(reviewRecommend);
+    }
+
+    // 리뷰 추천 취소
+    public void cancelRecommendReview(long memberId, long reviewId) {
+        checkLogin(memberId);
+        Member member = memberService.findVerifiedMember(memberId);
+        Review review = findVerifiedReview(reviewId);
+
+        ReviewRecommend reviewRecommend = findReviewRecommend(member, review);
+
+        if(reviewRecommend.isLiked() && !reviewRecommend.isDisliked()) {
+            reviewRecommend.setLiked(false);
+            review.setLikedCount(review.getLikedCount() - 1);
+        }
+
+        reviewRecommendRepository.save(reviewRecommend);
     }
 
     // 리뷰 비추천
-    public ReviewRecommend unrecommendReivew(long memberId, long reviewId) {
+    public void unrecommendReview(long memberId, long reviewId) {
         checkLogin(memberId);
         Member member = memberService.findVerifiedMember(memberId);
         Review review = findVerifiedReview(reviewId);
 
         ReviewRecommend reviewRecommend = findReviewRecommend(member, review);
 
-        if (reviewRecommend.getRecommendStatus() == ReviewRecommend.RecommendStatus.NON) {
-            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.UNRECOMMENDED);
-            review.setDisliked(review.getDisliked() + 1);
-        } else {
-            reviewRecommend.setRecommendStatus(ReviewRecommend.RecommendStatus.NON);
-            review.setDisliked(review.getDisliked() - 1);
+        if (!reviewRecommend.isLiked() && !reviewRecommend.isDisliked()) {
+            reviewRecommend.setDisliked(true);
+            review.setDislikedCount(review.getDislikedCount() + 1);
         }
 
-        return reviewRecommendRepository.save(reviewRecommend);
+        reviewRecommendRepository.save(reviewRecommend);
+    }
+
+    // 리뷰 비추천 취소
+    public void cancelUnrecommendReview(long memberId, long reviewId) {
+        checkLogin(memberId);
+        Member member = memberService.findVerifiedMember(memberId);
+        Review review = findVerifiedReview(reviewId);
+
+        ReviewRecommend reviewRecommend = findReviewRecommend(member, review);
+
+        if(!reviewRecommend.isLiked() && reviewRecommend.isDisliked()) {
+            reviewRecommend.setDisliked(false);
+            review.setDislikedCount(review.getDislikedCount() - 1);
+        }
+
+        reviewRecommendRepository.save(reviewRecommend);
     }
 
     // 리뷰 추천 객체 찾기 (없을 경우 새로운 객체를 반환)
