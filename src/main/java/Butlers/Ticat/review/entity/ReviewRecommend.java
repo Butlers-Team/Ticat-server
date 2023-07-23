@@ -25,8 +25,11 @@ public class ReviewRecommend {
     @JoinColumn(name = "review_id")
     private Review review;
 
-    // 추천 상태
-    private RecommendStatus recommendStatus = RecommendStatus.NON;
+    // 추천 상태 (좋아요)
+    private boolean liked = false;
+
+    // 추천 상태 (싫어요)
+    private boolean disliked = false;
 
     // 회원 설정 메서드
     public void setMember(Member member) {
@@ -41,20 +44,6 @@ public class ReviewRecommend {
         this.review = review;
         if (!review.getReviewRecommends().contains(this)) {
             review.addRecommend(this);
-        }
-    }
-
-
-    public enum RecommendStatus {
-        NON(""),
-        RECOMMEND("추천"),
-        UNRECOMMENDED("비 추천");
-
-        @Getter
-        private String status;
-
-        RecommendStatus(String status) {
-            this.status = status;
         }
     }
 }
