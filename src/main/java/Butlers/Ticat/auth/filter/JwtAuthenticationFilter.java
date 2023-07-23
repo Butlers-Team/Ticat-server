@@ -2,6 +2,7 @@ package Butlers.Ticat.auth.filter;
 
 import Butlers.Ticat.auth.dto.LoginDto;
 import Butlers.Ticat.auth.jwt.JwtTokenizer;
+import Butlers.Ticat.auth.jwt.TokenService;
 import Butlers.Ticat.member.entity.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
     private final JwtTokenizer jwtTokenizer;
 
 
@@ -41,10 +43,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         Member member = (Member) authResult.getPrincipal();
 
-        String accessToken = delegateAccessToken(member);
-        String refreshToken = delegateRefreshToken(member);
+        String accessToken = tokenService.delegateAccessToken(member);
+        String refreshToken = tokenService.delegateRefreshToken(member);
 
-        response.setHeader("Authorization", "Bearer " + accessToken);
+        response.setHeader("Authorization", accessToken);
         response.setHeader("Refresh", refreshToken);
 
         Map<String, Object> responseData = new HashMap<>();
