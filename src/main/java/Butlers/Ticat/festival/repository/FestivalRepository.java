@@ -5,6 +5,7 @@ import Butlers.Ticat.festival.entity.Festival;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,6 +25,7 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     Page<Festival> findByDetailFestivalCategoryIn(List<String> categories,Pageable pageable);
     Page<Festival> findByDetailFestivalCategory(String category,Pageable pageable);
     Page<Festival> findByDetailFestivalCategoryAndAreaIn(String category,List<String> areas, Pageable pageable);
+    List<Festival> findByDetailFestivalStatus(DetailFestival.Status status, Sort sort);
     List<Festival> findByDetailFestivalStatus(DetailFestival.Status status);
     List<Festival> findByDetailFestivalCategoryAndDetailFestivalStatus(String category,DetailFestival.Status status);
     List<Festival> findByDetailFestivalCategoryInAndDetailFestivalStatus(List<String> categories,DetailFestival.Status status);
