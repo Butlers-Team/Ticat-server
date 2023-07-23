@@ -59,9 +59,9 @@ public class FestivalService {
     }
 
     // 메인 배너페이지
-    public List<Festival> findFestivalByStatus(DetailFestival.Status status) {
+    public List<Festival> findFestivalByStatus() {
 
-        List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(status);
+        List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING);
 
         List<Festival> filteredFestivals = new ArrayList<>();
 
@@ -81,7 +81,6 @@ public class FestivalService {
 
     // 상세페이지 축제 추천
     public List<Festival> findDetailRecommend(String category) {
-
         List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryAndDetailFestivalStatus(category,ONGOING);
 
         List<Festival> filteredFestivals = new ArrayList<>();
@@ -102,26 +101,44 @@ public class FestivalService {
 
     // 메인페이지 회원 관심사로 축제 추천
     public List<Festival> findMainRecommend() {
+        try{
+            //로그인한 멤버 불러오기
+            Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
 
-        //로그인한 멤버 불러오기
-        Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
+            List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryInAndDetailFestivalStatus(member.getInterest().getCategories(),ONGOING);
 
-        List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryInAndDetailFestivalStatus(member.getInterest().getCategories(),ONGOING);
+            List<Festival> filteredFestivals = new ArrayList<>();
 
-        List<Festival> filteredFestivals = new ArrayList<>();
-
-        for (Festival festival : festivals) {
-            if (!festival.getImage().isEmpty()) {
-                filteredFestivals.add(festival);
+            for (Festival festival : festivals) {
+                if (!festival.getImage().isEmpty()) {
+                    filteredFestivals.add(festival);
+                }
             }
-        }
 
-        if (filteredFestivals.size() >= 5) {
-            Collections.shuffle(filteredFestivals);
-            filteredFestivals = filteredFestivals.subList(0, 5);
-        }
+            if (filteredFestivals.size() >= 5) {
+                Collections.shuffle(filteredFestivals);
+                filteredFestivals = filteredFestivals.subList(0, 5);
+            }
 
-        return filteredFestivals;
+            return filteredFestivals;
+        }catch (Exception e){
+            List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING);
+
+            List<Festival> filteredFestivals = new ArrayList<>();
+
+            for (Festival festival : festivals) {
+                if (!festival.getImage().isEmpty()) {
+                    filteredFestivals.add(festival);
+                }
+            }
+
+            if (filteredFestivals.size() >= 5) {
+                Collections.shuffle(filteredFestivals);
+                filteredFestivals = filteredFestivals.subList(0, 5);
+            }
+
+            return filteredFestivals;
+        }
     }
 
     // 카테고리와 지역 이용해서 축제 찾기
@@ -221,7 +238,6 @@ public class FestivalService {
     }
 
     public Page<Festival> findFestivalsByTitle(String title, int page, int size) {
-
         return festivalRepository.findByTitleContainingIgnoreCase(title,PageRequest.of(page -1, size));
     }
 
