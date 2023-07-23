@@ -2,10 +2,9 @@ package Butlers.Ticat.review.mapper;
 
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.member.entity.Member;
-import Butlers.Ticat.review.dto.ReviewCommentDto;
 import Butlers.Ticat.review.dto.ReviewDto;
 import Butlers.Ticat.review.entity.Review;
-import Butlers.Ticat.review.entity.ReviewComment;
+import Butlers.Ticat.review.entity.ReviewPlus;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public interface ReviewMapper {
         return review;
     }
 
-    default ReviewDto.ResponseInFestival reviewToResponseListElementInFestival(Review review) {
+    default ReviewDto.ResponseInFestival reviewToResponseListElementInFestival(ReviewPlus review) {
         Member member = review.getMember();
         List<String> pictures = new ArrayList<>();
 
@@ -56,11 +55,13 @@ public interface ReviewMapper {
                 .content(review.getContent())
                 .rating(review.getRate())
                 .pictures(pictures)
-                .liked(review.getLiked())
-                .disliked(review.getDisliked())
-                .commentCount(review.getCommentCount()).build();
+                .likedCount(review.getLikedCount())
+                .dislikedCount(review.getDislikedCount())
+                .commentCount(review.getCommentCount())
+                .liked(review.isLiked())
+                .disliked(review.isDisliked()).build();
     }
-    default List<ReviewDto.ResponseInFestival> reviewToResponseInFestival(List<Review> reviews) {
+    default List<ReviewDto.ResponseInFestival> reviewToResponseInFestival(List<ReviewPlus> reviews) {
         return reviews.stream()
                 .map(review -> reviewToResponseListElementInFestival(review))
                 .collect(Collectors.toList());

@@ -4,7 +4,6 @@ import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.festival.dto.FestivalDto;
-import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.helper.AreaConverter;
@@ -35,7 +34,8 @@ public class FestivalService {
 
     // 전체 리스트
     public Page<Festival> findFestivals(int page, int size){
-        return festivalRepository.findAll(PageRequest.of(page-1,size,Sort.by("festivalId").descending()));
+        Sort sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
+        return festivalRepository.findAll(PageRequest.of(page-1,size,sort));
     }
 
     // 위도 경도 거리에 따른 축제 찾기
@@ -55,13 +55,14 @@ public class FestivalService {
     public Page<Festival> findFestivalByArea(List<String> areas,int page,int size) {
         List<String> areaList = AreaConverter.convertToSpecialCity(areas);
 
-        return festivalRepository.findByAreaIn(areaList,PageRequest.of(page-1,size,Sort.by("festivalId").descending()));
+        Sort sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
+        return festivalRepository.findByAreaIn(areaList,PageRequest.of(page-1,size,sort));
     }
 
     // 메인 배너페이지
-    public List<Festival> findFestivalByStatus(DetailFestival.Status status) {
+    public List<Festival> findFestivalByStatus() {
 
-        List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(status);
+        List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING);
 
         List<Festival> filteredFestivals = new ArrayList<>();
 
@@ -81,7 +82,6 @@ public class FestivalService {
 
     // 상세페이지 축제 추천
     public List<Festival> findDetailRecommend(String category) {
-
         List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryAndDetailFestivalStatus(category,ONGOING);
 
         List<Festival> filteredFestivals = new ArrayList<>();
@@ -102,37 +102,56 @@ public class FestivalService {
 
     // 메인페이지 회원 관심사로 축제 추천
     public List<Festival> findMainRecommend() {
+        try{
+            //로그인한 멤버 불러오기
+            Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
 
-        //로그인한 멤버 불러오기
-        Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
+            List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryInAndDetailFestivalStatus(member.getInterest().getCategories(),ONGOING);
 
-        List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryInAndDetailFestivalStatus(member.getInterest().getCategories(),ONGOING);
+            List<Festival> filteredFestivals = new ArrayList<>();
 
-        List<Festival> filteredFestivals = new ArrayList<>();
-
-        for (Festival festival : festivals) {
-            if (!festival.getImage().isEmpty()) {
-                filteredFestivals.add(festival);
+            for (Festival festival : festivals) {
+                if (!festival.getImage().isEmpty()) {
+                    filteredFestivals.add(festival);
+                }
             }
-        }
 
-        if (filteredFestivals.size() >= 5) {
-            Collections.shuffle(filteredFestivals);
-            filteredFestivals = filteredFestivals.subList(0, 5);
-        }
+            if (filteredFestivals.size() >= 6) {
+                Collections.shuffle(filteredFestivals);
+                filteredFestivals = filteredFestivals.subList(0, 6);
+            }
 
-        return filteredFestivals;
+            return filteredFestivals;
+        }catch (Exception e){
+            List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING,Sort.by("likeCount").descending());
+
+            List<Festival> filteredFestivals = new ArrayList<>();
+
+            for (Festival festival : festivals) {
+                if (!festival.getImage().isEmpty()) {
+                    filteredFestivals.add(festival);
+                }
+            }
+
+            if (filteredFestivals.size() >= 6) {
+                filteredFestivals = filteredFestivals.subList(0, 6);
+            }
+
+            return filteredFestivals;
+        }
     }
 
     // 카테고리와 지역 이용해서 축제 찾기
     public Page<Festival> findByCategoryAndArea(String category,List<String> areas,int page,int size) {
         List<String> areaList = AreaConverter.convertToSpecialCity(areas);
-        return festivalRepository.findByDetailFestivalCategoryAndAreaIn(category,areaList,PageRequest.of(page-1,size, Sort.by("festivalId").descending()));
+        Sort sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
+        return festivalRepository.findByDetailFestivalCategoryAndAreaIn(category,areaList,PageRequest.of(page-1,size, sort));
     }
 
     // 카테고리 이용해서 축제 찾기
     public Page<Festival> findByCategory(String category,int page,int size) {
-        return festivalRepository.findByDetailFestivalCategory(category,PageRequest.of(page-1,size,Sort.by("festivalId").descending()));
+        Sort sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
+        return festivalRepository.findByDetailFestivalCategory(category,PageRequest.of(page-1,size,sort));
     }
 
     // 좋아요 하기
@@ -187,41 +206,51 @@ public class FestivalService {
         return favorite.isPresent();
     }
 
-    //여러개의 카테고리로 축제 찾기 최신순
-    public Page<Festival> findByCategories(List<String> categories ,int page,int size){
-        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page-1,size,Sort.by("festivalId").descending()));
+    public Page<Festival> findFestivals(int page, int size, String sortBy) {
+        Sort sort;
+        switch (sortBy) {
+            case "likeCount":
+                sort = Sort.by("likeCount").descending();
+                break;
+            case "reviewRating":
+                sort = Sort.by("reviewRating").descending();
+                break;
+            case "reviewCount":
+                sort = Sort.by("reviewCount").descending();
+                break;
+            default:
+                sort = Sort.by("festivalId").descending();
+                break;
+        }
+
+        return festivalRepository.findAll(PageRequest.of(page - 1, size, sort));
     }
 
-    //여러개의 카테고리로 축제 찾기 좋아요순
-    public Page<Festival> findByCategoriesAndSortByLikeCount(List<String> categories ,int page,int size){
-        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page-1,size,Sort.by("likeCount").descending()));
-    }
+    public Page<Festival> findFestivalsByCategories(List<String> categories, int page, int size, String sortBy) {
+        Sort sort;
+        if (sortBy == null) {
+            sort = Sort.by("festivalId").descending();
+        } else {
+            switch (sortBy) {
+                case "likeCount":
+                    sort = Sort.by("likeCount").descending();
+                    break;
+                case "reviewRating":
+                    sort = Sort.by("reviewRating").descending();
+                    break;
+                case "reviewCount":
+                    sort = Sort.by("reviewCount").descending();
+                    break;
+                default:
+                    sort = Sort.by("festivalId").descending();
+                    break;
+            }
+        }
 
-    //여러개의 카테고리로 축제 찾기 평점순
-    public Page<Festival> findByCategoriesAndSortByReviewRating(List<String> categories ,int page,int size){
-        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page-1,size,Sort.by("reviewRating").descending()));
-    }
-
-    //여러개의 카테고리로 축제 찾기 리뷰수순
-    public Page<Festival> findByCategoriesAndSortByReviewCount(List<String> categories ,int page,int size){
-        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page-1,size,Sort.by("reviewCount").descending()));
-    }
-
-    // 좋아요순 전체 리스트
-    public Page<Festival> findFestivalsByLikeCount(int page, int size){
-        return festivalRepository.findAll(PageRequest.of(page-1,size,Sort.by("likeCount").descending()));
-    }
-    // 평점순 전체 리스트
-    public Page<Festival> findFestivalsByReviewRating(int page, int size){
-        return festivalRepository.findAll(PageRequest.of(page-1,size,Sort.by("reviewRating").descending()));
-    }
-    // 리뷰수순 전체 리스트
-    public Page<Festival> findFestivalsByReviewCount(int page, int size){
-        return festivalRepository.findAll(PageRequest.of(page-1,size,Sort.by("reviewCount").descending()));
+        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
     }
 
     public Page<Festival> findFestivalsByTitle(String title, int page, int size) {
-
         return festivalRepository.findByTitleContainingIgnoreCase(title,PageRequest.of(page -1, size));
     }
 
