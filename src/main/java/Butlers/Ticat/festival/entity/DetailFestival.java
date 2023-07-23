@@ -32,7 +32,7 @@ public class DetailFestival {
     public void updateStatus() {
         LocalDate currentDate = LocalDate.now();
         if (currentDate.isBefore(LocalDate.parse(eventstartdate, DateTimeFormatter.ofPattern("yyyyMMdd")))) {
-            status = Status.PLANNED;
+            status = Status.EXPECTED;
         } else if (currentDate.isEqual(LocalDate.parse(eventstartdate,DateTimeFormatter.ofPattern("yyyyMMdd"))) || currentDate.isBefore(LocalDate.parse(eventenddate,DateTimeFormatter.ofPattern("yyyyMMdd")))) {
             status = Status.ONGOING;
         } else {
@@ -58,7 +58,7 @@ public class DetailFestival {
     }
 
     public enum Status {
-        PLANNED("진행 예정"),
+        EXPECTED("진행 예정"),
         ONGOING("진행 중"),
         COMPLETED("진행 종료");
 

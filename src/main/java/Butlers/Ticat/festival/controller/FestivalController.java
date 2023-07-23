@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
-
 @RestController
 @RequestMapping("/festivals")
 @RequiredArgsConstructor
@@ -93,41 +91,14 @@ public class FestivalController {
                                                     @Positive @RequestParam int page,
                                                     @Positive @RequestParam int size) {
         Page<Festival> pageFestivals;
-        List<Festival> festivals;
 
         if (categories != null && !categories.isEmpty()) {
-            switch (sortBy) {
-                case "likeCount":
-                    pageFestivals = festivalService.findByCategoriesAndSortByLikeCount(categories, page, size);
-                    break;
-                case "reviewRating":
-                    pageFestivals = festivalService.findByCategoriesAndSortByReviewRating(categories, page, size);
-                    break;
-                case "reviewCount":
-                    pageFestivals = festivalService.findByCategoriesAndSortByReviewCount(categories, page, size);
-                    break;
-                default:
-                    pageFestivals = festivalService.findByCategories(categories, page, size);
-                    break;
-            }
+            pageFestivals = festivalService.findFestivalsByCategories(categories, page, size, sortBy);
         } else {
-            switch (sortBy) {
-                case "likeCount":
-                    pageFestivals = festivalService.findFestivalsByLikeCount(page, size);
-                    break;
-                case "reviewRating":
-                    pageFestivals = festivalService.findFestivalsByReviewRating(page, size);
-                    break;
-                case "reviewCount":
-                    pageFestivals = festivalService.findFestivalsByReviewCount(page, size);
-                    break;
-                default:
-                    pageFestivals = festivalService.findFestivals(page, size);
-                    break;
-            }
+            pageFestivals = festivalService.findFestivals(page, size, sortBy);
         }
 
-        festivals = pageFestivals.getContent();
+        List<Festival> festivals = pageFestivals.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
     }
 
