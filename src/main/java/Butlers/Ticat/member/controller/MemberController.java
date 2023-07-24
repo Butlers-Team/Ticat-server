@@ -143,16 +143,14 @@ public class MemberController {
     }
 
     @GetMapping("/members/stamps")
-    public ResponseEntity getMemberStamped(@Positive @RequestParam int page,
-                                           @RequestParam int year, @RequestParam int month,
+    public ResponseEntity getMemberStamped(@Positive @RequestParam int year, @RequestParam int month,
                                            @RequestParam(required = false) Integer day) {
 
         long jwtId = JwtParseInterceptor.getAuthenticatedMemberId();
 
         Member member = memberService.findMember(jwtId);
 
-        Page<Stamp> stampPage = memberService.getMemberStamped(member, page -1, year, month, day);
-        List<Stamp> stamps = stampPage.getContent();
+        List<Stamp> stamps = memberService.getMemberStamped(member, year, month, day);
 
         List<StampDto.StampResponse> stampResponses = memberMapper.getStampResponses(stamps);
 
@@ -161,9 +159,7 @@ public class MemberController {
                 .festivalList(stampResponses)
                 .build();
 
-        MultiResponseDto<StampDto.Response> multiResponseDto =
-                new MultiResponseDto<>(Collections.singletonList(stampResponse), stampPage);
-        return new ResponseEntity<>(multiResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(stampResponse, HttpStatus.OK);
     }
 
     @GetMapping("/members/schedule")
