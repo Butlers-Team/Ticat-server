@@ -173,7 +173,7 @@ public class MemberService {
         return calendarRepository.findByMemberAndCalendarDateIsBetween(member, startDate, endDate, pageable);
     }
 
-    public Page<Stamp> getMemberStamped(Member member, int page, int year, int month, Integer day) {
+    public List<Stamp> getMemberStamped(Member member, int year, int month, Integer day) {
 
         LocalDate startDate;
         LocalDate endDate;
@@ -186,8 +186,7 @@ public class MemberService {
             endDate = startDate.plusMonths(1);
         }
 
-        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "stampDate"));
-        return stampRepository.findByMemberAndStampDateBetween(member, startDate, endDate, pageable);
+        return stampRepository.findByMemberAndStampDateBetween(member, startDate, endDate);
     }
 
 
