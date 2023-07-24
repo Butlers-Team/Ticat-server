@@ -211,6 +211,6 @@ public class MemberController {
 
         List<MemberRecent> memberFestival = memberService.getRecentFestival(member);
 
-        return new ResponseEntity(memberMapper.getRecentResponses(memberFestival), HttpStatus.OK);
+        return new ResponseEntity(memberMapper.getRecentResponses(memberFestival, member), HttpStatus.OK);
     }
 }

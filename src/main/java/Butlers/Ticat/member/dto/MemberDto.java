@@ -82,6 +82,7 @@ public class MemberDto {
     @Builder
     public static class recentFestivalResponse {
         private Long festivalId;
+        private boolean isFavorite;
         private String title;
         private String address;
         private String eventStartDate;
