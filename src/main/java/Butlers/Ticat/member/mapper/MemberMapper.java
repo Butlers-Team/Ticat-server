@@ -16,6 +16,7 @@ import org.mapstruct.Mapper;
 
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -88,10 +89,15 @@ public interface MemberMapper {
                 .profileUrl(member.getProfileUrl()).build();
     }
 
-    default List<MemberDto.recentFestivalResponse> getRecentResponses(List<MemberRecent> recents) {
+    default List<MemberDto.recentFestivalResponse> getRecentResponses(List<MemberRecent> recents, Member member) {
+        Set<Long> favoriteFestivalIds = member.getFavorites().stream()
+                .map(favorite -> favorite.getFestival().getFestivalId())
+                .collect(Collectors.toSet());
+
         return recents.stream()
                 .map(recent -> MemberDto.recentFestivalResponse.builder()
                         .festivalId(recent.getFestival().getFestivalId())
+                        .isFavorite(favoriteFestivalIds.contains(recent.getFestival().getFestivalId()))
                         .title(recent.getFestival().getTitle())
                         .address(recent.getFestival().getAddress())
                         .eventStartDate(recent.getFestival().getDetailFestival().getEventstartdate())
