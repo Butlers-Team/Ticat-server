@@ -222,7 +222,6 @@ public class FestivalService {
                 sort = Sort.by("festivalId").descending();
                 break;
         }
-
         return festivalRepository.findAll(PageRequest.of(page - 1, size, sort));
     }
 
@@ -246,8 +245,39 @@ public class FestivalService {
                     break;
             }
         }
-
         return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
+    }
+
+    public Page<Festival> findByKeywordAndAreas(String keyword, List<String> categories, int page, int size, String sortBy) {
+        Sort sort;
+        if (sortBy == null) {
+            sort = Sort.by("festivalId").descending();
+        } else {
+            switch (sortBy) {
+                case "likeCount":
+                    sort = Sort.by("likeCount").descending();
+                    break;
+                case "reviewRating":
+                    sort = Sort.by("reviewRating").descending();
+                    break;
+                case "reviewCount":
+                    sort = Sort.by("reviewCount").descending();
+                    break;
+                default:
+                    sort = Sort.by("festivalId").descending();
+                    break;
+            }
+        }
+
+        if (keyword != null && !keyword.isEmpty() && categories != null && !categories.isEmpty()) {
+            return festivalRepository.findByKeywordAndCategoryIn(keyword, categories, PageRequest.of(page - 1, size, sort));
+        } else if (keyword != null && !keyword.isEmpty()) {
+            return festivalRepository.findByTitleContainingIgnoreCase(keyword, PageRequest.of(page - 1, size, sort));
+        } else if (categories != null && !categories.isEmpty()) {
+            return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
+        } else {
+            return festivalRepository.findAll(PageRequest.of(page - 1, size, sort));
+        }
     }
 
     public Page<Festival> findFestivalsByTitle(String title, int page, int size) {
