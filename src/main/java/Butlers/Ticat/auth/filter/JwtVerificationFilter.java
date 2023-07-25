@@ -17,6 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -59,7 +61,17 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                     Member member = optionalMember.get();
                     String newAccessToken = tokenService.delegateAccessToken(member);
 
+                    // 액세스 토큰의 만료 시간을 가져옵니다.
+                    Date accessTokenExpiration = tokenService.getAccessTokenExpiration();
+
+                    // 날짜 포맷을 "yyyy-MM-dd HH:mm:ss"으로 변경
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String accessTokenExpirationFormatted = dateFormat.format(accessTokenExpiration);
+
+                    // 응답 헤더에 액세스 토큰과 만료 시간 설정
                     response.setHeader("Authorization", newAccessToken);
+                    response.setHeader("AccessTokenExpiration", accessTokenExpirationFormatted);
+
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("액세스 토큰이 갱신되었습니다");
                 } else {
