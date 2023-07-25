@@ -86,27 +86,33 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         String uri;
 
-        if (member.getDisplayName() == null || member.getInterest().getCategories() == null) {
-            uri = createInterestUri(accessToken, refreshToken).toString();
+        if (member.getDisplayName() == null || member.getInterest().getCategories().size() == 0) {
+            uri = createInterestUri(accessToken, refreshToken, member.getMemberId(), member.getDisplayName(), member.getProfileUrl()).toString();
         } else {
-            uri = createUri(accessToken, refreshToken).toString();
+            uri = createUri(accessToken, refreshToken, member.getMemberId(), member.getDisplayName(), member.getProfileUrl()).toString();
         }
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
     // 콜백 Uri
-    private URI createUri(String accessToken, String refreshToken) {
+    private URI createUri(String accessToken, String refreshToken, long memberId, String displayName, String profileUrl) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://d99pqcn6hzkdg.cloudfront.net/callback/true")
                 .queryParam("Authorization", accessToken)
-                .queryParam("Refresh", refreshToken);
+                .queryParam("Refresh", refreshToken)
+                .queryParam("memberId", memberId)
+                .queryParam("displayName", displayName)
+                .queryParam("profileUrl", profileUrl);
         return builder.build().toUri();
     }
 
     // 콜백 Uri(관심사 등록 필요)
-    private URI createInterestUri(String accessToken, String refreshToken) {
+    private URI createInterestUri(String accessToken, String refreshToken, long memberId, String displayName, String profileUrl) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://d99pqcn6hzkdg.cloudfront.net/callback/false")
                 .queryParam("Authorization", accessToken)
-                .queryParam("Refresh", refreshToken);
+                .queryParam("Refresh", refreshToken)
+                .queryParam("memberId", memberId)
+                .queryParam("displayName", displayName)
+                .queryParam("profileUrl", profileUrl);
         return builder.build().toUri();
     }
 }

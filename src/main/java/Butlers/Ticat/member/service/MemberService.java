@@ -74,7 +74,12 @@ public class MemberService {
         member.setOauthChecked(true);
         verifyExistingId(member.getId());
 
-        return memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+        Interest interest = new Interest();
+        interest.setMember(savedMember);
+
+        interestRepository.save(interest);
+        return savedMember;
     }
 
     // 오어스 로그인 중 joinInOauth 에서 MEMBER_EMAIL_EXISTS 예외 발생 시 사용 될 메서드

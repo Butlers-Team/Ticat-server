@@ -44,4 +44,13 @@ public class TokenService {
 
         return "Bearer " + refreshToken;
     }
+
+    // TokenService 클래스에 메서드 추가
+    public Date getAccessTokenExpiration() {
+        return jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
+    }
+
+    public Date getRefreshTokenExpiration() {
+        return jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
+    }
 }
