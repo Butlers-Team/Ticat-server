@@ -102,6 +102,20 @@ public class FestivalController {
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
     }
 
+    //검색 ( 카테고리 , 순서 필터 )
+    @GetMapping("/search")
+    public ResponseEntity getSearchAndFilterByMap(@RequestParam(required = false) String keyword,
+                                                  @RequestParam(required = false) List<String> categories,
+                                                  @RequestParam(required = false) String sortBy,
+                                                  @Positive @RequestParam int page,
+                                                  @Positive @RequestParam int size){
+        Page<Festival> pageFestivals = festivalService.findByKeywordAndAreas(keyword, categories, page, size, sortBy);
+
+        List<Festival> festivals = pageFestivals.getContent();
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
+
+    }
+
     // 좋아요 하기
     @PostMapping("/{festival-id}/favorite")
     public ResponseEntity<String> postFavorite(@PathVariable("festival-id") @Positive long festivalId) {
