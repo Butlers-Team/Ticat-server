@@ -3,6 +3,8 @@ package Butlers.Ticat.review.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 public class ReviewCommentDto {
 
     @Getter
@@ -18,5 +20,7 @@ public class ReviewCommentDto {
         private String displayName;
         private String profileUrl;
         private String content;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
     }
 }

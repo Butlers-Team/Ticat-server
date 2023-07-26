@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +52,7 @@ public class ReviewService {
         Festival festival = festivalService.findFestival(review.getFestival().getFestivalId());
         review.setMember(member);
         review.setFestival(festival);
+        review.setCreatedAt(LocalDateTime.now());
         reviewRateCreate(review, festival);
 
         uploadPicture(review, files);
@@ -78,6 +80,7 @@ public class ReviewService {
         checkAuthor(memberId, findedReview.getMember().getMemberId());
 
         findedReview.setContent(review.getContent());
+        findedReview.setModifiedAt(LocalDateTime.now());
         reviewRateUpdate(review, findedReview);
 
         deletePicture(review);
@@ -214,6 +217,8 @@ public class ReviewService {
                     review.getCommentCount(),
                     review.getLikedCount(),
                     review.getDislikedCount(),
+                    review.getCreatedAt(),
+                    review.getModifiedAt(),
                     false,
                     false
             );
@@ -322,6 +327,7 @@ public class ReviewService {
 
         reviewComment.setMember(member);
         reviewComment.setReview(review);
+        reviewComment.setCreatedAt(LocalDateTime.now());
         increaseReviewCommentCount(review);
 
         reviewCommentRepository.save(reviewComment);
@@ -338,6 +344,7 @@ public class ReviewService {
         checkAuthor(memberId, findedReviewComment.getMember().getMemberId());
 
         findedReviewComment.setContent((reviewComment.getContent()));
+        findedReviewComment.setModifiedAt(LocalDateTime.now());
 
         reviewCommentRepository.save(findedReviewComment);
     }

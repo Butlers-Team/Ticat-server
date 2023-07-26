@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,12 @@ public class ReviewPlus {
     // 비추천
     private int dislikedCount = 0;
 
+    // 리뷰 생성 날짜, 시간
+    private LocalDateTime createdAt = null;
+
+    // 리뷰 수정 날짜, 시간
+    private LocalDateTime modifiedAt = null;
+
     // 추천 여부
     private boolean liked;
 
@@ -48,7 +55,7 @@ public class ReviewPlus {
 
     public ReviewPlus(long reviewId, Member member, String content, double rate, List<String[]> pictures,
                       List<ReviewComment> comments, int commentCount, int likedCount, int dislikedCount,
-                      boolean liked, boolean disliked) {
+                      LocalDateTime createdAt, LocalDateTime modifiedAt, boolean liked, boolean disliked) {
         this.reviewId = reviewId;
         this.member = member;
         this.content = content;
@@ -58,6 +65,8 @@ public class ReviewPlus {
         this.commentCount = commentCount;
         this.likedCount = likedCount;
         this.dislikedCount = dislikedCount;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
         this.liked = liked;
         this.disliked = disliked;
     }

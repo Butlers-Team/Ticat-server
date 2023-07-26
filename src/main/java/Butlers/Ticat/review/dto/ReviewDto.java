@@ -3,6 +3,7 @@ package Butlers.Ticat.review.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ReviewDto {
@@ -26,6 +27,8 @@ public class ReviewDto {
         int likedCount;
         int dislikedCount;
         int commentCount;
+        LocalDateTime createdAt;
+        LocalDateTime modifiedAt;
         boolean liked;
         boolean disliked;
     }
