@@ -58,6 +58,8 @@ public interface ReviewMapper {
                 .likedCount(review.getLikedCount())
                 .dislikedCount(review.getDislikedCount())
                 .commentCount(review.getCommentCount())
+                .createdAt(review.getCreatedAt())
+                .modifiedAt(review.getModifiedAt())
                 .liked(review.isLiked())
                 .disliked(review.isDisliked()).build();
     }

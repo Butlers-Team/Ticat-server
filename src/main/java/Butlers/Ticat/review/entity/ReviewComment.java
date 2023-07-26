@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -27,6 +28,12 @@ public class ReviewComment {
 
     // 덧글 내용
     private String content;
+
+    // 리뷰 댓글 생성 날짜, 시간
+    private LocalDateTime createdAt = null;
+
+    // 리뷰 댓글 수정 날짜, 시간
+    private LocalDateTime modifiedAt = null;
 
     // 회원 설정 메서드
     public void setMember(Member member) {

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,12 @@ public class Review {
     // 리뷰 추천 1:N 매핑
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<ReviewRecommend> reviewRecommends = new ArrayList<>();
+
+    // 리뷰 생성 날짜, 시간
+    private LocalDateTime createdAt = null;
+
+    // 리뷰 수정 날짜, 시간
+    private LocalDateTime modifiedAt = null;
 
     // 회원 설정 메서드
     public void setMember(Member member) {
