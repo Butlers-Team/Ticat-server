@@ -272,7 +272,7 @@ public class FestivalService {
         if (keyword != null && !keyword.isEmpty() && categories != null && !categories.isEmpty()) {
             return festivalRepository.findByKeywordAndCategoryIn(keyword, categories, PageRequest.of(page - 1, size, sort));
         } else if (keyword != null && !keyword.isEmpty()) {
-            return festivalRepository.findByTitleContainingIgnoreCase(keyword, PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findByTitleOrAreaContainingIgnoreCase(keyword, PageRequest.of(page - 1, size, sort));
         } else if (categories != null && !categories.isEmpty()) {
             return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
         } else {
