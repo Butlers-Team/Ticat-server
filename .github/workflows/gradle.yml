@@ -4,7 +4,7 @@ name: Ticat-deploy to Amazon EC2
 
 on:
   push:
-    branches: [dev]
+    branches: [main]
     
 permissions:
   contents: read
@@ -32,18 +32,16 @@ jobs:
           port: ${{ secrets.AWS_SSH_PORT }}
           script_stop: true
           script: |
-              
-              cd .ssh
-              ls
-              
-##              cd ./Ticat-server
-##              lsof -i :8080 || true
-##              fuser -k -n tcp 8080 || true
-##              git pull origin main
-##              echo ${{ secrets.APPLICATION_YML }} | base64 --decode > src/main/resources/application.yml            
-##              ./gradlew build
-##              cd build/libs
-##              nohup java -jar Ticat-0.0.1-SNAPSHOT.jar 1>/dev/null 2>&1 &
+
+              cd ./Ticat-server
+              lsof -i :8080 || true
+              fuser -k -n tcp 8080 || true
+              git pull origin main
+              echo ${{ secrets.APPLICATION_YML }} | base64 --decode > src/main/resources/application.yml            
+              ./gradlew build
+              cd build/libs
+              nohup java -jar Ticat-0.0.1-SNAPSHOT.jar 1>output.log 2>error.log &
+
             
               
      
