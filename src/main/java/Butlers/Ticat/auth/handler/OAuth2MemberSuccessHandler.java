@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @Slf4j
@@ -81,32 +83,46 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String accessToken = tokenService.delegateAccessToken(member);
         String refreshToken = tokenService.delegateRefreshToken(member);
 
-        response.setHeader("Authorization", accessToken);
-        response.setHeader("Refresh", refreshToken);
+        Date accessTokenExpiration = tokenService.getAccessTokenExpiration();
+        Date refreshTokenExpiration = tokenService.getRefreshTokenExpiration();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String accessTokenExpirationFormatted = dateFormat.format(accessTokenExpiration);
+        String refreshTokenExpirationFormatted = dateFormat.format(refreshTokenExpiration);
 
         String uri;
 
-        if (member.getDisplayName() == null || member.getInterest().getCategories() == null) {
-            uri = createInterestUri(accessToken, refreshToken).toString();
+        if (member.getDisplayName() == null || member.getInterest().getCategories().size() == 0) {
+            uri = createInterestUri(accessToken, refreshToken, member.getMemberId(), member.getDisplayName(), member.getProfileUrl(), accessTokenExpirationFormatted, refreshTokenExpirationFormatted).toString();
         } else {
-            uri = createUri(accessToken, refreshToken).toString();
+            uri = createUri(accessToken, refreshToken, member.getMemberId(), member.getDisplayName(), member.getProfileUrl(), accessTokenExpirationFormatted, refreshTokenExpirationFormatted).toString();
         }
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
     // 콜백 Uri
-    private URI createUri(String accessToken, String refreshToken) {
+    private URI createUri(String accessToken, String refreshToken, long memberId, String displayName, String profileUrl, String accessTokenExpiration, String refreshTokenExpiration) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://d99pqcn6hzkdg.cloudfront.net/callback/true")
                 .queryParam("Authorization", accessToken)
-                .queryParam("Refresh", refreshToken);
+                .queryParam("Refresh", refreshToken)
+                .queryParam("memberId", memberId)
+                .queryParam("displayName", displayName)
+                .queryParam("profileUrl", profileUrl)
+                .queryParam("accessTokenExpiration", accessTokenExpiration)
+                .queryParam("refreshTokenExpiration", refreshTokenExpiration);
         return builder.build().toUri();
     }
 
     // 콜백 Uri(관심사 등록 필요)
-    private URI createInterestUri(String accessToken, String refreshToken) {
+    private URI createInterestUri(String accessToken, String refreshToken, long memberId, String displayName, String profileUrl, String accessTokenExpiration, String refreshTokenExpiration) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://d99pqcn6hzkdg.cloudfront.net/callback/false")
                 .queryParam("Authorization", accessToken)
-                .queryParam("Refresh", refreshToken);
+                .queryParam("Refresh", refreshToken)
+                .queryParam("memberId", memberId)
+                .queryParam("displayName", displayName)
+                .queryParam("profileUrl", profileUrl)
+                .queryParam("accessTokenExpiration", accessTokenExpiration)
+                .queryParam("refreshTokenExpiration", refreshTokenExpiration);
         return builder.build().toUri();
     }
 }

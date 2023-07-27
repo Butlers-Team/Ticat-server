@@ -30,6 +30,8 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     List<Festival> findByDetailFestivalCategoryAndDetailFestivalStatus(String category,DetailFestival.Status status);
     List<Festival> findByDetailFestivalCategoryInAndDetailFestivalStatus(List<String> categories,DetailFestival.Status status);
     Page<Festival> findByTitleContainingIgnoreCase(String title, PageRequest of);
+    @Query("SELECT f FROM Festival f WHERE (LOWER(f.title) LIKE %:keyword% OR LOWER(f.area) LIKE %:keyword%) AND f.detailFestival.category IN :categories")
+    Page<Festival> findByKeywordAndCategoryIn(@Param("keyword") String keyword, @Param("categories") List<String> categories, Pageable pageable);
 
     @Modifying
     @Query(value = "INSERT INTO favorite (festival_id, member_id, ischecked) " +

@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,8 +47,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = tokenService.delegateAccessToken(member);
         String refreshToken = tokenService.delegateRefreshToken(member);
 
+        Date accessTokenExpiration = tokenService.getAccessTokenExpiration();
+        Date refreshTokenExpiration = tokenService.getRefreshTokenExpiration();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String accessTokenExpirationFormatted = dateFormat.format(accessTokenExpiration);
+        String refreshTokenExpirationFormatted = dateFormat.format(refreshTokenExpiration);
+
         response.setHeader("Authorization", accessToken);
         response.setHeader("Refresh", refreshToken);
+        response.setHeader("accessTokenExpiration", accessTokenExpirationFormatted);
+        response.setHeader("refreshTokenExpiration", refreshTokenExpirationFormatted);
 
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("profileUrl", member.getProfileUrl());

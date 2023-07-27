@@ -51,6 +51,8 @@ public interface ReviewCommentMapper {
                 .memberId(member.getMemberId())
                 .displayName(member.getDisplayName())
                 .profileUrl(member.getProfileUrl())
-                .content(reviewComment.getContent()).build();
+                .content(reviewComment.getContent())
+                .createdAt(reviewComment.getCreatedAt())
+                .modifiedAt(reviewComment.getModifiedAt()).build();
     }
 }
