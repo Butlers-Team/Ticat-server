@@ -206,26 +206,7 @@ public class FestivalService {
         return favorite.isPresent();
     }
 
-    public Page<Festival> findFestivals(int page, int size, String sortBy) {
-        Sort sort;
-        switch (sortBy) {
-            case "likeCount":
-                sort = Sort.by("likeCount").descending();
-                break;
-            case "reviewRating":
-                sort = Sort.by("reviewRating").descending();
-                break;
-            case "reviewCount":
-                sort = Sort.by("reviewCount").descending();
-                break;
-            default:
-                sort = Sort.by("festivalId").descending();
-                break;
-        }
-        return festivalRepository.findAll(PageRequest.of(page - 1, size, sort));
-    }
-
-    public Page<Festival> findFestivalsByCategories(List<String> categories, int page, int size, String sortBy) {
+    public Page<Festival> getFilteredFestivals(List<String> categories, String sortBy, int page, int size) {
         Sort sort;
         if (sortBy == null) {
             sort = Sort.by("festivalId").descending();
@@ -245,7 +226,12 @@ public class FestivalService {
                     break;
             }
         }
-        return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
+
+        if (categories != null && !categories.isEmpty()) {
+            return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
+        } else {
+            return festivalRepository.findAll(PageRequest.of(page - 1, size, sort));
+        }
     }
 
     public Page<Festival> findByKeywordAndAreas(String keyword, List<String> categories, int page, int size, String sortBy) {
