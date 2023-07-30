@@ -90,13 +90,7 @@ public class FestivalController {
                                                     @RequestParam(required = false) String sortBy,
                                                     @Positive @RequestParam int page,
                                                     @Positive @RequestParam int size) {
-        Page<Festival> pageFestivals;
-
-        if (categories != null && !categories.isEmpty()) {
-            pageFestivals = festivalService.findFestivalsByCategories(categories, page, size, sortBy);
-        } else {
-            pageFestivals = festivalService.findFestivals(page, size, sortBy);
-        }
+        Page<Festival> pageFestivals = festivalService.getFilteredFestivals(categories, sortBy, page, size);
 
         List<Festival> festivals = pageFestivals.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
