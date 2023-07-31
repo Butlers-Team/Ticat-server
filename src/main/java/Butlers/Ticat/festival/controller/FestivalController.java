@@ -54,20 +54,7 @@ public class FestivalController {
                                                @RequestParam(required = false) List<String> areas,
                                                @Positive @RequestParam int page,
                                                @Positive @RequestParam int size) {
-        Page<Festival> pageFestivals;
-        if (category == null || category.equalsIgnoreCase("전체")) {
-            if (areas != null && !areas.isEmpty()) {
-                pageFestivals = festivalService.findFestivalByArea(areas, page, size);
-            } else {
-                pageFestivals = festivalService.findFestivals(page, size);
-            }
-        } else {
-            if (areas != null && !areas.isEmpty()) {
-                pageFestivals = festivalService.findByCategoryAndArea(category, areas, page, size);
-            } else {
-                pageFestivals = festivalService.findByCategory(category, page, size);
-            }
-        }
+        Page<Festival> pageFestivals = festivalService.getFilteredFestivalList(category, areas, page, size);
         List<Festival> festivals = pageFestivals.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
     }
