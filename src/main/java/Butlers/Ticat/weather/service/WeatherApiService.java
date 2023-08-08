@@ -153,7 +153,8 @@ public class WeatherApiService {
                         break;
                     case "PTY":
                         pty = (String)fcstValue;
-                        if(pty.equals("1") || pty.equals("2")) pty="비";
+                        if(pty.equals("0")) pty="강수없음";
+                        else if(pty.equals("1") || pty.equals("2")) pty="비";
                         else if(pty.equals("3")) pty="눈";
                         else pty ="소나기";
                         break;
@@ -168,7 +169,7 @@ public class WeatherApiService {
                         break;
                 }
             }
-            if(pty.equals("0")){
+            if(pty.equals("강수없음")){
                 if(sky.equals("맑음")) pty = "맑음";
                 else if(sky.equals("구름 많음")) pty = "구름많음";
                 else pty = "흐림";
