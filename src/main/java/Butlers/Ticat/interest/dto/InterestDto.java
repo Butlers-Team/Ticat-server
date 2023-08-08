@@ -2,6 +2,7 @@ package Butlers.Ticat.interest.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -21,5 +22,16 @@ public class InterestDto {
     @Builder
     public static class PostResponse {
         private String displayName;
+    }
+
+    @Getter
+    public static class Patch {
+        private List<String> categories;
+    }
+
+    @Getter
+    @Builder
+    public static class Response {
+        private List<String> categories;
     }
 }

@@ -8,9 +8,7 @@ import Butlers.Ticat.interest.service.InterestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +23,21 @@ public class InterestController {
         Interest interest = interestService.registerInterest(interestMapper.postToInterest(authenticationMemberId, requestBody));
 
         return new ResponseEntity<>(interestMapper.interestToPostResponse(interest), HttpStatus.OK);
+    }
+
+    @PatchMapping("/interest")
+    public ResponseEntity patchInterest(@RequestBody InterestDto.Patch requestBody) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+        Interest interest = interestService.updateInterest(interestMapper.patchToInterest(requestBody), authenticationMemberId);
+
+        return new ResponseEntity<>(interestMapper.interestToResponse(interest), HttpStatus.OK);
+    }
+
+    @GetMapping("/interest")
+    public ResponseEntity getInterest() {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+        Interest interest = interestService.getInterestByMemberId(authenticationMemberId);
+
+        return new ResponseEntity<>(interestMapper.interestToResponse(interest), HttpStatus.OK);
     }
 }

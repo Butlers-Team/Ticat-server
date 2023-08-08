@@ -23,4 +23,17 @@ public class InterestService {
 
         return interestRepository.save(memberInterest);
     }
+
+    // 관심사 수정
+    public Interest updateInterest(Interest interest, long memberId) {
+        Interest findedInterest = interestRepository.findByMemberMemberId(memberId);
+        findedInterest.setCategories(interest.getCategories());
+
+        return interestRepository.save(findedInterest);
+    }
+
+    // 관심사 조회
+    public Interest getInterestByMemberId(long memberId) {
+        return interestRepository.findByMemberMemberId(memberId);
+    }
 }
