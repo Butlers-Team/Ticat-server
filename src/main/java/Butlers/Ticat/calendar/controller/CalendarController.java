@@ -2,7 +2,6 @@ package Butlers.Ticat.calendar.controller;
 
 import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.calendar.dto.CalendarDto;
-import Butlers.Ticat.calendar.mapper.CalendarMapper;
 import Butlers.Ticat.calendar.service.CalendarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
