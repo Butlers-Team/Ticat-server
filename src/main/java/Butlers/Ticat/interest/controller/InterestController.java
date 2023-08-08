@@ -40,12 +40,4 @@ public class InterestController {
 
         return new ResponseEntity<>(interestMapper.interestToResponse(interest), HttpStatus.OK);
     }
-
-    @PatchMapping("/interest")
-    public ResponseEntity patchInterest(@RequestBody InterestDto.Patch interest) {
-        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
-        interestService.modifyInterest(interestMapper.patchToInterest(authenticationMemberId, interest));
-
-        return new ResponseEntity<>("관심사 수정이 완료되었습니다.", HttpStatus.OK);
-    }
 }

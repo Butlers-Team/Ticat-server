@@ -36,13 +36,4 @@ public class InterestService {
     public Interest getInterestByMemberId(long memberId) {
         return interestRepository.findByMemberMemberId(memberId);
     }
-
-    // 관심사 수정
-    public void modifyInterest(Interest interest) {
-        Member member = memberService.findVerifiedMember(interest.getMember().getMemberId());
-        Interest originalInterest = member.getInterest();
-        originalInterest.setCategories(interest.getCategories());
-
-        interestRepository.save(originalInterest);
-    }
 }
