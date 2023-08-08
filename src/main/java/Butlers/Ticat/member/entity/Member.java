@@ -10,18 +10,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 
-
 import Butlers.Ticat.stamp.entity.Stamp;
-import lombok.*;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-
 import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.interest.entity.Interest;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.List;
 
 @Entity
