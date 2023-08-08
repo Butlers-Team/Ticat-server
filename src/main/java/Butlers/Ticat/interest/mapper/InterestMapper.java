@@ -23,4 +23,7 @@ public interface InterestMapper {
         return InterestDto.PostResponse.builder()
                 .displayName(interest.getMember().getDisplayName()).build();
     }
+
+    Interest patchToInterest(InterestDto.Patch requestBody);
+    InterestDto.Response interestToResponse(Interest interest);
 }
