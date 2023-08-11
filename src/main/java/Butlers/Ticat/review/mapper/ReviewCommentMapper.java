@@ -1,11 +1,14 @@
 package Butlers.Ticat.review.mapper;
 
+import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.review.dto.ReviewCommentDto;
+import Butlers.Ticat.review.dto.ReviewDto;
 import Butlers.Ticat.review.entity.Review;
 import Butlers.Ticat.review.entity.ReviewComment;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,5 +57,23 @@ public interface ReviewCommentMapper {
                 .content(reviewComment.getContent())
                 .createdAt(reviewComment.getCreatedAt())
                 .modifiedAt(reviewComment.getModifiedAt()).build();
+    }
+
+    default ReviewCommentDto.ResponseInMyPage reviewCommentToListElement(ReviewComment reviewComment) {
+        Festival festival = reviewComment.getReview().getFestival();
+
+        return ReviewCommentDto.ResponseInMyPage.builder()
+                .reviewCommentId(reviewComment.getReviewCommentId())
+                .festivalId(festival.getFestivalId())
+                .festivalTitle(festival.getTitle())
+                .reviewCommentContent(reviewComment.getContent())
+                .createdAt(reviewComment.getCreatedAt())
+                .modifiedAt(reviewComment.getModifiedAt()).build();
+    }
+
+    default List<ReviewCommentDto.ResponseInMyPage> reviewCommentToResponseInMyPage(List<ReviewComment> reviewComments) {
+        return reviewComments.stream()
+                .map(reviewComment -> reviewCommentToListElement(reviewComment))
+                .collect(Collectors.toList());
     }
 }
