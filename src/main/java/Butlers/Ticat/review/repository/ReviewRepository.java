@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findAllByFestivalFestivalId(Long festivalId, Pageable pageable);
+    Page<Review> findAllByMemberMemberId(Long memberId, Pageable pageable);
 }

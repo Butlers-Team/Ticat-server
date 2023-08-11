@@ -163,6 +163,11 @@ public class ReviewService {
         return reviewCommentRepository.findAllByReviewReviewId(reviewId, PageRequest.of(page - 1, size, Sort.by("reviewCommentId").descending()));
     }
 
+    // 마이페이지 내 본인이 작성한 리뷰 리스트 불러오기
+    public Page<Review> getReviewListInMyPage(long memberId, int page, int size) {
+        return reviewRepository.findAllByMemberMemberId(memberId, PageRequest.of(page - 1, size, Sort.by("reviewId").descending()));
+    }
+
     // 리뷰 삭제
     public void deleteReview(long memberId, long reviewId) {
         checkLogin(memberId);
