@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReviewCommentDto {
 
@@ -22,5 +23,16 @@ public class ReviewCommentDto {
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
+    }
+
+    @Getter
+    @Builder
+    public static class ResponseInMyPage {
+        long reviewCommentId;
+        long festivalId;
+        String festivalTitle;
+        String reviewCommentContent;
+        LocalDateTime createdAt;
+        LocalDateTime modifiedAt;
     }
 }

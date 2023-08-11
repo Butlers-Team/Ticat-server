@@ -32,4 +32,16 @@ public class ReviewDto {
         boolean liked;
         boolean disliked;
     }
+
+    @Getter
+    @Builder
+    public static class ResponseInMyPage {
+        long reviewId;
+        long festivalId;
+        String festivalTitle;
+        String reviewContent;
+        List<String> reviewPictures;
+        LocalDateTime createdAt;
+        LocalDateTime modifiedAt;
+    }
 }

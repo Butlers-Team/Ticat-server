@@ -69,5 +69,27 @@ public interface ReviewMapper {
                 .collect(Collectors.toList());
     }
 
+    default ReviewDto.ResponseInMyPage reviewToResponseListElementInMyPage(Review review) {
+        Festival festival = review.getFestival();
+        List<String> pictures = new ArrayList<>();
 
+        for (String[] picture : review.getPictures()) {
+            pictures.add(picture[0]);
+        }
+
+        return ReviewDto.ResponseInMyPage.builder()
+                .reviewId(review.getReviewId())
+                .festivalId(festival.getFestivalId())
+                .festivalTitle(festival.getTitle())
+                .reviewContent(review.getContent())
+                .reviewPictures(pictures)
+                .createdAt(review.getCreatedAt())
+                .modifiedAt(review.getModifiedAt()).build();
+    }
+
+    default List<ReviewDto.ResponseInMyPage> reviewToReponseInMyPage(List<Review> reviews) {
+        return reviews.stream()
+                .map(review -> reviewToResponseListElementInMyPage(review))
+                .collect(Collectors.toList());
+    }
 }

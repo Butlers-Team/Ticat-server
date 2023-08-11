@@ -141,6 +141,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/members/**")
                 .addPathPatterns("/calendar/**")
                 .addPathPatterns("/stamp/**")
-                .addPathPatterns("/recent/**");
+                .addPathPatterns("/recent/**")
+                .addPathPatterns("/mypage/**");
     }
 }
