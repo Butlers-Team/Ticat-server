@@ -78,6 +78,18 @@ public class ReviewController {
         return new ResponseEntity<>(new MultiResponseDto<>(reviewMapper.reviewToResponseInFestival(reviewPluses), pageReviews), HttpStatus.OK);
     }
 
+    // 마이페이지 내부 본인이 작성한 리뷰 리스트 불러오기
+    @GetMapping("/mypage/reviews")
+    public ResponseEntity getReviewsInMyPage(@Positive @RequestParam int page,
+                                             @Positive @RequestParam int size) {
+        long authenticationMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
+
+        Page<Review> pageReviews = reviewService.getReviewListInMyPage(authenticationMemberId, page, size);
+        List<Review> reviews = pageReviews.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(reviewMapper.reviewToReponseInMyPage(reviews), pageReviews), HttpStatus.OK);
+    }
+
     // 리뷰에 속한 댓글 리스트 불러오기
     @GetMapping("/reviews/{review-id}/comments")
     public ResponseEntity getReviewComments(@PathVariable("review-id") long reviewId,
