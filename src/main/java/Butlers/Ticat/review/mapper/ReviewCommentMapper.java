@@ -49,9 +49,11 @@ public interface ReviewCommentMapper {
     default ReviewCommentDto.Response reviewCommentToResponse(ReviewComment reviewComment) {
         Member member = reviewComment.getMember();
         Review review = reviewComment.getReview();
+        Festival festival = review.getFestival();
 
         return ReviewCommentDto.Response.builder()
                 .reviewCommentId(reviewComment.getReviewCommentId())
+                .festivalId(festival.getFestivalId())
                 .reviewId(review.getReviewId())
                 .memberId(member.getMemberId())
                 .displayName(member.getDisplayName())

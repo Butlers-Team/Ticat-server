@@ -17,6 +17,7 @@ public class ReviewCommentDto {
     @Builder
     public static class Response {
         private long reviewCommentId;
+        private long festivalId;
         private long reviewId;
         private long memberId;
         private String displayName;
