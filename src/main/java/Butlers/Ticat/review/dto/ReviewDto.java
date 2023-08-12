@@ -18,6 +18,7 @@ public class ReviewDto {
     @Builder
     public static class ResponseInFestival{
         long reviewId;
+        long festivalId;
         long memberId;
         String displayName;
         String profileUrl;
