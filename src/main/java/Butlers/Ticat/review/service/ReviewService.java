@@ -219,6 +219,7 @@ public class ReviewService {
         for (Review review : reviews) {
             ReviewPlus reviewPlus = new ReviewPlus(
                     review.getReviewId(),
+                    review.getFestival(),
                     review.getMember(),
                     review.getContent(),
                     review.getRate(),
