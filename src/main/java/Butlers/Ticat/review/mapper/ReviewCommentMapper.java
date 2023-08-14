@@ -72,7 +72,7 @@ public interface ReviewCommentMapper {
                 .festivalId(festival.getFestivalId())
                 .reviewId(review.getReviewId())
                 .festivalTitle(festival.getTitle())
-                .reviewCommentContent(reviewComment.getContent())
+                .content(reviewComment.getContent())
                 .createdAt(reviewComment.getCreatedAt())
                 .modifiedAt(reviewComment.getModifiedAt()).build();
     }
