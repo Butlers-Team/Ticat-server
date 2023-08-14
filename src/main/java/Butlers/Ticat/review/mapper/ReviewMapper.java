@@ -41,6 +41,7 @@ public interface ReviewMapper {
 
     default ReviewDto.ResponseInFestival reviewToResponseListElementInFestival(ReviewPlus review) {
         Member member = review.getMember();
+        Festival festival = review.getFestival();
         List<String> pictures = new ArrayList<>();
 
         for (String[] picture : review.getPictures()) {
@@ -49,6 +50,7 @@ public interface ReviewMapper {
 
         return ReviewDto.ResponseInFestival.builder()
                 .reviewId(review.getReviewId())
+                .festivalId(festival.getFestivalId())
                 .memberId(member.getMemberId())
                 .displayName(member.getDisplayName())
                 .profileUrl(member.getProfileUrl())

@@ -17,6 +17,8 @@ public class ReviewCommentDto {
     @Builder
     public static class Response {
         private long reviewCommentId;
+        private long festivalId;
+        private long reviewId;
         private long memberId;
         private String displayName;
         private String profileUrl;
@@ -28,11 +30,12 @@ public class ReviewCommentDto {
     @Getter
     @Builder
     public static class ResponseInMyPage {
-        long reviewCommentId;
-        long festivalId;
-        String festivalTitle;
-        String reviewCommentContent;
-        LocalDateTime createdAt;
-        LocalDateTime modifiedAt;
+        private long reviewCommentId;
+        private long festivalId;
+        private long reviewId;
+        private String festivalTitle;
+        private String reviewCommentContent;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
     }
 }

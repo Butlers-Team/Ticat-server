@@ -48,9 +48,13 @@ public interface ReviewCommentMapper {
     }
     default ReviewCommentDto.Response reviewCommentToResponse(ReviewComment reviewComment) {
         Member member = reviewComment.getMember();
+        Review review = reviewComment.getReview();
+        Festival festival = review.getFestival();
 
         return ReviewCommentDto.Response.builder()
                 .reviewCommentId(reviewComment.getReviewCommentId())
+                .festivalId(festival.getFestivalId())
+                .reviewId(review.getReviewId())
                 .memberId(member.getMemberId())
                 .displayName(member.getDisplayName())
                 .profileUrl(member.getProfileUrl())
@@ -60,11 +64,13 @@ public interface ReviewCommentMapper {
     }
 
     default ReviewCommentDto.ResponseInMyPage reviewCommentToListElement(ReviewComment reviewComment) {
-        Festival festival = reviewComment.getReview().getFestival();
+        Review review = reviewComment.getReview();
+        Festival festival = review.getFestival();
 
         return ReviewCommentDto.ResponseInMyPage.builder()
                 .reviewCommentId(reviewComment.getReviewCommentId())
                 .festivalId(festival.getFestivalId())
+                .reviewId(review.getReviewId())
                 .festivalTitle(festival.getTitle())
                 .reviewCommentContent(reviewComment.getContent())
                 .createdAt(reviewComment.getCreatedAt())
