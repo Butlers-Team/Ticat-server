@@ -140,17 +140,9 @@ public class MemberService {
 
     public Member updateMember(Member member) {
         Member findedMember = findVerifiedMember(member.getMemberId());
-        verifyExistingEmail(member.getEmail());
-
-        String encryptedPassword = passwordEncoder.encode(member.getPassword());
-
 
         Optional.ofNullable(member.getDisplayName())
                 .ifPresent(displayName -> findedMember.setDisplayName(displayName));
-        Optional.ofNullable(encryptedPassword)
-                .ifPresent(password -> findedMember.setPassword(password));
-        Optional.ofNullable(member.getEmail())
-                .ifPresent(email -> findedMember.setEmail(email));
 
         return memberRepository.save(findedMember);
     }

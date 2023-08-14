@@ -37,7 +37,6 @@ public class MemberDto {
     public static class Patch {
 
         private String displayName;
-        private String password;
 
     }
 
