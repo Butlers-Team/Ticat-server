@@ -31,10 +31,11 @@ public class ReviewCommentDto {
     @Builder
     public static class ResponseInMyPage {
         private long reviewCommentId;
+        private long memberId;
         private long festivalId;
         private long reviewId;
         private String festivalTitle;
-        private String reviewCommentContent;
+        private String content;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
     }

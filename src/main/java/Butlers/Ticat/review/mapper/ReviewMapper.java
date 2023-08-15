@@ -81,10 +81,15 @@ public interface ReviewMapper {
 
         return ReviewDto.ResponseInMyPage.builder()
                 .reviewId(review.getReviewId())
+                .memberId(review.getMember().getMemberId())
                 .festivalId(festival.getFestivalId())
                 .festivalTitle(festival.getTitle())
-                .reviewContent(review.getContent())
-                .reviewPictures(pictures)
+                .content(review.getContent())
+                .rating(review.getRate())
+                .pictures(pictures)
+                .likedCount(review.getLikedCount())
+                .dislikedCount(review.getDislikedCount())
+                .commentCount(review.getCommentCount())
                 .createdAt(review.getCreatedAt())
                 .modifiedAt(review.getModifiedAt()).build();
     }

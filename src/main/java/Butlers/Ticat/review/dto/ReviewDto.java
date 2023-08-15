@@ -10,39 +10,44 @@ public class ReviewDto {
 
     @Getter
     public static class PostPatch {
-        String content;
-        double rating;
+        private String content;
+        private double rating;
     }
 
     @Getter
     @Builder
     public static class ResponseInFestival{
-        long reviewId;
-        long festivalId;
-        long memberId;
-        String displayName;
-        String profileUrl;
-        String content;
-        double rating;
-        List<String> pictures;
-        int likedCount;
-        int dislikedCount;
-        int commentCount;
-        LocalDateTime createdAt;
-        LocalDateTime modifiedAt;
-        boolean liked;
-        boolean disliked;
+        private long reviewId;
+        private long festivalId;
+        private long memberId;
+        private String displayName;
+        private String profileUrl;
+        private String content;
+        private double rating;
+        private List<String> pictures;
+        private int likedCount;
+        private int dislikedCount;
+        private int commentCount;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private boolean liked;
+        private boolean disliked;
     }
 
     @Getter
     @Builder
     public static class ResponseInMyPage {
-        long reviewId;
-        long festivalId;
-        String festivalTitle;
-        String reviewContent;
-        List<String> reviewPictures;
-        LocalDateTime createdAt;
-        LocalDateTime modifiedAt;
+        private long reviewId;
+        private long memberId;
+        private long festivalId;
+        private String festivalTitle;
+        private String content;
+        private double rating;
+        private List<String> pictures;
+        private int likedCount;
+        private int dislikedCount;
+        private int commentCount;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
     }
 }
