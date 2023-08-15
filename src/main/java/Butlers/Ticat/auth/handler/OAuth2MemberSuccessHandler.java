@@ -97,7 +97,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         } else {
             uri = createUri(accessToken, refreshToken, member.getMemberId(), member.getDisplayName(), member.getProfileUrl(), accessTokenExpirationFormatted, refreshTokenExpirationFormatted).toString();
         }
-        getRedirectStrategy().sendRedirect(request, response, URLEncoder.encode(uri, StandardCharsets.UTF_8));
+        getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
     // 콜백 Uri
