@@ -203,20 +203,20 @@ public class FestivalService {
     public Page<Festival> getFilteredFestivals(double longitude,double latitude,List<String> categories, String sortBy, int page, int size) {
         Sort sort;
         if (sortBy == null) {
-            sort = Sort.by("festivalId").descending();
+            sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
         } else {
             switch (sortBy) {
                 case "likeCount":
-                    sort = Sort.by("likeCount").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "likeCount");
                     break;
                 case "reviewRating":
-                    sort = Sort.by("reviewRating").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "reviewRating");
                     break;
                 case "reviewCount":
-                    sort = Sort.by("reviewCount").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "reviewCount");
                     break;
                 default:
-                    sort = Sort.by("festivalId").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
                     break;
             }
         }
@@ -231,20 +231,20 @@ public class FestivalService {
     public Page<Festival> findByKeywordAndAreas(String keyword, List<String> categories, int page, int size, String sortBy) {
         Sort sort;
         if (sortBy == null) {
-            sort = Sort.by("festivalId").descending();
+            sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
         } else {
             switch (sortBy) {
                 case "likeCount":
-                    sort = Sort.by("likeCount").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "likeCount");
                     break;
                 case "reviewRating":
-                    sort = Sort.by("reviewRating").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "reviewRating");
                     break;
                 case "reviewCount":
-                    sort = Sort.by("reviewCount").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "reviewCount");
                     break;
                 default:
-                    sort = Sort.by("festivalId").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
                     break;
             }
         }
