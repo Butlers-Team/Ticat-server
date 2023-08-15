@@ -13,8 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
@@ -22,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -97,7 +97,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         } else {
             uri = createUri(accessToken, refreshToken, member.getMemberId(), member.getDisplayName(), member.getProfileUrl(), accessTokenExpirationFormatted, refreshTokenExpirationFormatted).toString();
         }
-        getRedirectStrategy().sendRedirect(request, response, uri);
+        getRedirectStrategy().sendRedirect(request, response, URLEncoder.encode(uri, StandardCharsets.UTF_8));
     }
 
     // 콜백 Uri
