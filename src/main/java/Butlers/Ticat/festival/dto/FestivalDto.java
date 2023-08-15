@@ -2,6 +2,7 @@ package Butlers.Ticat.festival.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+
 public class FestivalDto {
 
     @Getter
@@ -21,6 +22,10 @@ public class FestivalDto {
         private String area;
         private double mapx;
         private double mapy;
+
+        public double getReviewRating() {
+            return Math.round(reviewRating * 10.0) / 10.0;
+        }
     }
 
     @Getter
