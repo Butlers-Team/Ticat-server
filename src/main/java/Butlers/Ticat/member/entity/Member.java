@@ -49,7 +49,7 @@ public class Member {
     private boolean isOauthChecked;
 
     // 관심사 1:1 매핑
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.REMOVE)
     private Interest interest;
 
     @OneToMany(mappedBy = "member")
