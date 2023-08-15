@@ -62,7 +62,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         String providerId = oAuth2UserInfo.getProviderId();
         String id = provider + "_" + providerId;
-        String email = null;
+        String email = oAuth2UserInfo.getEmail() == null ? null : oAuth2UserInfo.getEmail();
         Member member = null;
 
         try {
