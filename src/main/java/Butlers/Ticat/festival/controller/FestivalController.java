@@ -3,6 +3,7 @@ package Butlers.Ticat.festival.controller;
 import Butlers.Ticat.dto.MultiResponseDto;
 import Butlers.Ticat.dto.SingleResponseDto;
 import Butlers.Ticat.festival.dto.FestivalDto;
+import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.mapper.FestivalMapper;
 import Butlers.Ticat.festival.service.FestivalService;
@@ -73,11 +74,14 @@ public class FestivalController {
 
     // 지도페이지
     @GetMapping("/map")
-    public ResponseEntity getFilteredFestivalsByMap(@RequestParam(required = false) List<String> categories,
+    public ResponseEntity getFilteredFestivalsByMap(@Positive @RequestParam(defaultValue = "126.9816417") double longitude,
+                                                    @Positive @RequestParam(defaultValue = "37.57037778") double latitude,
+                                                    @RequestParam(required = false) List<String> categories,
                                                     @RequestParam(required = false) String sortBy,
+                                                    @RequestParam(required = false, defaultValue = "ONGOING") List<DetailFestival.Status> status,
                                                     @Positive @RequestParam int page,
                                                     @Positive @RequestParam int size) {
-        Page<Festival> pageFestivals = festivalService.getFilteredFestivals(categories, sortBy, page, size);
+        Page<Festival> pageFestivals = festivalService.getFilteredFestivals(longitude,latitude,categories,sortBy,status,page, size);
 
         List<Festival> festivals = pageFestivals.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
@@ -88,9 +92,10 @@ public class FestivalController {
     public ResponseEntity getSearchAndFilterByMap(@RequestParam(required = false) String keyword,
                                                   @RequestParam(required = false) List<String> categories,
                                                   @RequestParam(required = false) String sortBy,
+                                                  @RequestParam(required = false, defaultValue = "ONGOING") List<DetailFestival.Status> status,
                                                   @Positive @RequestParam int page,
                                                   @Positive @RequestParam int size){
-        Page<Festival> pageFestivals = festivalService.findByKeywordAndAreas(keyword, categories, page, size, sortBy);
+        Page<Festival> pageFestivals = festivalService.findByKeywordAndAreas(keyword, categories, sortBy,status,page, size);
 
         List<Festival> festivals = pageFestivals.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);

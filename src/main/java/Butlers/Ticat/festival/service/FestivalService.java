@@ -4,6 +4,7 @@ import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.festival.dto.FestivalDto;
+import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.helper.AreaConverter;
@@ -200,63 +201,63 @@ public class FestivalService {
         return favorite.isPresent();
     }
 
-    public Page<Festival> getFilteredFestivals(List<String> categories, String sortBy, int page, int size) {
+    public Page<Festival> getFilteredFestivals(double longitude, double latitude, List<String> categories, String sortBy, List<DetailFestival.Status> status, int page, int size) {
         Sort sort;
         if (sortBy == null) {
-            sort = Sort.by("festivalId").descending();
+            sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
         } else {
             switch (sortBy) {
                 case "likeCount":
-                    sort = Sort.by("likeCount").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "likeCount");
                     break;
                 case "reviewRating":
-                    sort = Sort.by("reviewRating").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "reviewRating");
                     break;
                 case "reviewCount":
-                    sort = Sort.by("reviewCount").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "reviewCount");
                     break;
                 default:
-                    sort = Sort.by("festivalId").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
                     break;
             }
         }
 
         if (categories != null && !categories.isEmpty()) {
-            return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(latitude,longitude,1000.0,categories,status ,PageRequest.of(page - 1, size, sort));
         } else {
-            return festivalRepository.findAll(PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndDetailFestivalStatusIn(latitude,longitude,1000.0,status,PageRequest.of(page - 1, size, sort));
         }
     }
 
-    public Page<Festival> findByKeywordAndAreas(String keyword, List<String> categories, int page, int size, String sortBy) {
+    public Page<Festival> findByKeywordAndAreas(String keyword, List<String> categories,String sortBy,List<DetailFestival.Status> status, int page, int size) {
         Sort sort;
         if (sortBy == null) {
-            sort = Sort.by("festivalId").descending();
+            sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
         } else {
             switch (sortBy) {
                 case "likeCount":
-                    sort = Sort.by("likeCount").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "likeCount");
                     break;
                 case "reviewRating":
-                    sort = Sort.by("reviewRating").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "reviewRating");
                     break;
                 case "reviewCount":
-                    sort = Sort.by("reviewCount").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "reviewCount");
                     break;
                 default:
-                    sort = Sort.by("festivalId").descending();
+                    sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
                     break;
             }
         }
 
         if (keyword != null && !keyword.isEmpty() && categories != null && !categories.isEmpty()) {
-            return festivalRepository.findByKeywordAndCategoryIn(keyword, categories, PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findByKeywordAndCategoryInAndDetailFestivalStatus(keyword, categories, status,PageRequest.of(page - 1, size, sort));
         } else if (keyword != null && !keyword.isEmpty()) {
-            return festivalRepository.findByTitleOrAreaContainingIgnoreCase(keyword, PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findByTitleOrAreaContainingIgnoreCaseAndDetailFestivalStatus(keyword,status, PageRequest.of(page - 1, size, sort));
         } else if (categories != null && !categories.isEmpty()) {
-            return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findByDetailFestivalCategoryInAndDetailFestivalStatusIn(categories,status, PageRequest.of(page - 1, size, sort));
         } else {
-            return festivalRepository.findAll(PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findByDetailFestivalStatusIn(status,PageRequest.of(page - 1, size, sort));
         }
     }
 

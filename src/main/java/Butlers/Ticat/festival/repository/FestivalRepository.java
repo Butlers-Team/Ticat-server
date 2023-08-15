@@ -20,9 +20,20 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     @Query("SELECT f FROM Festival f WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance")
     List<Festival> findFestivalsWithinDistance(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("distance") double distance);
 
+    @Query("SELECT f FROM Festival f " +
+            "WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance " +
+            "AND f.detailFestival.status IN :status")
+    Page<Festival> findFestivalsWithinDistanceAndDetailFestivalStatusIn(
+            @Param("latitude") double latitude,
+            @Param("longitude") double longitude,
+            @Param("distance") double distance,
+            @Param("status") List<DetailFestival.Status> status,
+            Pageable pageable);
+
     // In 키워드를 사용하면 단일 값이 아닌 다중 값에 대한 조건을 지정할 수 있다
     Page<Festival> findByAreaIn(List<String> areas, Pageable pageable);
-    Page<Festival> findByDetailFestivalCategoryIn(List<String> categories,Pageable pageable);
+    Page<Festival> findByDetailFestivalCategoryInAndDetailFestivalStatusIn(List<String> categories,List<DetailFestival.Status> status,Pageable pageable);
+    Page<Festival> findByDetailFestivalStatusIn(List<DetailFestival.Status> status, Pageable pageable);
     Page<Festival> findByDetailFestivalCategory(String category,Pageable pageable);
     Page<Festival> findByDetailFestivalCategoryAndAreaIn(String category,List<String> areas, Pageable pageable);
     List<Festival> findByDetailFestivalStatus(DetailFestival.Status status, Sort sort);
@@ -30,10 +41,29 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     List<Festival> findByDetailFestivalCategoryAndDetailFestivalStatus(String category,DetailFestival.Status status);
     List<Festival> findByDetailFestivalCategoryInAndDetailFestivalStatus(List<String> categories,DetailFestival.Status status);
     Page<Festival> findByTitleContainingIgnoreCase(String title, PageRequest of);
-    @Query("SELECT f FROM Festival f WHERE lower(f.title) LIKE %:keyword% OR lower(f.area) LIKE %:keyword%")
-    Page<Festival> findByTitleOrAreaContainingIgnoreCase(String keyword, PageRequest of);
-    @Query("SELECT f FROM Festival f WHERE (LOWER(f.title) LIKE %:keyword% OR LOWER(f.area) LIKE %:keyword%) AND f.detailFestival.category IN :categories")
-    Page<Festival> findByKeywordAndCategoryIn(@Param("keyword") String keyword, @Param("categories") List<String> categories, Pageable pageable);
+
+    @Query("SELECT f FROM Festival f WHERE lower(f.title) LIKE %:keyword% OR lower(f.area) LIKE %:keyword% " +
+            "AND f.detailFestival.status IN :status")
+    Page<Festival> findByTitleOrAreaContainingIgnoreCaseAndDetailFestivalStatus(
+            String keyword,
+            @Param("status") List<DetailFestival.Status> status,
+            Pageable pageable);
+
+    @Query("SELECT f FROM Festival f WHERE (LOWER(f.title) LIKE %:keyword% OR LOWER(f.area) LIKE %:keyword%) AND f.detailFestival.category IN :categories " +
+            "AND f.detailFestival.status IN :status")
+    Page<Festival> findByKeywordAndCategoryInAndDetailFestivalStatus(@Param("keyword") String keyword, @Param("categories") List<String> categories,@Param("status") List<DetailFestival.Status> status,Pageable pageable);
+
+    @Query("SELECT f FROM Festival f " +
+            "WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance " +
+            "AND f.detailFestival.category IN :categories " +
+            "AND f.detailFestival.status IN :status")
+    Page<Festival> findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(
+            @Param("latitude") double latitude,
+            @Param("longitude") double longitude,
+            @Param("distance") double distance,
+            @Param("categories") List<String> categories,
+            @Param("status") List<DetailFestival.Status> status,
+            Pageable pageable);
 
     @Modifying
     @Query(value = "INSERT INTO favorite (festival_id, member_id, ischecked) " +
