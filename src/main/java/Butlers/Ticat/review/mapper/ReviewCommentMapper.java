@@ -69,6 +69,7 @@ public interface ReviewCommentMapper {
 
         return ReviewCommentDto.ResponseInMyPage.builder()
                 .reviewCommentId(reviewComment.getReviewCommentId())
+                .memberId(reviewComment.getMember().getMemberId())
                 .festivalId(festival.getFestivalId())
                 .reviewId(review.getReviewId())
                 .festivalTitle(festival.getTitle())

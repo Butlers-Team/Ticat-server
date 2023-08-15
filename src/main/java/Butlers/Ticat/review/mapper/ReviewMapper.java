@@ -81,6 +81,7 @@ public interface ReviewMapper {
 
         return ReviewDto.ResponseInMyPage.builder()
                 .reviewId(review.getReviewId())
+                .memberId(review.getMember().getMemberId())
                 .festivalId(festival.getFestivalId())
                 .festivalTitle(festival.getTitle())
                 .content(review.getContent())
