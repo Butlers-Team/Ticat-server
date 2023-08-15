@@ -200,7 +200,7 @@ public class FestivalService {
         return favorite.isPresent();
     }
 
-    public Page<Festival> getFilteredFestivals(List<String> categories, String sortBy, int page, int size) {
+    public Page<Festival> getFilteredFestivals(double longitude,double latitude,List<String> categories, String sortBy, int page, int size) {
         Sort sort;
         if (sortBy == null) {
             sort = Sort.by("festivalId").descending();
@@ -222,9 +222,9 @@ public class FestivalService {
         }
 
         if (categories != null && !categories.isEmpty()) {
-            return festivalRepository.findByDetailFestivalCategoryIn(categories, PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndCategoryIn(latitude,longitude,1000.0,categories, PageRequest.of(page - 1, size, sort));
         } else {
-            return festivalRepository.findAll(PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistance(latitude,longitude,1000.0,PageRequest.of(page - 1, size, sort));
         }
     }
 

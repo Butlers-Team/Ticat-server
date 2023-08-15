@@ -73,11 +73,13 @@ public class FestivalController {
 
     // 지도페이지
     @GetMapping("/map")
-    public ResponseEntity getFilteredFestivalsByMap(@RequestParam(required = false) List<String> categories,
+    public ResponseEntity getFilteredFestivalsByMap(@Positive @RequestParam(defaultValue = "126.9816417") double longitude,
+                                                    @Positive @RequestParam(defaultValue = "37.57037778") double latitude,
+                                                    @RequestParam(required = false) List<String> categories,
                                                     @RequestParam(required = false) String sortBy,
                                                     @Positive @RequestParam int page,
                                                     @Positive @RequestParam int size) {
-        Page<Festival> pageFestivals = festivalService.getFilteredFestivals(categories, sortBy, page, size);
+        Page<Festival> pageFestivals = festivalService.getFilteredFestivals(longitude,latitude,categories, sortBy, page, size);
 
         List<Festival> festivals = pageFestivals.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);

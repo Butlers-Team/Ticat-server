@@ -20,6 +20,9 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     @Query("SELECT f FROM Festival f WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance")
     List<Festival> findFestivalsWithinDistance(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("distance") double distance);
 
+    @Query("SELECT f FROM Festival f WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance")
+    Page<Festival> findFestivalsWithinDistance(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("distance") double distance,Pageable pageable);
+
     // In 키워드를 사용하면 단일 값이 아닌 다중 값에 대한 조건을 지정할 수 있다
     Page<Festival> findByAreaIn(List<String> areas, Pageable pageable);
     Page<Festival> findByDetailFestivalCategoryIn(List<String> categories,Pageable pageable);
@@ -34,6 +37,16 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     Page<Festival> findByTitleOrAreaContainingIgnoreCase(String keyword, PageRequest of);
     @Query("SELECT f FROM Festival f WHERE (LOWER(f.title) LIKE %:keyword% OR LOWER(f.area) LIKE %:keyword%) AND f.detailFestival.category IN :categories")
     Page<Festival> findByKeywordAndCategoryIn(@Param("keyword") String keyword, @Param("categories") List<String> categories, Pageable pageable);
+
+    @Query("SELECT f FROM Festival f " +
+            "WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance " +
+            "AND f.detailFestival.category IN :categories")
+    Page<Festival> findFestivalsWithinDistanceAndCategoryIn(
+            @Param("latitude") double latitude,
+            @Param("longitude") double longitude,
+            @Param("distance") double distance,
+            @Param("categories") List<String> categories,
+            Pageable pageable);
 
     @Modifying
     @Query(value = "INSERT INTO favorite (festival_id, member_id, ischecked) " +
