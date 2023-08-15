@@ -4,6 +4,7 @@ import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.festival.dto.FestivalDto;
+import Butlers.Ticat.festival.entity.DetailFestival;
 import Butlers.Ticat.festival.entity.Favorite;
 import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.festival.helper.AreaConverter;
@@ -200,7 +201,7 @@ public class FestivalService {
         return favorite.isPresent();
     }
 
-    public Page<Festival> getFilteredFestivals(double longitude,double latitude,List<String> categories, String sortBy, int page, int size) {
+    public Page<Festival> getFilteredFestivals(double longitude, double latitude, List<String> categories, String sortBy, List<DetailFestival.Status> status, int page, int size) {
         Sort sort;
         if (sortBy == null) {
             sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");
@@ -222,13 +223,13 @@ public class FestivalService {
         }
 
         if (categories != null && !categories.isEmpty()) {
-            return festivalRepository.findFestivalsWithinDistanceAndCategoryIn(latitude,longitude,1000.0,categories, PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(latitude,longitude,1000.0,categories,status ,PageRequest.of(page - 1, size, sort));
         } else {
-            return festivalRepository.findFestivalsWithinDistance(latitude,longitude,1000.0,PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndDetailFestivalStatusIn(latitude,longitude,1000.0,status,PageRequest.of(page - 1, size, sort));
         }
     }
 
-    public Page<Festival> findByKeywordAndAreas(String keyword, List<String> categories, int page, int size, String sortBy) {
+    public Page<Festival> findByKeywordAndAreas(String keyword, List<String> categories,String sortBy,List<DetailFestival.Status> status, int page, int size) {
         Sort sort;
         if (sortBy == null) {
             sort = Sort.by(Sort.Direction.DESC, "detailFestival.status", "festivalId");

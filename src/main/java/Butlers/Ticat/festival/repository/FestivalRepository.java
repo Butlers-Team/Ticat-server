@@ -20,8 +20,15 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     @Query("SELECT f FROM Festival f WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance")
     List<Festival> findFestivalsWithinDistance(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("distance") double distance);
 
-    @Query("SELECT f FROM Festival f WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance")
-    Page<Festival> findFestivalsWithinDistance(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("distance") double distance,Pageable pageable);
+    @Query("SELECT f FROM Festival f " +
+            "WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance " +
+            "AND f.detailFestival.status IN :status")
+    Page<Festival> findFestivalsWithinDistanceAndDetailFestivalStatusIn(
+            @Param("latitude") double latitude,
+            @Param("longitude") double longitude,
+            @Param("distance") double distance,
+            @Param("status") List<DetailFestival.Status> status,
+            Pageable pageable);
 
     // In 키워드를 사용하면 단일 값이 아닌 다중 값에 대한 조건을 지정할 수 있다
     Page<Festival> findByAreaIn(List<String> areas, Pageable pageable);
@@ -40,12 +47,14 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
 
     @Query("SELECT f FROM Festival f " +
             "WHERE ST_DISTANCE_SPHERE(POINT(f.mapx, f.mapy), POINT(:longitude, :latitude)) <= :distance " +
-            "AND f.detailFestival.category IN :categories")
-    Page<Festival> findFestivalsWithinDistanceAndCategoryIn(
+            "AND f.detailFestival.category IN :categories " +
+            "AND f.detailFestival.status IN :status")
+    Page<Festival> findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(
             @Param("latitude") double latitude,
             @Param("longitude") double longitude,
             @Param("distance") double distance,
             @Param("categories") List<String> categories,
+            @Param("status") List<DetailFestival.Status> status,
             Pageable pageable);
 
     @Modifying
