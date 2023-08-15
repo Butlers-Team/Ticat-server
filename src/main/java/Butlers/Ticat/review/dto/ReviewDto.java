@@ -38,6 +38,7 @@ public class ReviewDto {
     @Builder
     public static class ResponseInMyPage {
         private long reviewId;
+        private long memberId;
         private long festivalId;
         private String festivalTitle;
         private String content;
