@@ -44,7 +44,16 @@ public interface MemberMapper {
                 .email(member.getEmail())
                 .profileUrl(member.getProfileUrl())
                 .pureProfileUrl(member.getPureProfileUrl())
+                .social(getProviderFromId(member.getId()))
                 .build();
+    }
+
+    default String getProviderFromId(String id) {
+        String provider = id.split("_")[0];
+        if (!provider.equals("google") && !provider.equals("kakao") && !provider.equals("naver")) {
+            provider = "local";
+        }
+        return provider;
     }
 
     Member memberPatchToMember(MemberDto.Patch requestBody);

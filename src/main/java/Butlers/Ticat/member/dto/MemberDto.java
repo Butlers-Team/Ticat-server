@@ -49,6 +49,7 @@ public class MemberDto {
         private String email;
         private String profileUrl;
         private String pureProfileUrl;
+        private String social;
 
     }
 
