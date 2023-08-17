@@ -79,27 +79,19 @@ public class FestivalController {
                                                     @RequestParam(required = false) List<String> categories,
                                                     @RequestParam(required = false) String sortBy,
                                                     @RequestParam(required = false, defaultValue = "ONGOING") List<DetailFestival.Status> status,
+                                                    @RequestParam(required = false) String keyword,
                                                     @Positive @RequestParam int page,
                                                     @Positive @RequestParam int size) {
-        Page<Festival> pageFestivals = festivalService.getFilteredFestivals(longitude,latitude,categories,sortBy,status,page, size);
+        Page<Festival> pageFestivals;
+
+        if (keyword != null) {
+            pageFestivals = festivalService.findByKeywordAndAreas(keyword, categories, sortBy, status, page, size);
+        } else {
+            pageFestivals = festivalService.getFilteredFestivals(longitude, latitude, categories, sortBy, status, page, size);
+        }
 
         List<Festival> festivals = pageFestivals.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
-    }
-
-    //검색 ( 카테고리 , 순서 필터 )
-    @GetMapping("/search")
-    public ResponseEntity getSearchAndFilterByMap(@RequestParam(required = false) String keyword,
-                                                  @RequestParam(required = false) List<String> categories,
-                                                  @RequestParam(required = false) String sortBy,
-                                                  @RequestParam(required = false, defaultValue = "ONGOING") List<DetailFestival.Status> status,
-                                                  @Positive @RequestParam int page,
-                                                  @Positive @RequestParam int size){
-        Page<Festival> pageFestivals = festivalService.findByKeywordAndAreas(keyword, categories, sortBy,status,page, size);
-
-        List<Festival> festivals = pageFestivals.getContent();
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.festivalsToFestivalListResponses(festivals), pageFestivals), HttpStatus.OK);
-
     }
 
     // 좋아요 하기
