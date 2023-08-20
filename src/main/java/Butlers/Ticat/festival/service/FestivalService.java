@@ -43,7 +43,7 @@ public class FestivalService {
     @Transactional(readOnly = true)
     public Festival findFestival(long festivalId) {
         Optional<Festival> optionalFestival = festivalRepository.findById(festivalId);
-        Festival festival = optionalFestival.orElseThrow();
+        Festival festival = optionalFestival.orElseThrow(() -> new BusinessLogicException(ExceptionCode.FESTIVAL_NOT_FOUND));
 
         return festival;
     }
