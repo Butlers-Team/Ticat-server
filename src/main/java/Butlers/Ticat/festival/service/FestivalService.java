@@ -18,8 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 import static Butlers.Ticat.festival.entity.DetailFestival.Status.ONGOING;
@@ -34,19 +34,22 @@ public class FestivalService {
     private final FavoriteRepository favoriteRepository;
 
     // 위도 경도 거리에 따른 축제 찾기
+    @Transactional(readOnly = true)
     public List<Festival> findFestivalsWithinDistance(double latitude, double longitude, double distance) {
         return festivalRepository.findFestivalsWithinDistance(longitude,latitude, distance);
     }
 
     // 축제 상세 페이지
+    @Transactional(readOnly = true)
     public Festival findFestival(long festivalId) {
         Optional<Festival> optionalFestival = festivalRepository.findById(festivalId);
-        Festival festival = optionalFestival.orElseThrow();
+        Festival festival = optionalFestival.orElseThrow(() -> new BusinessLogicException(ExceptionCode.FESTIVAL_NOT_FOUND));
 
         return festival;
     }
 
     // 메인 배너페이지
+    @Transactional(readOnly = true)
     public List<Festival> findFestivalByStatus() {
 
         List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING);
@@ -68,6 +71,7 @@ public class FestivalService {
     }
 
     // 상세페이지 축제 추천
+    @Transactional(readOnly = true)
     public List<Festival> findDetailRecommend(String category) {
         List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryAndDetailFestivalStatus(category,ONGOING);
 
@@ -88,6 +92,7 @@ public class FestivalService {
     }
 
     // 메인페이지 회원 관심사로 축제 추천
+    @Transactional(readOnly = true)
     public List<Festival> findMainRecommend() {
         try{
             //로그인한 멤버 불러오기
@@ -129,6 +134,7 @@ public class FestivalService {
     }
 
     //축제 리스트 필터
+    @Transactional(readOnly = true)
     public Page<Festival> getFilteredFestivalList(String category, List<String> areas, int page, int size) {
         List<String> areaList = new ArrayList<>();
         if(areas != null) areaList = AreaConverter.convertToSpecialCity(areas);
@@ -201,6 +207,7 @@ public class FestivalService {
         return favorite.isPresent();
     }
 
+    @Transactional(readOnly = true)
     public Page<Festival> getFilteredFestivals(double longitude, double latitude, List<String> categories, String sortBy, List<DetailFestival.Status> status, int page, int size) {
         Sort sort;
         if (sortBy == null) {
@@ -223,12 +230,13 @@ public class FestivalService {
         }
 
         if (categories != null && !categories.isEmpty()) {
-            return festivalRepository.findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(latitude,longitude,1000.0,categories,status ,PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(latitude,longitude,3000.0,categories,status ,PageRequest.of(page - 1, size, sort));
         } else {
-            return festivalRepository.findFestivalsWithinDistanceAndDetailFestivalStatusIn(latitude,longitude,1000.0,status,PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndDetailFestivalStatusIn(latitude,longitude,3000.0,status,PageRequest.of(page - 1, size, sort));
         }
     }
 
+    @Transactional(readOnly = true)
     public Page<Festival> findByKeywordAndAreas(String keyword, List<String> categories,String sortBy,List<DetailFestival.Status> status, int page, int size) {
         Sort sort;
         if (sortBy == null) {
@@ -261,11 +269,13 @@ public class FestivalService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Page<Festival> findFestivalsByTitle(String title, int page, int size) {
         return festivalRepository.findByTitleContainingIgnoreCase(title,PageRequest.of(page -1, size));
     }
 
     // 두 좌표 사이의 거리 계산하는 기능
+    @Transactional(readOnly = true)
     public FestivalDto.DistanceResponse calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         double earthRadius = 6371; // 지구 반지름 (단위: km)
 
