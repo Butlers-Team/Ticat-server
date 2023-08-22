@@ -247,7 +247,7 @@ public class FestivalServiceTest {
         List<DetailFestival.Status> status = List.of(ONGOING);
         double latitude = 37.12345;
         double longitude = 126.67890;
-        double distance = 1000.0;
+        double distance = 3000.0;
 
         Mockito.when(festivalRepository.findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(eq(latitude),eq(longitude),eq(distance),eq(categories),eq(status),any(Pageable.class)))
                 .thenReturn(expected);
@@ -267,7 +267,7 @@ public class FestivalServiceTest {
         List<DetailFestival.Status> status = List.of(ONGOING);
         double latitude = 37.12345;
         double longitude = 126.67890;
-        double distance = 1000.0;
+        double distance = 3000.0;
 
         Mockito.when(festivalRepository.findFestivalsWithinDistanceAndDetailFestivalStatusIn(eq(latitude),eq(longitude),eq(distance),eq(status),any(Pageable.class)))
                 .thenReturn(expected);
