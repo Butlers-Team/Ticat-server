@@ -230,9 +230,9 @@ public class FestivalService {
         }
 
         if (categories != null && !categories.isEmpty()) {
-            return festivalRepository.findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(latitude,longitude,1000.0,categories,status ,PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndCategoryInAndDetailFestivalStatusIn(latitude,longitude,3000.0,categories,status ,PageRequest.of(page - 1, size, sort));
         } else {
-            return festivalRepository.findFestivalsWithinDistanceAndDetailFestivalStatusIn(latitude,longitude,1000.0,status,PageRequest.of(page - 1, size, sort));
+            return festivalRepository.findFestivalsWithinDistanceAndDetailFestivalStatusIn(latitude,longitude,3000.0,status,PageRequest.of(page - 1, size, sort));
         }
     }
 
