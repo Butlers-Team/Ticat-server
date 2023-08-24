@@ -84,7 +84,7 @@ public class FestivalController {
                                                     @Positive @RequestParam int size) {
         Page<Festival> pageFestivals;
 
-        if (keyword != null) {
+        if (keyword != null & keyword.equals("")) {
             pageFestivals = festivalService.findByKeywordAndAreas(keyword, categories, sortBy, status, page, size);
         } else {
             pageFestivals = festivalService.getFilteredFestivals(longitude, latitude, categories, sortBy, status, page, size);
