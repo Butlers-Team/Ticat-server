@@ -42,8 +42,7 @@ public interface FestivalRepository extends JpaRepository<Festival,Long> {
     List<Festival> findByDetailFestivalCategoryInAndDetailFestivalStatus(List<String> categories,DetailFestival.Status status);
     Page<Festival> findByTitleContainingIgnoreCase(String title, PageRequest of);
 
-    @Query("SELECT f FROM Festival f WHERE lower(f.title) LIKE %:keyword% OR lower(f.area) LIKE %:keyword% " +
-            "AND f.detailFestival.status IN :status")
+    @Query("SELECT f FROM Festival f WHERE (Lower(f.title) LIKE %:keyword% OR Lower(f.area) LIKE %:keyword%) AND f.detailFestival.status IN :status")
     Page<Festival> findByTitleOrAreaContainingIgnoreCaseAndDetailFestivalStatus(
             @Param("keyword") String keyword,
             @Param("status") List<DetailFestival.Status> status,
