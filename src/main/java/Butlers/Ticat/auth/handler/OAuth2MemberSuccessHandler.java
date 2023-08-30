@@ -21,10 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -93,7 +94,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String uri;
 
         if (member.getDisplayName() == null || member.getInterest().getCategories().size() == 0) {
-            uri = createInterestUri(accessToken, refreshToken, member.getMemberId(), member.getDisplayName(), member.getProfileUrl(), accessTokenExpirationFormatted, refreshTokenExpirationFormatted).toString();
+            uri = createInterestUri(accessToken, refreshToken, member.getMemberId(), member.getProfileUrl(), accessTokenExpirationFormatted, refreshTokenExpirationFormatted).toString();
         } else {
             uri = createUri(accessToken, refreshToken, member.getMemberId(), member.getDisplayName(), member.getProfileUrl(), accessTokenExpirationFormatted, refreshTokenExpirationFormatted).toString();
         }
@@ -106,7 +107,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .queryParam("Authorization", accessToken)
                 .queryParam("Refresh", refreshToken)
                 .queryParam("memberId", memberId)
-                .queryParam("displayName", displayName)
+                .queryParam("displayName", URLEncoder.encode(displayName, UTF_8))
                 .queryParam("profileUrl", profileUrl)
                 .queryParam("accessTokenExpiration", accessTokenExpiration)
                 .queryParam("refreshTokenExpiration", refreshTokenExpiration);
@@ -114,12 +115,11 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     // 콜백 Uri(관심사 등록 필요)
-    private URI createInterestUri(String accessToken, String refreshToken, long memberId, String displayName, String profileUrl, String accessTokenExpiration, String refreshTokenExpiration) {
+    private URI createInterestUri(String accessToken, String refreshToken, long memberId, String profileUrl, String accessTokenExpiration, String refreshTokenExpiration) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://d99pqcn6hzkdg.cloudfront.net/callback/false")
                 .queryParam("Authorization", accessToken)
                 .queryParam("Refresh", refreshToken)
                 .queryParam("memberId", memberId)
-                .queryParam("displayName", displayName)
                 .queryParam("profileUrl", profileUrl)
                 .queryParam("accessTokenExpiration", accessTokenExpiration)
                 .queryParam("refreshTokenExpiration", refreshTokenExpiration);
