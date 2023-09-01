@@ -48,12 +48,15 @@ public interface MemberMapper {
                 .build();
     }
 
-    default String getProviderFromId(String id) {
-        String provider = id.split("_")[0];
-        if (!provider.equals("google") && !provider.equals("kakao") && !provider.equals("naver")) {
-            provider = "local";
-        }
-        return provider;
+    private String getProviderFromId(String id) {
+        String social = id.split("_")[0];
+        if (social.equals("google"))
+            return "google";
+        if (social.equals("kakao"))
+            return "kakao";
+        if (social.equals("naver"))
+            return "naver";
+        else return "local";
     }
 
     Member memberPatchToMember(MemberDto.Patch requestBody);
