@@ -23,16 +23,28 @@ public class CalendarDto {
     @Builder
     public static class CalendarResponse{
 
-        private Long festivalId;
-        private Long calendarId;
+        private String address;
         private String category;
+        private String eventEndDate; // 행사 종료일
+        private String eventhomepage;
+        private String eventplace;
+        private String eventStartDate; // 행사시작일
+        private Long festivalId;
+        private String image; // 축제 사진
+        private boolean liked;
+        private double mapx; // 축제 x좌표
+        private double mapy; // 축제 y좌표
+        private String overview; // 상세 정보
+        private String playtime; //공연시간
+        private String price; // 이용요금
         private DetailFestival.Status status;
+        private String tel; // 축제 전화번호
+        private String title;
+
+        private Long calendarId;
         private LocalDate scheduledDate;
         private LocalDate calendarDate;
-        private String eventStartDate; // 행사시작일
-        private String eventEndDate; // 행사 종료일
-        private String title;
-        private String address;
+
     }
 
     @Getter

@@ -130,7 +130,7 @@ public class MemberController {
         Page<Calendar> calendarPage = memberService.getMemberCalendar(member, page -1, year, month, day);
         List<Calendar> calendars = calendarPage.getContent();
 
-        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getCalendarResponses(calendars);
+        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getCalendarResponses(calendars, member);
 
         CalendarDto.Response calendarResponse = CalendarDto.Response.builder()
                 .memberId(member.getMemberId())
@@ -174,7 +174,7 @@ public class MemberController {
         Page<Calendar> calendarPage = memberService.getMemberSchedule(member, page -1, year, month, day);
         List<Calendar> calendars = calendarPage.getContent();
 
-        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getCalendarResponses(calendars);
+        List<CalendarDto.CalendarResponse> calendarResponses = memberMapper.getCalendarResponses(calendars, member);
 
         CalendarDto.Response calendarResponse = CalendarDto.Response.builder()
                 .memberId(member.getMemberId())

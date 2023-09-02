@@ -62,19 +62,33 @@ public interface MemberMapper {
     Member memberPatchToMember(MemberDto.Patch requestBody);
 
 
-    default List<CalendarDto.CalendarResponse> getCalendarResponses(List<Calendar> calendars) {
+    default List<CalendarDto.CalendarResponse> getCalendarResponses(List<Calendar> calendars, Member member) {
+        Set<Long> favoriteFestivalIds = member.getFavorites().stream()
+                .map(favorite -> favorite.getFestival().getFestivalId())
+                .collect(Collectors.toSet());
+
         return calendars.stream()
                 .map(calendar -> CalendarDto.CalendarResponse.builder()
-                        .festivalId(calendar.getFestival().getFestivalId())
-                        .calendarId(calendar.getCalenderId())
-                        .status(calendar.getFestival().getDetailFestival().getStatus())
+                        .address(calendar.getFestival().getAddress())
                         .category(calendar.getFestival().getDetailFestival().getCategory())
+                        .eventEndDate(calendar.getFestival().getDetailFestival().getEventenddate())
+                        .eventhomepage(calendar.getFestival().getDetailFestival().getEventhomepage())
+                        .eventplace(calendar.getFestival().getDetailFestival().getEventplace())
+                        .eventStartDate(calendar.getFestival().getDetailFestival().getEventstartdate())
+                        .festivalId(calendar.getFestival().getFestivalId())
+                        .image(calendar.getFestival().getImage())
+                        .liked(favoriteFestivalIds.contains(calendar.getFestival().getFestivalId()))
+                        .mapx(calendar.getFestival().getMapx())
+                        .mapy(calendar.getFestival().getMapy())
+                        .overview(calendar.getFestival().getDetailFestival().getOverview())
+                        .playtime(calendar.getFestival().getDetailFestival().getPlaytime())
+                        .price(calendar.getFestival().getDetailFestival().getUsetimefestival())
+                        .status(calendar.getFestival().getDetailFestival().getStatus())
+                        .tel(calendar.getFestival().getTel())
+                        .title(calendar.getFestival().getTitle())
+                        .calendarId(calendar.getCalenderId())
                         .scheduledDate(calendar.getScheduleDate())
                         .calendarDate(calendar.getCalendarDate())
-                        .title(calendar.getFestival().getTitle())
-                        .address(calendar.getFestival().getAddress())
-                        .eventStartDate(calendar.getFestival().getDetailFestival().getEventstartdate())
-                        .eventEndDate(calendar.getFestival().getDetailFestival().getEventenddate())
                         .build())
                 .collect(Collectors.toList());
     }
