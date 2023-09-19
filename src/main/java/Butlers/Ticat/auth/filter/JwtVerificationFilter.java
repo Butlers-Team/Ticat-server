@@ -7,6 +7,7 @@ import Butlers.Ticat.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -72,17 +73,22 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                     response.setHeader("Authorization", newAccessToken);
                     response.setHeader("AccessTokenExpiration", accessTokenExpirationFormatted);
 
+
+                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("액세스 토큰이 갱신되었습니다");
                 } else {
+                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("유효하지 않은 회원 ID");
                 }
             } catch (Exception e) {
+                response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("리프레시 토큰이 만료되었습니다.");
             }
         } else {
+            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("만료된 토큰입니다. 리프레시 토큰이 누락되었습니다.");
 
