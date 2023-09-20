@@ -49,9 +49,15 @@ public class CalendarDto {
 
     @Getter
     @Setter
-    @Builder
+    @NoArgsConstructor
     public static class Post {
         private Long festivalId;
-        private LocalDate scheduleDate;
+        private LocalDate startDate;
+        private LocalDate endDate;
+
+        public Post(LocalDate startDate, LocalDate endDate) {
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
     }
 }
