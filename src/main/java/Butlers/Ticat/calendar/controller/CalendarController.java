@@ -20,9 +20,10 @@ public class CalendarController {
     public ResponseEntity createdCalendar(@RequestBody CalendarDto.Post requestBody) {
         Long festivalId = requestBody.getFestivalId();
         long jwtMemberId = JwtParseInterceptor.getAuthenticatedMemberId();
-        LocalDate scheduleDate = requestBody.getScheduleDate();
+        LocalDate startDate = requestBody.getStartDate();
+        LocalDate endDate = requestBody.getEndDate();
 
-        calendarService.createCalendar(festivalId, jwtMemberId, scheduleDate);
+        calendarService.createCalendar(festivalId, jwtMemberId, startDate, endDate);
         return ResponseEntity.ok("일정이 등록되었습니다");
     }
 
