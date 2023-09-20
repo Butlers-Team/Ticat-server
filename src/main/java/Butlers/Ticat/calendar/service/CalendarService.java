@@ -12,7 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +24,7 @@ public class CalendarService {
     private final CalendarRepository calendarRepository;
     private final MemberService memberService;
     private final FestivalRepository festivalRepository;
-    public Calendar createCalendar(Long festivalId, Long memberId, LocalDate scheduleDate) {
+    public List<Calendar> createCalendar(Long festivalId, Long memberId, LocalDate startDate, LocalDate endDate) {
 
 
         Member member = memberService.findMember(memberId);
@@ -29,18 +32,35 @@ public class CalendarService {
         Festival festival = festivalRepository.findByFestivalId(festivalId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.FESTIVAL_NOT_FOUND));
 
-        boolean isDuplicate = calendarRepository.existsByFestivalAndMemberAndScheduleDate(festival, member, scheduleDate);
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("시작날짜와 마지막날짜를 입력해주세요");
+        }
+
+        boolean isDuplicate = calendarRepository.existsByFestivalAndMemberAndScheduleDateBetween(festival, member, startDate, endDate);
         if (isDuplicate) {
             throw new BusinessLogicException(ExceptionCode.DUPLICATE_CALENDAR_REGISTRATION);
         }
 
-        Calendar calendar = new Calendar();
-        calendar.setFestival(festival);
-        calendar.setMember(member);
-        calendar.setCalendarDate(LocalDate.now());
-        calendar.setScheduleDate(scheduleDate);
+        List<LocalDate> datesToSave = new ArrayList<>();
+        LocalDate currentDate = startDate;
 
-        return calendarRepository.save(calendar);
+        while (!currentDate.isAfter(endDate)) {
+            datesToSave.add(currentDate);
+            currentDate = currentDate.plusDays(1);
+        }
+
+        List<Calendar> calendarsToSave = datesToSave.stream()
+                .map(data -> {
+                            Calendar calendar = new Calendar();
+                            calendar.setFestival(festival);
+                            calendar.setMember(member);
+                            calendar.setCalendarDate(LocalDate.now());
+                            calendar.setScheduleDate(data);
+                            return calendar;
+                        })
+                .collect(Collectors.toList());
+
+        return calendarRepository.saveAll(calendarsToSave);
     }
 
 

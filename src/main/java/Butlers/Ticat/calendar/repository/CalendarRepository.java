@@ -18,5 +18,5 @@ public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
     Page<Calendar> findByMemberAndScheduleDateIsBetween(Member member, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
-    boolean existsByFestivalAndMemberAndScheduleDate(Festival festival, Member member, LocalDate scheduleDate);
+    boolean existsByFestivalAndMemberAndScheduleDateBetween(Festival festival, Member member, LocalDate startDate, LocalDate endDate);
 }
