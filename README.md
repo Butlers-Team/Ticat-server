@@ -1,27 +1,64 @@
-# Ticat-server
+# 🐈 TICAT - 축제 안내 서비스
 
-
-## ✉️ Git Commit Message Convention ✉️ 
-
-### 🌿 Branch
-main : 서비스 운영 브랜치 </br>
-dev : 개발중인 브랜치 </br>
-feat/기능명 : 기능 개발 브랜치 </br>
-
-### 💌 Commit Message
-|Tag|Title|
-|:---:|:---|
-|feat|새로운 기능 추가|
-|fix|버그 수정|
-|docs|문서 수정|
-|design|CSS 등 사용자 UI 디자인 변경|
-|style|코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우|
-|refactor|코드 리팩토링|
-|test|테스트 추가, 테스트 리팩토링 추가 (프로덕션 코드 변경 x)|
-|chore|빌드 테스트 업데이트, 패키지 매니저를 설정 (프로덕션 코드 변경 x)|
-|comment|필요한 주석 추가 및 변경
-|rename|파일 혹은 폴더명을 수정하거나 옮기는 작업만인 경우
-|remove|파일을 삭제하는 작업만 수행한 경우
-|!BREAKING CHANGE|커다란 API 변경
-|!HOTFIX|급하게 치명적인 버그를 고쳐야하는 경우
+<div align="center">
+  <img width="60%" alt="TICAT" src="https://github.com/Butlers-Team/ticat-client/assets/97720335/58ee326d-61a8-404c-84f6-9f03390b6d67">
+  <br>
+  <p>다양한 축제 정보를 효과적으로 제공하여 사용자가 쉽고 빠르게 <br>
+    흥미로운 축제를 찾아 새로운 경험을 할 수 있도록 도와줍니다.</p>
 </div>
+
+<br>
+
+- `팀 명` : Butlers
+- `프로젝트명` : Ticat
+- `프로젝트 기간` : 2023.07. ~ ing
+- `배포 링크` : **[TICAT](https://d99pqcn6hzkdg.cloudfront.net/main)**
+
+<br>
+
+## ✨ Page
+
+<div align="center">
+  <img width="100%" alt="TICAT" src="https://github.com/Butlers-Team/ticat-client/assets/97720335/04be1c64-7733-4b9d-8842-7ae530733eff">
+  <img width="100%" alt="TICAT" src="https://github.com/Butlers-Team/ticat-client/assets/97720335/f5bf6348-187e-441a-963d-99a079ef52da">
+  <img width="100%" alt="TICAT" src="https://github.com/Butlers-Team/ticat-client/assets/97720335/f13c74e9-248a-496e-870a-297d8430f28a">
+</div>
+
+<br>
+
+## 🛠️ Tech Stack
+- Java
+- Spring Boot
+- Gradle
+- Redis
+- AWS
+
+<br>
+
+## 👻 Back-End
+
+<table>
+  <tr align="center">
+    <td style="min-width: 150px;" background-color="white">
+      <a href="https://github.com/DDunDDang">
+        <img src="https://github.com/DDunDDang.png" width="150" height="150" style="object-fit :cover">
+        <br />
+        <b>송준상</b>
+      </a>
+    </td>
+    <td style="min-width: 150px;" background-color="white">
+      <a href="https://github.com/Rapil3090">
+        <img src="https://github.com/Rapil3090.png" width="150" height="150" style="object-fit :cover">
+          <br />
+          <b>심재우</b>
+      </a> 
+    </td>
+    <td style="min-width: 150px;" background-color="white">
+      <a href="https://github.com/jy3026">
+        <img src="https://github.com/jy3026.png" width="150" height="150" style="object-fit :cover">
+        <br />
+        <b>최진영</b>
+      </a> 
+    </td>
+  </tr>
+</table>
