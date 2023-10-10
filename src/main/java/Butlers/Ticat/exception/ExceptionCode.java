@@ -20,7 +20,8 @@ public enum ExceptionCode {
     CALENDAR_NOT_FOUND(404,"일정을 찾을 수 없습니다"),
     STAMP_ALREADY_EXISTS(409, "스탬프가 이미 저장되어있습니다" ),
     DUPLICATE_CALENDAR_REGISTRATION(409, "동일 축제를 같은날 중복 등록 할 수 없습니다"),
-    UNAUTHORIZED(404, "권한이 없습니다" );
+    UNAUTHORIZED(404, "권한이 없습니다" ),
+    INTEREST_NOT_FOUND(404, "관심사를 찾을 수 없습니다.");
     @Getter
     private int status;
     @Getter
