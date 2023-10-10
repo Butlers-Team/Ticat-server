@@ -98,6 +98,8 @@ public class FestivalService {
             //로그인한 멤버 불러오기
             Member member = memberService.findMember(JwtParseInterceptor.getAuthenticatedMemberId());
 
+            if(member.getInterest() == null || member.getInterest().getCategories().isEmpty()) throw new BusinessLogicException(ExceptionCode.INTEREST_NOT_FOUND);
+
             List<Festival> festivals = festivalRepository.findByDetailFestivalCategoryInAndDetailFestivalStatus(member.getInterest().getCategories(),ONGOING);
 
             List<Festival> filteredFestivals = new ArrayList<>();
@@ -114,7 +116,7 @@ public class FestivalService {
             }
 
             return filteredFestivals;
-        }catch (Exception e){
+        } catch (Exception e) {
             List<Festival> festivals = festivalRepository.findByDetailFestivalStatus(ONGOING,Sort.by("likeCount").descending());
 
             List<Festival> filteredFestivals = new ArrayList<>();
