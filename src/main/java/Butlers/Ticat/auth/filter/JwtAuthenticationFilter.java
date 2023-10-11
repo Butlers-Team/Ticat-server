@@ -64,6 +64,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         responseData.put("displayName", member.getDisplayName());
         responseData.put("memberId", member.getMemberId());
 
+        if (member.getInterest().getCategories().size() == 0 ) {
+            responseData.put("interest", false);
+        } else {
+            responseData.put("interest", true);
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponseBody = objectMapper.writeValueAsString(responseData);
 
