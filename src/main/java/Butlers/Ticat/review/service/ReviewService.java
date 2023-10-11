@@ -9,7 +9,7 @@ import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.service.MemberService;
 import Butlers.Ticat.review.entity.Review;
 import Butlers.Ticat.review.entity.ReviewComment;
-import Butlers.Ticat.review.entity.ReviewPlus;
+import Butlers.Ticat.review.entity.ReviewAddLikeInfo;
 import Butlers.Ticat.review.entity.ReviewRecommend;
 import Butlers.Ticat.review.repository.ReviewCommentRepository;
 import Butlers.Ticat.review.repository.ReviewRecommendRepository;
@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -206,7 +205,7 @@ public class ReviewService {
         }
     }
 
-    public List<ReviewPlus> reviewToPlus(List<Review> reviews, long memberId) {
+    public List<ReviewAddLikeInfo> reviewToPlus(List<Review> reviews, long memberId) {
         Member member;
         if (memberId != NUMBER_OF_NON_LOGIN) {
             member = memberService.findVerifiedMember(memberId);
@@ -214,10 +213,10 @@ public class ReviewService {
             member = new Member();
             member.setMemberId(memberId);
         }
-        List<ReviewPlus> reviewPluses = new ArrayList<>();
+        List<ReviewAddLikeInfo> reviewAddLikeInfos = new ArrayList<>();
 
         for (Review review : reviews) {
-            ReviewPlus reviewPlus = new ReviewPlus(
+            ReviewAddLikeInfo reviewAddLikeInfo = new ReviewAddLikeInfo(
                     review.getReviewId(),
                     review.getFestival(),
                     review.getMember(),
@@ -236,16 +235,16 @@ public class ReviewService {
 
             for (ReviewRecommend recommend : review.getReviewRecommends()) {
                 if (recommend.getMember().equals(member)) {
-                    reviewPlus.setLiked(recommend.isLiked());
-                    reviewPlus.setDisliked(recommend.isDisliked());
+                    reviewAddLikeInfo.setLiked(recommend.isLiked());
+                    reviewAddLikeInfo.setDisliked(recommend.isDisliked());
                     break;
                 }
             }
 
-            reviewPluses.add(reviewPlus);
+            reviewAddLikeInfos.add(reviewAddLikeInfo);
         }
 
-        return reviewPluses;
+        return reviewAddLikeInfos;
     }
 
     // 리뷰 추천
