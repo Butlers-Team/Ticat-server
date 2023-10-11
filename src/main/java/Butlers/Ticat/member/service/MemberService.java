@@ -44,12 +44,32 @@ public class MemberService {
         verifyExistingEmail(member.getEmail());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
-        member.setDisplayName(member.getDisplayName());
+
+        String randomDisplayName = makeAnonymousDisplayName();
+        member.setDisplayName(randomDisplayName);
 
         Interest interest = new Interest();
         interest.setMember(memberRepository.save(member));
 
         interestRepository.save(interest);
+    }
+
+    // 익명 닉네임 만들기
+    public String makeAnonymousDisplayName() {
+        String randomDisplayName = null;
+        boolean isPresent = true;
+        while (isPresent) {
+            randomDisplayName = "익명" + (int)(Math.random() * 1_000_000);
+            isPresent = verifyExistingDisplayName(randomDisplayName);
+        }
+
+        return randomDisplayName;
+    }
+
+    // 닉네임 중복 확인
+    public boolean verifyExistingDisplayName(String displayName) {
+        Optional<Member> optionalMember = memberRepository.findByDisplayName(displayName);
+        return  optionalMember.isPresent();
     }
 
     // 아이디 중복 획인
@@ -73,6 +93,8 @@ public class MemberService {
     public Member joinInOauth(Member member) {
         member.setOauthChecked(true);
         verifyExistingId(member.getId());
+        String randomDisplayName = makeAnonymousDisplayName();
+        member.setDisplayName(randomDisplayName);
 
         Member savedMember = memberRepository.save(member);
         Interest interest = new Interest();
