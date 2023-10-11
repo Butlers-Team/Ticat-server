@@ -4,7 +4,7 @@ import Butlers.Ticat.festival.entity.Festival;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.review.dto.ReviewDto;
 import Butlers.Ticat.review.entity.Review;
-import Butlers.Ticat.review.entity.ReviewPlus;
+import Butlers.Ticat.review.entity.ReviewAddLikeInfo;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public interface ReviewMapper {
         return review;
     }
 
-    default ReviewDto.ResponseInFestival reviewToResponseListElementInFestival(ReviewPlus review) {
+    default ReviewDto.ResponseInFestival reviewToResponseListElementInFestival(ReviewAddLikeInfo review) {
         Member member = review.getMember();
         Festival festival = review.getFestival();
         List<String> pictures = new ArrayList<>();
@@ -65,7 +65,7 @@ public interface ReviewMapper {
                 .liked(review.isLiked())
                 .disliked(review.isDisliked()).build();
     }
-    default List<ReviewDto.ResponseInFestival> reviewToResponseInFestival(List<ReviewPlus> reviews) {
+    default List<ReviewDto.ResponseInFestival> reviewToResponseInFestival(List<ReviewAddLikeInfo> reviews) {
         return reviews.stream()
                 .map(review -> reviewToResponseListElementInFestival(review))
                 .collect(Collectors.toList());
