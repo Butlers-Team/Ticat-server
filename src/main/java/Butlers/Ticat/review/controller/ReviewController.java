@@ -6,8 +6,7 @@ import Butlers.Ticat.review.dto.ReviewCommentDto;
 import Butlers.Ticat.review.dto.ReviewDto;
 import Butlers.Ticat.review.entity.Review;
 import Butlers.Ticat.review.entity.ReviewComment;
-import Butlers.Ticat.review.entity.ReviewPlus;
-import Butlers.Ticat.review.entity.ReviewRecommend;
+import Butlers.Ticat.review.entity.ReviewAddLikeInfo;
 import Butlers.Ticat.review.mapper.ReviewCommentMapper;
 import Butlers.Ticat.review.mapper.ReviewMapper;
 import Butlers.Ticat.review.service.ReviewService;
@@ -73,9 +72,9 @@ public class ReviewController {
 
         Page<Review> pageReviews = reviewService.getReviewListInFestivalDetail(festivalId, page, size);
         List<Review> reviews = pageReviews.getContent();
-        List<ReviewPlus> reviewPluses = reviewService.reviewToPlus(reviews, authenticationMemberId);
+        List<ReviewAddLikeInfo> reviewAddLikeInfos = reviewService.reviewToPlus(reviews, authenticationMemberId);
 
-        return new ResponseEntity<>(new MultiResponseDto<>(reviewMapper.reviewToResponseInFestival(reviewPluses), pageReviews), HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(reviewMapper.reviewToResponseInFestival(reviewAddLikeInfos), pageReviews), HttpStatus.OK);
     }
 
     // 마이페이지 내부 본인이 작성한 리뷰 리스트 불러오기
