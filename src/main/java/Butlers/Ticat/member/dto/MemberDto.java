@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class MemberDto {
@@ -35,7 +36,8 @@ public class MemberDto {
     @Getter
     @Setter
     public static class Patch {
-
+        @NotNull
+        @Pattern(regexp = "^[A-Za-z가-힣0-9]{2,8}$")
         private String displayName;
 
     }

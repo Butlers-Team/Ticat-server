@@ -17,7 +17,9 @@ public class InterestService {
     // 관심사 등록
     public Interest registerInterest(Interest interest) {
         Member member = memberService.findVerifiedMember(interest.getMember().getMemberId());
-        member.setDisplayName(interest.getMember().getDisplayName());
+        String displayName = interest.getMember().getDisplayName();
+        memberService.verifyExistingDpName(displayName);
+        member.setDisplayName(displayName);
         Interest memberInterest = member.getInterest();
         memberInterest.setCategories(interest.getCategories());
 
