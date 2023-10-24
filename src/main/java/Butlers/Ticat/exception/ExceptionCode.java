@@ -4,6 +4,7 @@ import lombok.Getter;
 
 public enum ExceptionCode {
     MEMBER_NOT_FOUND(404, "회원을 찾을 수 없습니다"),
+    DISPLAY_NAME_EXISTS(409, "현재 사용중인 닉네임 입니다."),
     MEMBER_EMAIL_EXISTS(409, "현재 사용중인 이메일 입니다." ),
     MEMBER_ID_EXISTS(409, "현재 사용중인 아이디 입니다."),
     FESTIVAL_NOT_FOUND(404, "축제를 찾을 수 없습니다"),

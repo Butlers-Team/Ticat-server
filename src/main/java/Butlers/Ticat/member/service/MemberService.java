@@ -66,10 +66,18 @@ public class MemberService {
         return randomDisplayName;
     }
 
-    // 닉네임 중복 확인
+    // 닉네임 중복 확인 (익명 닉네임)
     public boolean verifyExistingDisplayName(String displayName) {
         Optional<Member> optionalMember = memberRepository.findByDisplayName(displayName);
         return  optionalMember.isPresent();
+    }
+
+    // 닉네임 중복 확인
+    public void verifyExistingDpName(String displayName) {
+        Optional<Member> optionalMember = memberRepository.findByDisplayName(displayName);
+        if (optionalMember.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.DISPLAY_NAME_EXISTS);
+        }
     }
 
     // 아이디 중복 획인
@@ -162,7 +170,7 @@ public class MemberService {
 
     public Member updateMember(Member member) {
         Member findedMember = findVerifiedMember(member.getMemberId());
-
+        verifyExistingDpName(member.getDisplayName());
         Optional.ofNullable(member.getDisplayName())
                 .ifPresent(displayName -> findedMember.setDisplayName(displayName));
 
