@@ -40,7 +40,9 @@ public class CalendarDto {
         private DetailFestival.Status status;
         private String tel; // 축제 전화번호
         private String title;
-
+        private Integer likeCount;
+        private double reviewRating;
+        private Integer reviewCount;
         private Long calendarId;
         private LocalDate scheduledDate;
         private LocalDate calendarDate;
