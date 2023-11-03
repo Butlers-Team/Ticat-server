@@ -75,6 +75,13 @@ public class MemberDto {
     }
 
     @Getter
+    public static class DisplayName {
+        @NotNull
+        @Pattern(regexp = "^[A-Za-z가-힣0-9]{2,8}$")
+        private String displayName;
+    }
+
+    @Getter
     @Builder
     public static class ProfileUrl {
         private String profileUrl;
