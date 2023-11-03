@@ -89,6 +89,14 @@ public class MemberController {
         return new ResponseEntity<>("사용 가능한 이메일 입니다.", HttpStatus.OK);
     }
 
+    // 닉네임 체크
+    @PostMapping("/display-name")
+    public ResponseEntity postCheckDisplayName(@Validated @RequestBody MemberDto.DisplayName displayName) {
+        memberService.verifyExistingDpName(displayName.getDisplayName());
+
+        return new ResponseEntity<>("사용 가능한 닉네임 입니다.", HttpStatus.OK);
+    }
+
 
     // 프로필 이미지 업로드
     @PostMapping("/profile")
