@@ -1,6 +1,7 @@
 package Butlers.Ticat.auth.filter;
 
 import Butlers.Ticat.auth.jwt.TokenService;
+import Butlers.Ticat.auth.utils.CustomAuthorityUtils;
 import Butlers.Ticat.auth.utils.JwtUtils;
 import Butlers.Ticat.member.entity.Member;
 import Butlers.Ticat.member.repository.MemberRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,12 +22,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
+    private final CustomAuthorityUtils authorityUtils;
     private final TokenService tokenService;
     private final MemberRepository memberRepository;
 
@@ -104,7 +108,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
         String userId = (String) claims.get("id");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userId, null);
+        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List) claims.get("roles"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userId, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
