@@ -6,6 +6,7 @@ import Butlers.Ticat.auth.handler.*;
 import Butlers.Ticat.auth.interceptor.JwtParseInterceptor;
 import Butlers.Ticat.auth.jwt.JwtTokenizer;
 import Butlers.Ticat.auth.jwt.TokenService;
+import Butlers.Ticat.auth.utils.CustomAuthorityUtils;
 import Butlers.Ticat.auth.utils.JwtUtils;
 import Butlers.Ticat.member.repository.MemberRepository;
 import Butlers.Ticat.member.service.MemberService;
@@ -112,7 +113,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtUtils(), tokenService, memberRepository);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtUtils(), authorityUtils(), tokenService, memberRepository);
 
             builder
                     .addFilter(jwtAuthenticationFilter)
@@ -128,6 +129,11 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     @Bean
     public JwtTokenizer jwtTokenizer() {
         return new JwtTokenizer();
+    }
+
+    @Bean
+    public CustomAuthorityUtils authorityUtils() {
+        return new CustomAuthorityUtils();
     }
 
     @Override

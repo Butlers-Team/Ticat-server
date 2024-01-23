@@ -1,6 +1,7 @@
 package Butlers.Ticat.member.service;
 
 
+import Butlers.Ticat.auth.utils.CustomAuthorityUtils;
 import Butlers.Ticat.calendar.entity.Calendar;
 import Butlers.Ticat.calendar.repository.CalendarRepository;
 import Butlers.Ticat.aws.service.AwsS3Service;
@@ -30,6 +31,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final CustomAuthorityUtils authorityUtils;
     private final AwsS3Service awsS3Service;
     private final MemberRepository memberRepository;
     private final CalendarRepository calendarRepository;
@@ -47,11 +49,18 @@ public class MemberService {
 
         String randomDisplayName = makeAnonymousDisplayName();
         member.setDisplayName(randomDisplayName);
+        createRoles(member);
 
         Interest interest = new Interest();
         interest.setMember(memberRepository.save(member));
 
         interestRepository.save(interest);
+    }
+
+    // 역할 생성(역할 db 저장)
+    private void createRoles(Member member) {
+        List<String> authorities = authorityUtils.createRoles(member.getEmail());
+        member.setRoles(authorities);
     }
 
     // 익명 닉네임 만들기
@@ -103,6 +112,7 @@ public class MemberService {
         verifyExistingId(member.getId());
         String randomDisplayName = makeAnonymousDisplayName();
         member.setDisplayName(randomDisplayName);
+        createRoles(member);
 
         Member savedMember = memberRepository.save(member);
         Interest interest = new Interest();
