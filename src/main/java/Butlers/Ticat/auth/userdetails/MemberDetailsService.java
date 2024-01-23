@@ -1,5 +1,6 @@
 package Butlers.Ticat.auth.userdetails;
 
+import Butlers.Ticat.auth.utils.CustomAuthorityUtils;
 import Butlers.Ticat.exception.BusinessLogicException;
 import Butlers.Ticat.exception.ExceptionCode;
 import Butlers.Ticat.member.entity.Member;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
+    private final CustomAuthorityUtils authorityUtils;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -31,6 +33,7 @@ public class MemberDetailsService implements UserDetailsService {
         MemberDetails(Member member) {
             setMemberId(member.getMemberId());
             setId(member.getId());
+            setRoles(member.getRoles());
             setPassword(member.getPassword());
             setProfileUrl(member.getProfileUrl());
             setDisplayName(member.getDisplayName());
@@ -40,7 +43,7 @@ public class MemberDetailsService implements UserDetailsService {
 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return null;
+            return authorityUtils.createAuthorities(this.getRoles());
         }
 
         @Override
