@@ -32,6 +32,9 @@ public class Member {
     private String password;
     private String displayName;
 
+    // 역할(권한)
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Calendar> calendars = new ArrayList<>();
