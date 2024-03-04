@@ -49,6 +49,7 @@ public class MemberController {
                 memberService.findMember(jwtId)), HttpStatus.OK);
     }
 
+
     @PatchMapping("/members")
     public ResponseEntity updateMember(@Validated @RequestBody MemberDto.Patch requestBody) {
 
